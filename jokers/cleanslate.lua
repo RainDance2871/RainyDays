@@ -38,7 +38,7 @@ SMODS.Joker {
 --override function, changes discard behaviour to discard all cards
 local old_func_discard = G.FUNCS.discard_cards_from_highlighted
 function G.FUNCS.discard_cards_from_highlighted(e, hook)
-  if next(SMODS.find_card('j_RainyDays_tantrum')) then
+  if next(SMODS.find_card('j_RainyDays_cleanslate')) then
     local card_limit = G.hand.config.highlighted_limit;
     G.hand.config.highlighted_limit = #G.hand.cards
     G.hand:unhighlight_all()
@@ -58,7 +58,7 @@ end
 --override function that changes button behaviour - now active when no cards selected if you have tantrum
 local old_func_can_discard = G.FUNCS.can_discard
 function G.FUNCS.can_discard(e)
-  if next(SMODS.find_card('j_RainyDays_tantrum')) and G.GAME.current_round.discards_left > 0 then
+  if next(SMODS.find_card('j_RainyDays_cleanslate')) and G.GAME.current_round.discards_left > 0 then
     e.config.colour = G.C.RED
     e.config.button = 'discard_cards_from_highlighted'
   else
