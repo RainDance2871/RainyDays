@@ -124,6 +124,20 @@ function reset_game_globals_lotteryticket(run_start)
     end
   end
   picked_ranks = nil
+  
+  G.GAME.current_round.RD_lotteryticket_string = ""
+  for i = 1, #G.GAME.current_round.RD_lotteryticket do
+    local sub = string.sub(G.GAME.current_round.RD_lotteryticket[i], 1, 1)
+    if sub ~= "1" then
+      G.GAME.current_round.RD_lotteryticket_string = G.GAME.current_round.RD_lotteryticket_string .. sub
+    else
+      G.GAME.current_round.RD_lotteryticket_string = G.GAME.current_round.RD_lotteryticket_string .. "10"
+    end
+    
+    if i ~= #G.GAME.current_round.RD_lotteryticket then
+      G.GAME.current_round.RD_lotteryticket_string = G.GAME.current_round.RD_lotteryticket_string  .. " "
+    end
+  end
 end
 
 --here we draw or lottery ticket ranks onto our card. It's far from perfect, but it's the best I can manage. 
@@ -135,17 +149,6 @@ SMODS.DrawStep {
   conditions = { vortex = false, facing = 'front' },
   func = function(self, layer)
     if self.ability.name == 'Lottery Ticket' and self.children.center then
-      --creating the string
-      local string = ""
-      for i = 1, #G.GAME.current_round.RD_lotteryticket do
-        local sub = string.sub(G.GAME.current_round.RD_lotteryticket[i], 1, 1)
-        if sub ~= "1" then
-          string = string .. string.sub(G.GAME.current_round.RD_lotteryticket[i], 1, 1) .. " "
-        else
-          string = string .. "10 "
-        end
-      end
-      
       --drawing the string
       prep_draw(self.children.center, 0.015)
       if self.edition and self.edition.negative then
@@ -153,7 +156,7 @@ SMODS.DrawStep {
       else
         love.graphics.setColor(0.047059, 0.039216, 0.258824, 1)
       end
-      love.graphics.print(string, -40, -10, 0)
+      love.graphics.print(G.GAME.current_round.RD_lotteryticket_string, -40, -10, 0)
       love.graphics.pop()
     end
   end

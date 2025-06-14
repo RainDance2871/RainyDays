@@ -41,6 +41,17 @@ return {
         }
       },
       
+      j_RainyDays_diamondmine = {
+        name = "Diamond Mine",
+        text = {
+          "This Joker gains {C:mult}+#1#{} Mult",
+          "every {C:attention}#3# {C:inactive}[#4#]{} cards with",
+          "{C:diamonds}Diamond{} suit held in",
+          "hand each played hand",
+          "{C:inactive}(Currently {C:mult}+#2# {C:inactive}Mult)"
+        }
+      },
+      
       j_RainyDays_feather_precious = {
         name = "Precious Feather",
         text = {
@@ -117,8 +128,8 @@ return {
         text = {
           "If played hand contains a",
           "{C:attention}#1#{}, {C:attention}#2#{}, {C:attention}#3#{}, {C:attention}#4#{} and {C:attention}#5#{},",
-          "hand is considered a {C:attention}Straight{}.",
-          "Earns {C:money}$#6#{} if played this way",
+          "hand is considered a {C:attention}Straight",
+          "Earn {C:money}$#6#{} if played this way",
           "{s:0.8}Listed ranks change each round"
         }
       },
@@ -157,9 +168,10 @@ return {
         name = "Waste Not",
         text = {
           "Every discarded {C:attention}card",
-          "permanently loses {C:chips}-#1#{} Chips.",
-          "Give lost Chips to random",
-          "card {C:attention}remaining{} in hand"
+          "permanently loses {C:chips}-#1#{} Chips,",
+          "random card {C:attention}remaining",
+          "in hand permanently",
+          "gains those Chips"
         }
       },
     }

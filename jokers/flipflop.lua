@@ -30,6 +30,12 @@ SMODS.Joker {
     }
   end,
   
+  set_sprites = function(self, card, front)
+    if card.ability and card.ability.state == 1 then
+      card.children.center:set_sprite_pos(GetRainyDaysAtlasTable('flipflop_odd'))
+    end
+  end,
+  
   calculate = function(self, card, context)
     if context.cardarea == G.jokers and context.joker_main then
       if card.ability.state == 0 then

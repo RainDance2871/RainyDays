@@ -14,7 +14,8 @@ SMODS.Joker {
   config = {
     growth_money = 5,
     bonus_threshold = 10,
-    jokers = 3
+    jokers = 3,
+    jokers_total = 3
   },
   
   loc_vars = function(self, info_queue, card)
