@@ -33,7 +33,7 @@ return {
       j_RainyDays_cloverfield = {
         name = "Klaverveld",
         text = {
-          "Deze joker levert {C:mult}+#1#{} Multi op",
+          "Deze Joker levert {C:mult}+#1#{} Multi op",
           "telkens als {C:attention}#3#{C:inactive} [#4#]{} kaarten met de",
           "kleur {C:clubs}Klaveren{} worden weggegooid",
           "{C:inactive}(Momenteel {C:mult}+#2# {C:inactive}Multi)"
@@ -91,10 +91,11 @@ return {
       j_RainyDays_heirloom = {
         name = "Erfstuk",
         text = {
-          "Wanneer gespeelde {C:attention}bonus{}- of {C:attention}multi{}-",
-          "{C:attention}kaart{} scoort, geeft deze zijn",
-          "fiches en +Multi aan de kaart rechts.",
-          "Vernietig na scoren de gevende kaart"
+          "Wanneer gespeelde",
+          "{C:attention}bonus{}- of {C:attention}multikaart",
+          "scoort, krijgt de kaart",
+          "rechts permanent de",
+          "{C:attention}helft{} zijn fiches en +Multi"
         }
       },
       
@@ -103,7 +104,7 @@ return {
         text = {
           "Wanneer een {C:attention}glaskaart{} wordt",
           "vernietigd schud je een kopie met",
-          "{C:attention}gouden zegel{} in het kaartspel"
+          "{C:attention}gouden zegel{} het kaartspel in"
         }
       },
       
@@ -140,10 +141,10 @@ return {
       j_RainyDays_truffle = {
         name = "Truffel",
         text = {
-          "Voeg {C:money}$#1#{} {C:attention}verkoopwaarde{} toe aan een",
-          "willekeurige Joker aan het einde van de ronde.",
-          "Creëer een {C:rare}zeldzame{} Joker voor de volgende",
-          "{C:attention}#3#{} Jokers verkocht voor {C:money}$#2#{} of meer"
+          "De volgende {C:attention}#1#{} gespeelde",
+          "plaatjes worden {C:dark_edition}folie{},",
+          "{C:dark_edition}holografisch{} of {C:dark_edition}polychroom",
+          "bij het scoren"
         }
       },
       

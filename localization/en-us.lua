@@ -26,8 +26,7 @@ return {
         text = {
           "{C:mult}+#1#{} Mult",
           "Whenever you discard,",
-          "discard your {C:attention}entire",
-          "hand"
+          "discard your {C:attention}entire{} hand"
         }
       },
       
@@ -55,9 +54,9 @@ return {
       j_RainyDays_feather_precious = {
         name = "Precious Feather",
         text = {
-          "Earn {C:money}$#1#{} at end of round",
-          "for each {C:attention}Feather Joker",
-          "card",
+          "Earn {C:money}$#1#{} at end",
+          "of round for each",
+          "{C:attention}Feather Joker{} card",
           "{C:inactive}(Currently {C:money}$#2#{C:inactive})"
         }
       },
@@ -84,9 +83,9 @@ return {
         name = "Flip-flop",
         text = {
           "This Joker alternates",
-          "between {X:mult,C:white}X#1#{} Mult and",
-          "{C:chips}+#2#{} Chips each played",
-          "hand",
+          "between {X:mult,C:white}X#1#{} Mult",
+          "and {C:chips}+#2#{} Chips",
+          "each played hand",
           "{C:inactive}(Next hand: {X:mult,C:white}X#1#{C:inactive} Mult)"
         }
       },
@@ -95,9 +94,9 @@ return {
         name = "Flip-flop",
         text = {
           "This Joker alternates",
-          "between {X:mult,C:white}X#1#{} Mult and",
-          "{C:chips}+#2#{} Chips each played",
-          "hand",
+          "between {X:mult,C:white}X#1#{} Mult",
+          "and {C:chips}+#2#{} Chips",
+          "each played hand",
           "{C:inactive}(Next hand: {C:chips}+#2#{C:inactive} Chips)"
         }
       },
@@ -126,7 +125,7 @@ return {
       j_RainyDays_lotteryticket = {
         name = "Lottery Ticket",
         text = {
-          "If played hand contains a",
+          "If played hand contains #7#",
           "{C:attention}#1#{}, {C:attention}#2#{}, {C:attention}#3#{}, {C:attention}#4#{} and {C:attention}#5#{},",
           "hand is considered a {C:attention}Straight",
           "Earn {C:money}$#6#{} if played this way",
@@ -142,7 +141,7 @@ return {
           "played. At {C:mult}+#3#{} Mult",
           "transform into {C:attention}Popcorn"
         }
-      },      
+      },
       
       j_RainyDays_sediment = {
         name = "Sediment",
@@ -155,12 +154,10 @@ return {
       j_RainyDays_truffle = {
         name = "Truffle",
         text = {
-          "Add {C:money}$#1#{} of {C:attention}sell value{} to",
-          "another random Joker",
-          "at end of round. Create",
-          "a {C:rare}Rare{} Joker the next",
-          "{C:attention}#3#{} times you sell a Joker",
-          "for {C:money}$#2#{} or more"
+          "The next {C:attention}#1#{} played face",
+          "cards become {C:dark_edition}Foil{},",
+          "{C:dark_edition}Holographic{}, or",
+          "{C:dark_edition}Polychrome{} when scored"
         }
       },
       

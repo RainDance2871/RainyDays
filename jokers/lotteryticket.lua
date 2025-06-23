@@ -22,7 +22,8 @@ SMODS.Joker {
         localize(G.GAME.current_round.RD_lotteryticket[3], 'ranks'),
         localize(G.GAME.current_round.RD_lotteryticket[4], 'ranks'),
         localize(G.GAME.current_round.RD_lotteryticket[5], 'ranks'),
-        card.ability.reward_money
+        card.ability.reward_money,
+        (G.GAME.current_round.RD_lotteryticket[1] == "Ace" or G.GAME.current_round.RD_lotteryticket[1] == "8") and "an" or "a"
       }
     }
   end,

@@ -130,9 +130,9 @@ jd_def["j_RainyDays_sediment"] = {
 jd_def["j_RainyDays_truffle"] = {
   text = {
     { text = "(" },
-    { ref_table = "card.ability", ref_value = "jokers" },
+    { ref_table = "card.ability", ref_value = "amount" },
     { text = "/" },
-    { ref_table = "card.ability", ref_value = "jokers_total" },
+    { ref_table = "card.ability", ref_value = "amount_total" },
     { text = ")" }
   },
   text_config = { colour = G.C.FILTER }
