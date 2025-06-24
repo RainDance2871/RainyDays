@@ -57,7 +57,7 @@ return {
           "Played Kings and Queens",
           "each add {C:money}$#1#{} of {C:attention}sell",
           "{C:attention}value{} to this Joker",
-          "when scored"          
+          "when scored"
         }
       },
       

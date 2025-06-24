@@ -40,6 +40,16 @@ return {
         }
       },
       
+      j_RainyDays_fabergeegg = {
+        name = "Fabergé Ei",
+        text = {          
+          "Gespeelde heren en vrouwen",
+          "verhogen elk de {C:attention}verkoopwaarde",
+          "van deze Joker met {C:money}$#1#{} bij",
+          "het scoren,"
+        }
+      },
+      
       j_RainyDays_flipflop_even = {
         name = "Flip-flop",
         text = {
