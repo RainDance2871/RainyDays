@@ -12,8 +12,8 @@ SMODS.Joker {
   perishable_compat = true,
   pos = GetRainyDaysAtlasTable('truffle'),
   config = {
-    amount = 7,
-    amount_total = 7
+    amount = 5,
+    amount_total = 5
   },
   
   loc_vars = function(self, info_queue, card)

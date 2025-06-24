@@ -33,6 +33,8 @@ jd_def["j_RainyDays_cloverfield"] = {
   }
 }
 
+jd_def["j_RainyDays_fabergeegg"] = {}
+
 jd_def["j_RainyDays_feather_precious"] = {
   text = {
     { text = "+$" },

@@ -25,7 +25,8 @@ local RainyDaysAtlasKeys = {
   'waste_not',
   
   'flipflop_odd',
-  'kintsugi_vase'
+  'kintsugi_vase',
+  'fabergeegg'
 }
 
 local RainyDaysAtlasTable = {}

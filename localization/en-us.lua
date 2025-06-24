@@ -51,6 +51,16 @@ return {
         }
       },
       
+      j_RainyDays_fabergeegg = {
+        name = "Fabergé Egg",
+        text = {
+          "Played Kings and Queens",
+          "each add {C:money}$#1#{} of {C:attention}sell",
+          "{C:attention}value{} to this Joker",
+          "when scored"          
+        }
+      },
+      
       j_RainyDays_feather_precious = {
         name = "Precious Feather",
         text = {
