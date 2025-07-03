@@ -6,7 +6,7 @@ SMODS.Joker {
   cost = 5,
   unlocked = true, 
   discovered = true,
-  blueprint_compat = false,
+  blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
   in_pool = function(self, args) --only appears if player has at least one bonus or mult card in deck.
@@ -35,7 +35,7 @@ SMODS.Joker {
   end,
   
   calculate = function(self, card, context)
-    if not context.blueprint and context.individual and context.cardarea == G.play then
+    if context.individual and context.cardarea == G.play then
       if SMODS.has_enhancement(context.other_card, 'm_bonus') or SMODS.has_enhancement(context.other_card, 'm_mult') then
         if not context.other_card.debuff and check_card_in_hand(context.other_card, context.scoring_hand) then
           --find position of this card 
