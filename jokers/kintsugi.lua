@@ -35,7 +35,6 @@ SMODS.Joker {
   --very similar to horoscope, see comments there.
   calculate = function(self, card, context)
     if context.remove_playing_cards then
-      
       --create the cards and apply the gold seals.
       local copies = {}
       for i = 1, #context.removed do
@@ -48,34 +47,36 @@ SMODS.Joker {
         end
       end
       
-      G.E_MANAGER:add_event(Event({
-        blocking = false,
-        func = function() 
-          if #G.play.cards > 0 then
-            return false
-          end
-          
-          for i = 1, #copies do
-            copies[i]:start_materialize({ G.C.SECONDARY_SET.Enhanced })
-            G.play:emplace(copies[i])
-          end
-          
-          G.E_MANAGER:add_event(Event({
-            trigger = "after", --delay the event by 1 unit. exact time depends on game speed.
-            delay = 1,
-            func = function()
-              for i = 1, #copies do
-                copies[i]:add_to_deck()
-                draw_card(G.play, G.deck, 90, 'up', nil, copies[i]) --draw from play into the deck.
-              end
-              G.deck:shuffle('kintsugi'..G.GAME.round_resets.ante) --shuffle the deck
-              SMODS.calculate_context({ playing_card_added = true, cards = copies }) --some jokers care about adding cards to the deck, so we let them know.
-              return true
+      if #copies > 0 then
+        G.E_MANAGER:add_event(Event({
+          blocking = false,
+          func = function() 
+            if #G.play.cards > 0 then
+              return false
             end
-          }))
-          return true
-        end
-      }))
+            
+            for i = 1, #copies do
+              copies[i]:start_materialize({ G.C.SECONDARY_SET.Enhanced })
+              G.play:emplace(copies[i])
+            end
+            
+            G.E_MANAGER:add_event(Event({
+              trigger = "after", --delay the event by 1 unit. exact time depends on game speed.
+              delay = 1,
+              func = function()
+                for i = 1, #copies do
+                  copies[i]:add_to_deck()
+                  draw_card(G.play, G.deck, 90, 'up', nil, copies[i]) --draw from play into the deck.
+                end
+                G.deck:shuffle('kintsugi'..G.GAME.round_resets.ante) --shuffle the deck
+                SMODS.calculate_context({ playing_card_added = true, cards = copies }) --some jokers care about adding cards to the deck, so we let them know.
+                return true
+              end
+            }))
+            return true
+          end
+        }))
+      end
     end
   end
 }

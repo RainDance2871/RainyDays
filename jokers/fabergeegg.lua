@@ -3,7 +3,7 @@ SMODS.Joker {
   name = 'Fabergé Egg',
   atlas = 'RainyDays',
   rarity = 1,
-  cost = 6,
+  cost = 4,
   unlocked = true, 
   discovered = true,
   blueprint_compat = true,
@@ -21,7 +21,7 @@ SMODS.Joker {
   end,
   
   calculate = function(self, card, context)
-    if context.individual and context.cardarea == G.play and (context.other_card:get_id() == 12 or context.other_card:get_id() == 13) then
+    if context.individual and context.cardarea == G.play and context.other_card:is_face() then
       card.ability.extra_value = card.ability.extra_value + card.ability.plus_value
       card:set_cost()
       return {

@@ -54,7 +54,7 @@ return {
       j_RainyDays_fabergeegg = {
         name = "Fabergé Egg",
         text = {
-          "Played Kings and Queens",
+          "Played {C:attention}face{} cards",
           "each add {C:money}$#1#{} of {C:attention}sell",
           "{C:attention}value{} to this Joker",
           "when scored"
@@ -114,11 +114,21 @@ return {
       j_RainyDays_heirloom = {
         name = "Heirloom",
         text = {
-          "When a played {C:attention}Bonus{} or",
-          "{C:attention}Mult Card{} is scored,",
+          "When each played {C:attention}Bonus",
+          "or {C:attention}Mult Card{} is scored,",
           "scoring card to the",
           "right permanently gains",
-          "{C:attention}half{} its Chips and +Mult"
+          "{C:chips}+#1#{} Chips and {C:mult}+#2#{} Mult"
+        }
+      },
+      
+      j_RainyDays_junkdrawer = {
+        name = "Junk Drawer",
+        text = {
+          "{C:green}#1# in #2#{} chance per {C:attention}reroll",
+          "in the shop to create a",
+          "free {C:dark_edition}Foil{}, {C:dark_edition}Holographic{},",
+          "{C:dark_edition}Polychrome{} or {C:dark_edition}Negative Tag"
         }
       },
       
@@ -156,8 +166,10 @@ return {
       j_RainyDays_sediment = {
         name = "Sediment",
         text = {
-          "{X:mult,C:white}X#1#{} Mult if {C:attention}full deck",
-          "has {C:attention}#2#{} or more cards"
+          "{X:mult,C:white}X#1#{} Mult",
+          "Shuffle #2# {C:attention}random{} cards",
+          "into your the deck when",
+          "{C:attention}Blind{} is selected"
         }
       },
       
@@ -180,13 +192,26 @@ return {
           "in hand permanently",
           "gains those Chips"
         }
-      },
+      }
+    },
+    
+    Tag = {
+      tag_edition = {
+        name = "Edition Tag",
+        text = {
+            "Next base edition shop",
+            "Joker is free and",
+            "becomes {C:dark_edition}Foil{}, {C:dark_edition}Holographic{},",
+            "{C:dark_edition}Polychrome{}, or {C:dark_edition}Negative"
+        }
+      }
     }
   },
   
   misc = {
     dictionary = {
       rainydays_beep = "Done!",
+      rainydays_cards = "Cards",
       rainydays_danger = "Danger increased!"
     }
   }

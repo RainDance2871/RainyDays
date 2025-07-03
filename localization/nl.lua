@@ -43,7 +43,7 @@ return {
       j_RainyDays_fabergeegg = {
         name = "Fabergé Ei",
         text = {          
-          "Gespeelde heren en vrouwen",
+          "Gespeelde {C:attention}plaatjes",
           "verhogen elk de {C:attention}verkoopwaarde",
           "van deze Joker met {C:money}$#1#{} bij",
           "het scoren,"
@@ -103,9 +103,20 @@ return {
         text = {
           "Wanneer gespeelde",
           "{C:attention}bonus{}- of {C:attention}multikaart",
-          "scoort, krijgt de kaart",
-          "rechts permanent de",
-          "{C:attention}helft{} zijn fiches en +Multi"
+          "scoort, krijgt scorende",
+          "kaart rechts permanent",
+          "{C:chips}+#1#{} fiches en {C:mult}+#2#{} Multi"
+        }
+      },
+
+      j_RainyDays_junkdrawer = {
+        name = "Rommellade",
+        text = {
+          "Kans van {C:green}#1# op #2#{} per",
+          "{C:attention}verversing in de winkel",
+          "om een gratis {C:dark_edition}folie{},",
+          "{C:dark_edition}holografische{}, {C:dark_edition}polychrome",
+          "of {C:dark_edition}negatieve tag{} te maken"
         }
       },
       
@@ -142,9 +153,10 @@ return {
       j_RainyDays_sediment = {
         name = "Sediment",
         text = {
-          "{X:mult,C:white}X#1#{} Multi als je",
-          "{C:attention}volledige kaartspel",
-          "{C:attention}#2#{} of meer kaarten bevat"
+          "{X:mult,C:white}X#1#{} Multi",
+          "Schud #2# {C:attention}willekeurige",
+          "kaarten het kaartspel",
+          "in als {C:attention}blind{} is geselecteerd"
         }
       },
       
@@ -166,14 +178,26 @@ return {
           "Geef deze aan willekeurige",
           "kaart in {C:attention}overgebleven{} hand"
         }
-      },
-      
+      }
+    },
+    
+    Tag = {
+      tag_edition = {
+        name = "Editie-tag",
+        text = {
+            "Volgende basiseditie-",
+            "winkeljoker is gratis en",
+            "wordt {C:dark_edition}folie{}, {C:dark_edition}holografisch{},",
+            "{C:dark_edition}polychroom{} of {C:dark_edition}negatief"
+        }
+      }
     }
   },
   
   misc = {
     dictionary = {
       rainydays_beep = "Klaar!",
+      rainydays_cards = "Kaarten",
       rainydays_danger = "Vergroot gevaar!"
     }
   }
