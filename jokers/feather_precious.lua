@@ -1,7 +1,7 @@
 SMODS.Joker {
   key = 'feather_precious',
   name = 'Precious Feather',
-  atlas = 'RainyDays',
+  atlas = 'Jokers',
   pools = { Feather = true },
   rarity = 1,
   cost = 4,
@@ -10,19 +10,24 @@ SMODS.Joker {
   blueprint_compat = false,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetRainyDaysAtlasTable('feather_precious'),
+  pos = GetJokersAtlasTable('feather_precious'),
   config = {
-    plus_money = 3
+    extra = {
+      plus_money = 3
+    }
   },
   
   loc_vars = function(self, info_queue, card)
     return {
-      vars = { card.ability.plus_money, card.ability.plus_money * GetFeatherCount() }
+      vars = { 
+        card.ability.extra.plus_money, 
+        card.ability.extra.plus_money * GetFeatherCount() 
+      }
     } 
   end,
   
   calc_dollar_bonus = function(self, card)
-		local bonus = card.ability.plus_money * GetFeatherCount()
+		local bonus = card.ability.extra.plus_money * GetFeatherCount()
 		if bonus > 0 then 
       return bonus 
     end

@@ -1,33 +1,54 @@
 SMODS.Joker {
   key = 'waste_not',
   name = 'Waste Not',
-  atlas = 'RainyDays',
+  atlas = 'Jokers',
   rarity = 2,
-  cost = 4,
+  cost = 6,
   unlocked = true, 
   discovered = true,
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetRainyDaysAtlasTable('waste_not'),
+  pos = GetJokersAtlasTable('waste_not'),
   config = {
-    minus_chips = 4
+    extra = {
+      minus_chips = 3,
+      count_cards_to_discard = 0,
+      chips_taken = 0
+    }
   },
   
   loc_vars = function(self, info_queue, card)
     return {
-      vars = { card.ability.minus_chips }
+      vars = { card.ability.extra.minus_chips }
     } 
   end,
   
   calculate = function(self, card, context)
-    if context.discard and not context.other_card.debuff then
-      --find the maximum amount of chips when can remove without cards scoring negative chips.
-      local amount_to_take = math.min(card.ability.minus_chips, context.other_card:get_chip_bonus())
+    if context.pre_discard then
+      card.ability.extra.count_cards_to_discard = #G.hand.highlighted --amount of cards to be discarded, count this down after each card eval.
+      card.ability.extra.chips_taken = 0
+    end
+    
+    if context.discard and #G.hand.cards > #G.hand.highlighted then
+      local mes = nil
+      local extra_mes = nil
       
-      if amount_to_take > 0 and #G.hand.cards > #G.hand.highlighted then --check if chips can be taken and if there are cards remaining in hand to give them to
-        --create the perma_bonus var in the card if it doesn't have it yet, then substract the amount of chips
-        
+      --taking
+      local amount_to_take = math.min(card.ability.extra.minus_chips, context.other_card:get_chip_bonus()) --find the maximum amount of chips when can remove
+      if amount_to_take > 0 and not context.other_card.debuff then --check if chips can be taken and if there are cards remaining in hand to give them to
+        context.other_card.ability.perma_bonus = (context.other_card.ability.perma_bonus or 0) - amount_to_take
+        card.ability.extra.chips_taken = card.ability.extra.chips_taken + amount_to_take
+        mes = {
+          card = context.other_card,
+          message = localize{ type = 'variable', key = 'a_chips_minus', vars = { amount_to_take }},
+          colour = G.C.CHIPS
+        }
+      end
+      
+      --giving
+      card.ability.extra.count_cards_to_discard = card.ability.extra.count_cards_to_discard - 1
+      if card.ability.extra.count_cards_to_discard == 0 then --all cards have been discarded
         --find all cards remaing in hand and pick one at random, then give the taken chips to it
         local remaining_cards = {}
         for i = 1, #G.hand.cards do
@@ -37,21 +58,22 @@ SMODS.Joker {
         end
         
         if #remaining_cards > 0 then
-          context.other_card.ability.perma_bonus = (context.other_card.ability.perma_bonus or 0) - amount_to_take
           local recieving_card = pseudorandom_element(remaining_cards, pseudoseed('WasteNot' .. G.GAME.round_scores.cards_discarded.amt))
-          recieving_card.ability.perma_bonus = (recieving_card.ability.perma_bonus or 0) + amount_to_take
-        
-          return {
-            card = context.other_card,
-            message = localize{ type = 'variable', key = 'a_chips_minus', vars = { amount_to_take }},
-            colour = G.C.CHIPS,
-            extra = {
-              card = recieving_card,
-              message = localize { type = 'variable', key = 'a_chips', vars = { amount_to_take }},
-              colour = G.C.CHIPS
-            }
+          recieving_card.ability.perma_bonus = (recieving_card.ability.perma_bonus or 0) + card.ability.extra.chips_taken
+          extra_mes = {
+            card = recieving_card,
+            message = localize('k_upgrade_ex'),
+            colour = G.C.CHIPS
           }
         end
+      end
+      
+      --message
+      if mes then
+        mes.extra = extra_mes
+        return mes
+      else
+        return extra_mes
       end
     end
   end

@@ -1,7 +1,7 @@
 SMODS.Joker {
   key = 'heirloom',
   name = 'Heirloom',
-  atlas = 'RainyDays',
+  atlas = 'Jokers',
   rarity = 2,
   cost = 5,
   unlocked = true, 
@@ -17,10 +17,12 @@ SMODS.Joker {
     end
     return false
   end,
-  pos = GetRainyDaysAtlasTable('heirloom'),  
+  pos = GetJokersAtlasTable('heirloom'),  
   config = {
-    chip_bonus = 15,
-    mult_bonus = 2
+    extra = {
+      chip_bonus = 12,
+      mult_bonus = 1
+    }
   },
   
   loc_vars = function(self, info_queue, card)
@@ -28,8 +30,8 @@ SMODS.Joker {
     info_queue[#info_queue + 1] = G.P_CENTERS.m_mult
     return {
       vars = { 
-        card.ability.chip_bonus,
-        card.ability.mult_bonus
+        card.ability.extra.chip_bonus,
+        card.ability.extra.mult_bonus
       }
     }
   end,
@@ -39,20 +41,20 @@ SMODS.Joker {
       if SMODS.has_enhancement(context.other_card, 'm_bonus') or SMODS.has_enhancement(context.other_card, 'm_mult') then
         if not context.other_card.debuff and check_card_in_hand(context.other_card, context.scoring_hand) then
           --find position of this card 
-          local card_position = nil
+          local card_pos = nil
           for i = 1, #context.scoring_hand do
             if context.scoring_hand[i] == context.other_card then
-              card_position = i
+              card_pos = i
               break
             end
           end
           
           --if the next card exists, we increase its chip and mult amount.
-          if card_position and context.scoring_hand[card_position + 1] then
-            context.scoring_hand[card_position + 1].ability.perma_bonus = (context.scoring_hand[card_position + 1].ability.perma_bonus or 0) + card.ability.chip_bonus
-            context.scoring_hand[card_position + 1].ability.perma_mult = (context.scoring_hand[card_position + 1].ability.perma_mult or 0) + card.ability.mult_bonus
+          if card_pos and context.scoring_hand[card_pos + 1] then
+            context.scoring_hand[card_pos + 1].ability.perma_bonus = (context.scoring_hand[card_pos + 1].ability.perma_bonus or 0) + card.ability.extra.chip_bonus
+            context.scoring_hand[card_pos + 1].ability.perma_mult = (context.scoring_hand[card_pos + 1].ability.perma_mult or 0) + card.ability.extra.mult_bonus
             return {
-              message_card = context.scoring_hand[card_position + 1],
+              message_card = context.scoring_hand[card_pos + 1],
               message = localize('k_upgrade_ex'),
               colour = G.C.MULT
             }

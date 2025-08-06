@@ -1,33 +1,35 @@
 SMODS.Joker {
   key = 'cleanslate',
   name = 'Clean Slate',
-  atlas = 'RainyDays',
+  atlas = 'Jokers',
   rarity = 1,
-  cost = 4,
+  cost = 6,
   unlocked = true, 
   discovered = true,
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetRainyDaysAtlasTable('cleanslate'),
+  pos = GetJokersAtlasTable('cleanslate'),
   config = {
-    plus_mult = 15
+    extra = {
+      plus_mult = 15
+    }
   },
   
   loc_vars = function(self, info_queue, card)
     return {
-      vars = { card.ability.plus_mult }
+      vars = { card.ability.extra.plus_mult }
     } 
   end,
   
   calculate = function(self, card, context)
     if context.cardarea == G.jokers and context.joker_main then
       return {
-        mult_mod =  card.ability.plus_mult,
+        mult_mod =  card.ability.extra.plus_mult,
         message = localize {
           type = 'variable',
           key = 'a_mult',
-          vars = { card.ability.plus_mult }
+          vars = { card.ability.extra.plus_mult }
         },
         colour = G.C.MULT,
       }
@@ -55,7 +57,7 @@ function G.FUNCS.discard_cards_from_highlighted(e, hook)
   end
 end
 
---override function that changes button behaviour - now active when no cards selected if you have tantrum
+--override function that changes button behaviour - now active when no cards selected if you have cleanslate
 local old_func_can_discard = G.FUNCS.can_discard
 function G.FUNCS.can_discard(e)
   if next(SMODS.find_card('j_RainyDays_cleanslate')) and G.GAME.current_round.discards_left > 0 then

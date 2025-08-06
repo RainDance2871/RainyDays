@@ -1,7 +1,7 @@
 SMODS.Joker {
   key = 'feather_vibrant',
   name = 'Vibrant Feather',
-  atlas = 'RainyDays',
+  atlas = 'Jokers',
   pools = { Feather = true },
   rarity = 1,
   cost = 4,
@@ -10,14 +10,19 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetRainyDaysAtlasTable('feather_vibrant'),
+  pos = GetJokersAtlasTable('feather_vibrant'),
   config = {
-    plus_chips = 60
+    extra = {
+      plus_chips = 60
+    }
   },
   
   loc_vars = function(self, info_queue, card)
     return {
-      vars = { card.ability.plus_chips, card.ability.plus_chips * GetFeatherCount() }
+      vars = { 
+        card.ability.extra.plus_chips, 
+        card.ability.extra.plus_chips * GetFeatherCount() 
+      }
     } 
   end,
   
@@ -25,11 +30,11 @@ SMODS.Joker {
     if context.cardarea == G.jokers and context.joker_main then
       local feather_count = GetFeatherCount()
       return {
-        chip_mod = feather_count * card.ability.plus_chips,
+        chip_mod = feather_count * card.ability.extra.plus_chips,
         message = localize {
           type = 'variable',
           key = 'a_chips',
-          vars = { feather_count * card.ability.plus_chips }
+          vars = { feather_count * card.ability.extra.plus_chips }
         },
         colour = G.C.CHIPS,
       }

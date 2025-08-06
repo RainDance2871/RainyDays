@@ -1,7 +1,7 @@
 SMODS.Joker {
   key = 'bankaccount',
   name = 'Bank Account',
-  atlas = 'RainyDays',
+  atlas = 'Jokers',
   rarity = 1,
   cost = 4,
   unlocked = true, 
@@ -9,26 +9,28 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetRainyDaysAtlasTable('bankaccount'),
+  pos = GetJokersAtlasTable('bankaccount'),
   config = {
-    plus_chips = 100,
-    interest_saved = 0
+    extra = {
+      plus_chips = 100,
+      interest_saved = 0
+    }
   },
   
   loc_vars = function(self, info_queue, card)
     return {
-      vars = { card.ability.plus_chips }
+      vars = { card.ability.extra.plus_chips }
     } 
   end,
   
   calculate = function(self, card, context)
-    if context.cardarea == G.jokers and context.joker_main then
+    if context.joker_main then
       return {
-        chip_mod = card.ability.plus_chips,
+        chip_mod = card.ability.extra.plus_chips,
         message = localize {
           type = 'variable',
           key = 'a_chips',
-          vars = { card.ability.plus_chips }
+          vars = { card.ability.extra.plus_chips }
         },
         colour = G.C.CHIPS,
       }
@@ -40,16 +42,16 @@ SMODS.Joker {
       if context.RD_before_payout and not G.GAME.current_round.RD_skip_interest then
         G.GAME.current_round.RD_skip_interest = true;
         if not G.GAME.modifiers.no_interest then -- if interest would normally be earned, increase this joker's sell value
-          card.ability.interest_saved = G.GAME.interest_amount * math.floor(math.min(G.GAME.dollars / 5, G.GAME.interest_cap / 5))
+          card.ability.extra.interest_saved = G.GAME.interest_amount * math.floor(math.min(G.GAME.dollars / 5, G.GAME.interest_cap / 5))
         end
       end
       
       --increase this joker's value after the whole payout screen has appeared.
-      if context.RD_after_payout and card.ability.interest_saved > 0 then
+      if context.RD_after_payout and card.ability.extra.interest_saved > 0 then
         G.E_MANAGER:add_event(Event({ --we do need this event, otherwise the piggybank-value will go up before the payout is drawn.
           func = function()
-            card.ability.extra_value = (card.ability.extra_value or 0) + card.ability.interest_saved
-            card.ability.interest_saved = 0
+            card.ability.extra_value = (card.ability.extra_value or 0) + card.ability.extra.interest_saved
+            card.ability.extra.interest_saved = 0
             card:set_cost()
             return true
           end

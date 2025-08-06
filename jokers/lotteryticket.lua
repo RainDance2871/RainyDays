@@ -1,17 +1,23 @@
 SMODS.Joker {
   key = 'lotteryticket',
   name = 'Lottery Ticket',
-  atlas = 'RainyDays',
+  atlas = 'Jokers',
   rarity = 1,
-  cost = 4,
+  cost = 5,
   unlocked = true, 
   discovered = true,
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetRainyDaysAtlasTable('lotteryticket'),
+  pos = GetJokersAtlasTable('lotteryticket'),
   config = {
-    reward_money = 10
+    lottery_string = "",
+    extra = {
+      reward_money_start = 1,
+      reward_money = 1,
+      payout_increase = 1,
+      ranks_played = {}
+    }
   },
   
   loc_vars = function(self, info_queue, card)
@@ -22,68 +28,56 @@ SMODS.Joker {
         localize(G.GAME.current_round.RD_lotteryticket[3], 'ranks'),
         localize(G.GAME.current_round.RD_lotteryticket[4], 'ranks'),
         localize(G.GAME.current_round.RD_lotteryticket[5], 'ranks'),
-        card.ability.reward_money,
-        (G.GAME.current_round.RD_lotteryticket[1] == "Ace" or G.GAME.current_round.RD_lotteryticket[1] == "8") and "an" or "a"
+        card.ability.extra.reward_money,
+        card.ability.extra.payout_increase
       }
     }
   end,
   
+  update = function(self, card, dt)
+    if card.ability then
+      card.ability.lottery_string = generate_lottery_string(card)
+    end
+  end,
+  
   calculate = function(self, card, context)
-    if context.cardarea == G.jokers and context.before and #context.scoring_hand >= 5 then
-      if lottery_check(context.scoring_hand) then --for each rank in our lottery, check if there is a card to match it.
-        ease_dollars(card.ability.reward_money)
+    --clear on round start
+    if context.first_hand_drawn then
+      card.ability.extra.ranks_played = {}
+    end
+    
+    --check if rank is special and has been played yet.
+    if context.individual and context.cardarea == G.play and not context.other_card.debuff and not SMODS.has_no_rank(context.other_card) then
+      if list_contains(G.GAME.current_round.RD_lotteryticket, context.other_card.base.value) then
+        if not list_contains(card.ability.extra.ranks_played, context.other_card.base.value) then
+          card.ability.extra.ranks_played[#card.ability.extra.ranks_played + 1] = context.other_card.base.value
+          return {
+            func = function()
+              ease_dollars(card.ability.extra.reward_money)
+              card.ability.extra.reward_money = card.ability.extra.reward_money + card.ability.extra.payout_increase
+            end,
+            message = localize('$') .. card.ability.extra.reward_money,
+            colour = G.C.MONEY
+          }
+        end
+      end
+    end
+    
+    if context.end_of_round and context.game_over == false and context.main_eval and not context.blueprint then
+      if card.ability.extra.reward_money > card.ability.extra.reward_money_start then
+        card.ability.extra.reward_money = card.ability.extra.reward_money_start
+        card.ability.extra.ranks_played = {}
         return {
-          message = localize('$')..card.ability.reward_money,
-          colour = G.C.MONEY
+          message = localize('k_reset'),
+          colour = G.C.RED
         }
       end
     end
   end
 }
 
---overrides existing get straight function
-local old_func_get_straight = get_straight
-function get_straight(hand, min_length, skip, wrap) 
-  --check results of old function first.
-  local ret = old_func_get_straight(hand, min_length, skip, wrap)
-  
-  if #hand < 5 or not next(SMODS.find_card('j_RainyDays_lotteryticket')) then --lottery straight is impossible.
-    return ret
-  end
-  
-  for i = 1, #ret do
-    if #ret[i] >= 5 then --if there is already a hand using all five cards, we can just return it now.
-      return ret
-    end
-  end
-  
-  if not lottery_check(hand) then --check if we have all five lottery ranks in hand. we also call this function when checking our scoring hand.
-    return ret
-  end
-  
-  --we made it! We just need to let the game know which cards to score. We make a table containing all five cards and add it.
-  local straight = {}
-  for i = 1, #hand do
-    straight[#straight + 1] = hand[i]
-  end
-  
-  ret[#ret + 1] = straight
-  table.sort(ret, function(a,b) return #a > #b end) --lets put our five card sequence at the top of the table.
-  return ret
-end
-
---for each rank in our lottery, check if there is a card to match it.
-function lottery_check(hand)
-  for i = 1, #G.GAME.current_round.RD_lotteryticket do 
-    if not check_hand_for_match(hand, G.GAME.current_round.RD_lotteryticket[i]) then --see function.lua
-      return false --a rank is missing. Abort.
-    end
-  end
-  return true
-end
-
 --this function updates the listed ranks every round.
-function reset_game_globals_lotteryticket(run_start)  
+function reset_game_globals_lotteryticket()  
   --add ranks from cards in deck to pool for picking, ranks can be added multiple times, so more common ranks get chosen more often
   local ranks_in_deck = {}
   for i = 1, #G.playing_cards do
@@ -125,23 +119,33 @@ function reset_game_globals_lotteryticket(run_start)
     end
   end
   picked_ranks = nil
-  
-  G.GAME.current_round.RD_lotteryticket_string = ""
-  for i = 1, #G.GAME.current_round.RD_lotteryticket do
-    local sub = string.sub(G.GAME.current_round.RD_lotteryticket[i], 1, 1)
-    if sub ~= "1" then
-      G.GAME.current_round.RD_lotteryticket_string = G.GAME.current_round.RD_lotteryticket_string .. sub
-    else
-      G.GAME.current_round.RD_lotteryticket_string = G.GAME.current_round.RD_lotteryticket_string .. "10"
-    end
-    
-    if i ~= #G.GAME.current_round.RD_lotteryticket then
-      G.GAME.current_round.RD_lotteryticket_string = G.GAME.current_round.RD_lotteryticket_string  .. " "
-    end
-  end
 end
 
---here we draw or lottery ticket ranks onto our card. It's far from perfect, but it's the best I can manage. 
+function generate_lottery_string(card)
+  local string = ""
+  for i = 1, #G.GAME.current_round.RD_lotteryticket do
+    if not list_contains(card.ability.extra.ranks_played, G.GAME.current_round.RD_lotteryticket[i]) then
+      local sub = string.sub(G.GAME.current_round.RD_lotteryticket[i], 1, 1)
+      if sub ~= "1" then
+        string = string .. sub
+      else
+        string = string .. "10"
+      end
+      
+      if i ~= #G.GAME.current_round.RD_lotteryticket then
+        string = string  .. " "
+      end
+    end
+  end
+  
+  if string == "" then
+    string = localize('rainydays_full_clear')
+  end
+  
+  return string
+end
+
+--here we draw our lottery ticket ranks onto our card. It's far from perfect, but it's the best I can manage. 
 --issues: text hovers over editions, text wobbles a bit, text moves as you move the joker around the screen (sometimes outside the box).
 --if you have any how to solve one or more of these issues, your help is most welcome on either github or discord.
 SMODS.DrawStep {
@@ -149,15 +153,15 @@ SMODS.DrawStep {
   order = 21,
   conditions = { vortex = false, facing = 'front' },
   func = function(self, layer)
-    if self.ability.name == 'Lottery Ticket' and self.children.center then
+    if self.ability and self.ability.lottery_string and self.children.center then
       --drawing the string
       prep_draw(self.children.center, 0.015)
       if self.edition and self.edition.negative then
-        love.graphics.setColor(1 - 0.047059, 1 - 0.039216, 1 - 0.258824, 1) --not the right color, but it looks cool
+        love.graphics.setColor(1 - 79 / 255, 1 - 99 / 255, 1 - 103 / 255, 1) --not the right color, but it looks cool
       else
-        love.graphics.setColor(0.047059, 0.039216, 0.258824, 1)
+        love.graphics.setColor(79 / 255, 99 / 255, 103 / 255, 1)
       end
-      love.graphics.print(G.GAME.current_round.RD_lotteryticket_string, -40, -10, 0)
+      love.graphics.print(self.ability.lottery_string, -40, -10, 0)
       love.graphics.pop()
     end
   end

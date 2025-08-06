@@ -1,7 +1,7 @@
 SMODS.Joker {
   key = 'kintsugi',
   name = 'Kintsugi',
-  atlas = 'RainyDays',
+  atlas = 'Jokers',
   rarity = 2,
   cost = 5,
   unlocked = true, 
@@ -24,15 +24,14 @@ SMODS.Joker {
     end
   end,
     
-  pos = GetRainyDaysAtlasTable('kintsugi'),
-  soul_pos = GetRainyDaysAtlasTable('kintsugi_vase'),
+  pos = GetJokersAtlasTable('kintsugi'),
+  soul_pos = GetJokersAtlasTable('kintsugi_vase'),
   
   loc_vars = function(self, info_queue, card)
     info_queue[#info_queue + 1] = G.P_CENTERS.m_glass
     info_queue[#info_queue + 1] = {key = 'gold_seal', set = 'Other'}
   end,
 
-  --very similar to horoscope, see comments there.
   calculate = function(self, card, context)
     if context.remove_playing_cards then
       --create the cards and apply the gold seals.
@@ -65,7 +64,7 @@ SMODS.Joker {
               delay = 1,
               func = function()
                 for i = 1, #copies do
-                  copies[i]:add_to_deck()
+                  copies[i]:add_to_deck() --handles achievements
                   draw_card(G.play, G.deck, 90, 'up', nil, copies[i]) --draw from play into the deck.
                 end
                 G.deck:shuffle('kintsugi'..G.GAME.round_resets.ante) --shuffle the deck

@@ -1,11 +1,11 @@
 SMODS.Atlas {
-    key = 'RainyDays',
-    path = 'RainyDays.png',
-    px = 71, --width of one card
-    py = 95 -- height of one card
+  key = 'Jokers',
+  path = 'Jokers.png',
+  px = 71,
+  py = 95 
 }
 
-local RainyDaysAtlasKeys = {
+local JokerAtlasKeys = {
   'burdenofgreatness',
   'cloverfield',
   'flipflop_even',
@@ -27,16 +27,85 @@ local RainyDaysAtlasKeys = {
   'flipflop_odd',
   'kintsugi_vase',
   'fabergeegg',
-  'junkdrawer'
+  'sextant',
+  'hannysvoorwerp',
+  
+  'sputnik',
+  'breakfast_cereal',
+  'atom',
+  'lady_of_the_lake',
+  'kudzu'
 }
 
-local RainyDaysAtlasTable = {}
-for i, key in ipairs(RainyDaysAtlasKeys) do
-    RainyDaysAtlasTable[key] = i - 1
+local JokerAtlasTable = {}
+for i, key in ipairs(JokerAtlasKeys) do
+  JokerAtlasTable[key] = i - 1
 end
-RainyDaysAtlasKeys = nil
+JokerAtlasKeys = nil
 
-function GetRainyDaysAtlasTable(key)
-  local pos = RainyDaysAtlasTable[key]
+function GetJokersAtlasTable(key)
+  local pos = JokerAtlasTable[key]
   return { x = pos % 5, y = math.floor(pos / 5) }
 end
+
+SMODS.Atlas {
+  key = 'Constellations',
+  path = 'Constellations.png',
+  px = 65,
+  py = 95
+}
+
+local ConstellationAtlasKeys = {
+  'aries',
+  'taurus',
+  'gemini',
+  'cancer',
+  'leo',
+  'virgo',
+  
+  'libra',
+  'scorpio',
+  'sagittarius',
+  'capricorn',
+  'aquarius',
+  'pisces',
+  
+  'pegasus',
+  'cetus',
+  'ophiuchus',
+  'orion',
+  'vulpecula',
+  'chamaeleon'
+}
+
+local ConstellationAtlasTable = {}
+for i, key in ipairs(ConstellationAtlasKeys) do
+  ConstellationAtlasTable[key] = i - 1
+end
+ConstellationAtlasKeys = nil
+
+function GetConstellationAtlasTable(key)
+  local pos = ConstellationAtlasTable[key]
+  return { x = pos % 6, y = math.floor(pos / 6) }
+end
+
+SMODS.Atlas {
+  key = 'Seals',
+  path = 'Seals.png',
+  px = 71,
+  py = 95
+}
+
+SMODS.Atlas {
+  key = 'Spectrals',
+  path = 'Spectrals.png',
+  px = 71,
+  py = 95 
+}
+
+SMODS.Atlas {
+  key = 'Tags',
+  path = 'Tags.png',
+  px = 34,
+  py = 34
+}

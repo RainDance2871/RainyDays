@@ -1,7 +1,7 @@
 SMODS.Joker {
   key = 'truffle',
   name = 'Truffle',
-  atlas = 'RainyDays',
+  atlas = 'Jokers',
   pools = { Food = true },
   rarity = 3,
   cost = 7,
@@ -10,19 +10,18 @@ SMODS.Joker {
   blueprint_compat = false,
   eternal_compat = false,
   perishable_compat = true,
-  pos = GetRainyDaysAtlasTable('truffle'),
+  pos = GetJokersAtlasTable('truffle'),
   config = {
-    amount = 5,
-    amount_total = 5
+    extra = {
+      amount = 4
+    }
   },
   
   loc_vars = function(self, info_queue, card)
     info_queue[#info_queue + 1] = G.P_CENTERS.e_foil
-    info_queue[#info_queue + 1] = G.P_CENTERS.e_holo
-    info_queue[#info_queue + 1] = G.P_CENTERS.e_polychrome
     return {
       vars = { 
-        card.ability.amount
+        card.ability.extra.amount
       }
     } 
   end,
@@ -31,10 +30,9 @@ SMODS.Joker {
     if context.before and context.cardarea == G.jokers and not context.blueprint then
       for i = 1, #context.scoring_hand do
         local scoring_card = context.scoring_hand[i]
-        if scoring_card:is_face() and card.ability.amount > 0 and not scoring_card.edition then
-          card.ability.amount = card.ability.amount - 1
-          local edition = poll_edition('truffle', nil, true, true)
-          scoring_card:set_edition(edition, true, true)
+        if scoring_card:is_face() and card.ability.extra.amount > 0 and not scoring_card.edition then
+          card.ability.extra.amount = card.ability.extra.amount - 1
+          scoring_card:set_edition('e_foil', true, true)
           scoring_card.delay_edition = true
           G.E_MANAGER:add_event(Event({
             trigger = 'after', 
@@ -42,9 +40,7 @@ SMODS.Joker {
             func = function()
               scoring_card.delay_edition = nil
               scoring_card:juice_up()
-              if scoring_card.edition.foil then play_sound('foil1', 1.2, 0.4) end
-              if scoring_card.edition.holo then play_sound('holo1', 1.2*1.58, 0.4) end
-              if scoring_card.edition.polychrome then play_sound('polychrome1', 1.2, 0.7) end
+              play_sound('foil1', 1.2, 0.4)
               return true 
             end 
           }))
@@ -52,7 +48,7 @@ SMODS.Joker {
         end
       end
       
-      if card.ability.amount <= 0 then
+      if card.ability.extra.amount <= 0 then
         G.E_MANAGER:add_event(Event({func = function()
           play_sound('tarot1')
           card.T.r = -0.2
