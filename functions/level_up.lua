@@ -134,11 +134,11 @@ function level_up_table(card, table_hands, description, instant, level_up, chip_
     end
     
     --prevent negative scores
-    if hand.chips < 0 then
+    if to_big(hand.chips) < to_big(0) then
       hand.chips_bonus = hand.chips_bonus - hand.chips
       hand.chips = 0
     end
-    if hand.mult < 1 then
+    if to_big(hand.mult) < to_big(1) then
       hand.mult_bonus = hand.mult_bonus - hand.mult + 1
       hand.mult = 1
     end
