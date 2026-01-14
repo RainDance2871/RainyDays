@@ -1,0 +1,93 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+
+
+#game info money bar
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+match_indent = true
+pattern = '''{n=G.UIT.C, config={align = "cm"}, nodes={
+          {n=G.UIT.T, config={text = '  #', scale = 0.45, colour = G.C.UI.TEXT_LIGHT, shadow = true}}
+        }},'''
+position = "before"
+payload = '''      
+G.GAME.money_bonus_given and ({n=G.UIT.C, config={align = "cm", padding = 0.05, colour = G.C.L_BLACK, r = 0.1, minw = 0.9}, nodes={
+  {n=G.UIT.T, config={text = (G.GAME.hands[handname].money and G.GAME.hands[handname].money < 0) and  ('-' .. localize('$') .. math.abs(G.GAME.hands[handname].money)) or (localize('$') .. (G.GAME.hands[handname].money or 0)), scale = 0.45, colour = G.C.MONEY, shadow = true}},
+}}) or nil,'''
+
+
+
+#when downgrading the amount of chips or mult, when presenting a string value, squares blink red instead of green like normal, this solves this issue
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+match_indent = true
+pattern = '''if type(vals[name]) == 'string' then delta = vals[name] end'''
+position = "after"
+payload = '''if type(delta) == 'string' and string.sub(delta, 1, 1) == '-' then col = G.C.RED end'''
+
+
+
+#discard into deck
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+match_indent = true
+pattern = '''draw_card(G.hand, G.discard, i*100/highlighted_count, 'down', false, G.hand.highlighted[i])'''
+position = 'at'
+payload = '''if G.hand.highlighted[i].discard_into_deck then
+    G.hand.highlighted[i].discard_into_deck = nil
+    draw_card(G.hand, G.deck, i*100/highlighted_count, 'down', false, G.hand.highlighted[i])
+    G.deck:shuffle()
+else
+    draw_card(G.hand, G.discard, i*100/highlighted_count, 'down', false, G.hand.highlighted[i])
+end'''
+
+
+
+#retrigger joker react
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/utils.lua"]'''
+match_indent = true
+pattern = '''context.individual = true'''
+position = 'after'
+payload = '''context.is_repetition = (reps[j] ~= 1)'''
+
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/utils.lua"]'''
+match_indent = true
+pattern = '''context.individual = nil'''
+position = 'after'
+payload = '''context.is_repetition = nil'''
+
+
+
+#draw soul with edition 
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+match_indent = true
+pattern = '''if edition.apply_to_float and self.children.floating_sprite then'''
+position = 'at'
+payload = '''local apply_edition = edition.apply_to_float
+if (self.config.center.soul_pos.draw_edition ~= nil) then
+    apply_edition = self.config.center.soul_draw_edition
+end
+if apply_edition and self.children.floating_sprite then'''
+
+
+
+#dont draw soul if soul draw early is set active
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+match_indent = true
+pattern = '''if self.config.center.soul_pos and (self.config.center.discovered or self.bypass_discovery_center) then'''
+position = 'after'
+payload = '''if self.config.center.soul_draw_as_highlight then return end'''
