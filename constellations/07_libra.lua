@@ -1,6 +1,5 @@
 SMODS.Consumable {
   key = 'libra',
-  name = 'Libra',
   set = 'Constellation',
   atlas = "Constellations",
   pos = GetConstellationAtlasTable('libra'),
@@ -23,7 +22,7 @@ SMODS.Consumable {
   use = function(self, card, area, copier)
     --find random hand
     local hands = {}
-    for key, value in ipairs(G.handlist) do
+    for _, value in ipairs(G.handlist) do
       if SMODS.is_poker_hand_visible(value) then
         hands[#hands + 1] = value
       end

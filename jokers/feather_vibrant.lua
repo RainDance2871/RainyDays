@@ -1,6 +1,5 @@
 SMODS.Joker {
   key = 'feather_vibrant',
-  name = 'Vibrant Feather',
   atlas = 'Jokers',
   pools = { Feather = true },
   rarity = 1,
@@ -13,7 +12,7 @@ SMODS.Joker {
   pos = GetJokersAtlasTable('feather_vibrant'),
   config = {
     extra = {
-      plus_chips = 60
+      plus_chips = 40
     }
   },
   
@@ -30,13 +29,7 @@ SMODS.Joker {
     if context.cardarea == G.jokers and context.joker_main then
       local feather_count = GetFeatherCount()
       return {
-        chip_mod = feather_count * card.ability.extra.plus_chips,
-        message = localize {
-          type = 'variable',
-          key = 'a_chips',
-          vars = { feather_count * card.ability.extra.plus_chips }
-        },
-        colour = G.C.CHIPS,
+        chips = feather_count * card.ability.extra.plus_chips
       }
     end
   end

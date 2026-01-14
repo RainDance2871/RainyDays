@@ -1,6 +1,5 @@
 SMODS.Joker {
   key = 'feather_silky',
-  name = 'Silky Feather',
   atlas = 'Jokers',
   pools = { Feather = true },
   rarity = 1,
@@ -13,7 +12,7 @@ SMODS.Joker {
   pos = GetJokersAtlasTable('feather_silky'),
   config = {
     extra = {
-      plus_mult = 8
+      plus_mult = 7
     }
   },
   
@@ -30,13 +29,7 @@ SMODS.Joker {
     if context.cardarea == G.jokers and context.joker_main then
       local feather_count = GetFeatherCount()
       return {
-        mult_mod = feather_count * card.ability.extra.plus_mult,
-        message = localize {
-          type = 'variable',
-          key = 'a_mult',
-          vars = { feather_count * card.ability.extra.plus_mult }
-        },
-        colour = G.C.MULT,
+        mult = feather_count * card.ability.extra.plus_mult
       }
     end
   end

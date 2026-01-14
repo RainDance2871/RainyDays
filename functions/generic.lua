@@ -27,10 +27,12 @@ function check_card_in_hand(card, hand)
 end
 
 --check if given table contain given value
-function list_contains(list, value)
-  for i = 1, #list do
-    if list[i] == value then
-      return true
+function list_contains(list, entry)
+  if list then
+    for _, value in pairs(list) do
+      if entry == value then
+        return true
+      end
     end
   end
   return false

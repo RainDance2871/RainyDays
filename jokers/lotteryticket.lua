@@ -1,9 +1,8 @@
 SMODS.Joker {
   key = 'lotteryticket',
-  name = 'Lottery Ticket',
   atlas = 'Jokers',
   rarity = 1,
-  cost = 5,
+  cost = 4,
   unlocked = true, 
   discovered = true,
   blueprint_compat = true,
@@ -11,11 +10,8 @@ SMODS.Joker {
   perishable_compat = true,
   pos = GetJokersAtlasTable('lotteryticket'),
   config = {
-    lottery_string = "",
     extra = {
-      reward_money_start = 1,
-      reward_money = 1,
-      payout_increase = 1,
+      reward_money = 3,
       ranks_played = {}
     }
   },
@@ -23,39 +19,68 @@ SMODS.Joker {
   loc_vars = function(self, info_queue, card)
     return {
       vars = {
+        colours = {
+          not list_contains(card.ability.extra.ranks_played, G.GAME.current_round.RD_lotteryticket[1]) and G.C.FILTER or G.C.UI.TEXT_INACTIVE,
+          not list_contains(card.ability.extra.ranks_played, G.GAME.current_round.RD_lotteryticket[2]) and G.C.FILTER or G.C.UI.TEXT_INACTIVE,
+          not list_contains(card.ability.extra.ranks_played, G.GAME.current_round.RD_lotteryticket[3]) and G.C.FILTER or G.C.UI.TEXT_INACTIVE,
+          not list_contains(card.ability.extra.ranks_played, G.GAME.current_round.RD_lotteryticket[4]) and G.C.FILTER or G.C.UI.TEXT_INACTIVE,
+          not list_contains(card.ability.extra.ranks_played, G.GAME.current_round.RD_lotteryticket[5]) and G.C.FILTER or G.C.UI.TEXT_INACTIVE
+        },
         localize(G.GAME.current_round.RD_lotteryticket[1], 'ranks'),
         localize(G.GAME.current_round.RD_lotteryticket[2], 'ranks'),
         localize(G.GAME.current_round.RD_lotteryticket[3], 'ranks'),
         localize(G.GAME.current_round.RD_lotteryticket[4], 'ranks'),
         localize(G.GAME.current_round.RD_lotteryticket[5], 'ranks'),
-        card.ability.extra.reward_money,
-        card.ability.extra.payout_increase
+        card.ability.extra.reward_money
       }
     }
   end,
   
-  update = function(self, card, dt)
+  set_ability = function(self, card, initial, delay_sprites)
+    generate_lottery_string(card)
+    generate_lottery_string_sprite(card)
+  end,
+  
+  
+  set_sprites = function(self, card, front)
     if card.ability then
-      card.ability.lottery_string = generate_lottery_string(card)
+      generate_lottery_string(card)
+      generate_lottery_string_sprite(card, true)
     end
   end,
   
   calculate = function(self, card, context)
-    --clear on round start
-    if context.first_hand_drawn then
-      card.ability.extra.ranks_played = {}
+    if not context.blueprint then
+      if context.first_hand_drawn then
+        card.ability.extra.ranks_played = {}
+      end
+      
+      if context.after then
+        G.E_MANAGER:add_event(Event({
+          func = function()
+            generate_lottery_string(card)
+            generate_lottery_string_sprite(card)
+            return true
+          end
+        }))
+        card.ability.card_to_reward = nil
+      end
     end
-    
+      
     --check if rank is special and has been played yet.
     if context.individual and context.cardarea == G.play and not context.other_card.debuff and not SMODS.has_no_rank(context.other_card) then
-      if list_contains(G.GAME.current_round.RD_lotteryticket, context.other_card.base.value) then
+      if not context.is_repetition and list_contains(G.GAME.current_round.RD_lotteryticket, context.other_card.base.value) then
         if not list_contains(card.ability.extra.ranks_played, context.other_card.base.value) then
+          card.ability.card_to_reward = context.other_card
           card.ability.extra.ranks_played[#card.ability.extra.ranks_played + 1] = context.other_card.base.value
+        end
+        
+        if card.ability.card_to_reward == context.other_card then
           return {
             func = function()
               ease_dollars(card.ability.extra.reward_money)
-              card.ability.extra.reward_money = card.ability.extra.reward_money + card.ability.extra.payout_increase
             end,
+            message_card = context.blueprint_card or card,
             message = localize('$') .. card.ability.extra.reward_money,
             colour = G.C.MONEY
           }
@@ -63,16 +88,6 @@ SMODS.Joker {
       end
     end
     
-    if context.end_of_round and context.game_over == false and context.main_eval and not context.blueprint then
-      if card.ability.extra.reward_money > card.ability.extra.reward_money_start then
-        card.ability.extra.reward_money = card.ability.extra.reward_money_start
-        card.ability.extra.ranks_played = {}
-        return {
-          message = localize('k_reset'),
-          colour = G.C.RED
-        }
-      end
-    end
   end
 }
 
@@ -99,6 +114,7 @@ function reset_game_globals_lotteryticket()
       remove_by_value(unchosen_ranks, picked_ranks[i])
     end
   end
+  ranks_in_deck = nil
   unchosen_ranks = nil
   
   --order the ranks chosen from ace to 2
@@ -114,11 +130,18 @@ function reset_game_globals_lotteryticket()
       G.GAME.current_round.RD_lotteryticket[i] = 'Queen'
     elseif picked_ranks[i] == 13 then
       G.GAME.current_round.RD_lotteryticket[i] = 'King'
-    elseif picked_ranks[i] == 14 then --do you miss switch statements yet?
+    elseif picked_ranks[i] == 14 then
       G.GAME.current_round.RD_lotteryticket[i] = 'Ace'
     end
   end
   picked_ranks = nil
+  
+  local table = SMODS.find_card('j_RainyDays_lotteryticket', true)
+  for i = 1, #table do
+    table[i].ability.extra.ranks_played = {}
+    generate_lottery_string(table[i])
+    generate_lottery_string_sprite(table[i])
+  end
 end
 
 function generate_lottery_string(card)
@@ -126,15 +149,7 @@ function generate_lottery_string(card)
   for i = 1, #G.GAME.current_round.RD_lotteryticket do
     if not list_contains(card.ability.extra.ranks_played, G.GAME.current_round.RD_lotteryticket[i]) then
       local sub = string.sub(G.GAME.current_round.RD_lotteryticket[i], 1, 1)
-      if sub ~= "1" then
-        string = string .. sub
-      else
-        string = string .. "10"
-      end
-      
-      if i ~= #G.GAME.current_round.RD_lotteryticket then
-        string = string  .. " "
-      end
+      string = string .. (sub ~= "1" and sub or "10") .. (i < #G.GAME.current_round.RD_lotteryticket and " " or "")
     end
   end
   
@@ -142,27 +157,22 @@ function generate_lottery_string(card)
     string = localize('rainydays_full_clear')
   end
   
-  return string
+  card.ability.lottery_string = string
 end
 
---here we draw our lottery ticket ranks onto our card. It's far from perfect, but it's the best I can manage. 
---issues: text hovers over editions, text wobbles a bit, text moves as you move the joker around the screen (sometimes outside the box).
---if you have any how to solve one or more of these issues, your help is most welcome on either github or discord.
-SMODS.DrawStep {
-  key = 'lotteryticket_text',
-  order = 21,
-  conditions = { vortex = false, facing = 'front' },
-  func = function(self, layer)
-    if self.ability and self.ability.lottery_string and self.children.center then
-      --drawing the string
-      prep_draw(self.children.center, 0.015)
-      if self.edition and self.edition.negative then
-        love.graphics.setColor(1 - 79 / 255, 1 - 99 / 255, 1 - 103 / 255, 1) --not the right color, but it looks cool
-      else
-        love.graphics.setColor(79 / 255, 99 / 255, 103 / 255, 1)
-      end
-      love.graphics.print(self.ability.lottery_string, -40, -10, 0)
-      love.graphics.pop()
-    end
+function generate_lottery_string_sprite(card, force)
+  if not card.ability.canvas_sprite or force then
+    card.ability.canvas_sprite = CanvasSprite(card.children.center.T.x, card.children.center.T.y, card.children.center.T.w, card.children.center.T.h)
   end
-}
+  
+  love.graphics.push()
+  love.graphics.origin()
+  local old = love.graphics.getCanvas()
+  love.graphics.setCanvas(card.ability.canvas_sprite.canvas)
+  love.graphics.clear()
+  love.graphics.setFont(RainyDays_lottery_font)
+  love.graphics.setColor(0.309803921569, 0.388235294118, 0.403921568627, 1)
+  love.graphics.print(card.ability.lottery_string, 11, 41, 0)
+  love.graphics.setCanvas(old)
+  love.graphics.pop()
+end

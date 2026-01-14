@@ -1,6 +1,5 @@
 SMODS.Joker {
   key = 'cloverfield',
-  name = 'Clover Field',
   atlas = 'Jokers',
   rarity = 1,
   cost = 6,
@@ -42,7 +41,7 @@ SMODS.Joker {
         return {
           message_card = card,
           message = localize('k_upgrade_ex'),
-          colour = G.C.MULT,
+          colour = G.C.MULT
         }
       end
     end
@@ -56,7 +55,7 @@ SMODS.Joker {
           key = 'a_mult',
           vars = { card.ability.extra.current_mult }
         },
-        colour = G.C.MULT,
+        colour = G.C.MULT
       }
     end
   end

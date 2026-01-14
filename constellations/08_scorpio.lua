@@ -1,6 +1,5 @@
 SMODS.Consumable {
   key = 'scorpio',
-  name = 'Scorpio',
   set = 'Constellation',
   atlas = "Constellations",
   pos = GetConstellationAtlasTable('scorpio'),
@@ -22,7 +21,7 @@ SMODS.Consumable {
   
   use = function(self, card, area, copier)
     local table = {}
-    for key, value in ipairs(G.handlist) do
+    for _, value in ipairs(G.handlist) do
       table[#table + 1] = value
     end
     level_up_table_tailends(card, table, localize('k_all_hands'), false, 0, -card.ability.chip_malus, card.ability.mult_bonus)

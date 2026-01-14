@@ -1,6 +1,5 @@
 SMODS.Joker {
   key = 'atom',
-  name = 'Atom',
   atlas = 'Jokers',
   rarity = 2,
   cost = 7,
@@ -32,9 +31,13 @@ SMODS.Joker {
   end,
   
   calculate = function(self, card, context)
-    if context.individual and context.cardarea == G.play and context.other_card.base.value == card.ability.extra.rank then
+    if context.individual and context.cardarea == G.play and context.other_card.base.value == card.ability.extra.rank and not context.other_card.debuff then
       if SMODS.pseudorandom_probability(card, 'atom', card.ability.extra.numerator_in, card.ability.extra.denominator_in) then
-        level_up_table_tailends(card, { context.scoring_name}, nil, false, 0, card.ability.extra.chips_rewards)
+        level_up_table_tailends(context.blueprint_card or card, { context.scoring_name }, nil, false, 0, card.ability.extra.chips_rewards, nil, nil, context.other_card)
+        card_eval_status_text(context.blueprint_card or card, 'jokers', nil, nil, nil, {
+          message = localize('rainydays_hands_upgraded'),
+          colour = G.C.FILTER
+        })
       end
     end
   end

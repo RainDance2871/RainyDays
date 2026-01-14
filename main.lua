@@ -1,3 +1,5 @@
+RainyDays = SMODS.current_mod
+
 function load_folder(folder)
   filenames = NFS.getDirectoryItems(SMODS.current_mod.path .. folder)
   for i = 1, #filenames do
@@ -10,16 +12,29 @@ function load_folder(folder)
 end
 
 --load mod files
+assert(SMODS.load_file('config_menu.lua'))()
 load_folder('functions')
 assert(SMODS.load_file('atlas.lua'))()
+assert(SMODS.load_file('canvas_sprite.lua'))()
+assert(SMODS.load_file('drawstep.lua'))()
+assert(SMODS.load_file('shaders.lua'))()
 assert(SMODS.load_file('objecttype_feather.lua'))()
 load_folder('jokers')
-assert(SMODS.load_file('constellation_type.lua'))()
-load_folder('constellations')
-load_folder('seals')
-load_folder('spectrals')
-load_folder('tags')
-load_folder('take_ownership')
+load_folder('enhancements')
+
+if RainyDays.config.constellations then
+  assert(SMODS.load_file('constellation_type.lua'))()
+  load_folder('constellations')
+  load_folder('jokers_constellations')
+  load_folder('seals')
+  load_folder('spectrals')
+  load_folder('take_ownership')
+end
+  
+RainyDays_lottery_font = love.graphics.newFont('resources/fonts/GoNotoCurrent-Bold.ttf', 0.5 * G.TILESIZE)
+RainyDays_lottery_font:setFilter('nearest', 'nearest')
+RainyDays_skinner_box_font = love.graphics.newFont('resources/fonts/m6x11plus.ttf', 16)
+RainyDays_skinner_box_font:setFilter('nearest', 'nearest')
 
 --jokerdisplay support
 if JokerDisplay then

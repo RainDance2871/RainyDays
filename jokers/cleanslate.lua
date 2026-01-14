@@ -1,6 +1,5 @@
 SMODS.Joker {
   key = 'cleanslate',
-  name = 'Clean Slate',
   atlas = 'Jokers',
   rarity = 1,
   cost = 6,
@@ -25,13 +24,7 @@ SMODS.Joker {
   calculate = function(self, card, context)
     if context.cardarea == G.jokers and context.joker_main then
       return {
-        mult_mod =  card.ability.extra.plus_mult,
-        message = localize {
-          type = 'variable',
-          key = 'a_mult',
-          vars = { card.ability.extra.plus_mult }
-        },
-        colour = G.C.MULT,
+        mult = card.ability.extra.plus_mult
       }
     end
   end

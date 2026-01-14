@@ -2,7 +2,7 @@ SMODS.Consumable {
   key = 'stigmata',
   set = 'Spectral',
   atlas = 'Spectrals',
-  pos = { x = 1, y = 0 },
+  pos = { x = 0, y = 0 },
   unlocked = true, 
   discovered = true,
   
@@ -11,7 +11,7 @@ SMODS.Consumable {
   },
   
   loc_vars = function(self, info_queue, card)
-    info_queue[#info_queue + 1] = { key = 'rainydays_mint_seal', set = 'Other', vars = { 5, 2 }}
+    info_queue[#info_queue + 1] = { key = 'rainydays_ivory_seal', set = 'Other' }
     return { vars = { card.ability.max_highlighted } }
   end,
   
@@ -29,7 +29,7 @@ SMODS.Consumable {
       trigger = 'after',
       delay = 0.1,
       func = function()
-        conv_card:set_seal('RainyDays_mint', nil, true)
+        conv_card:set_seal('RainyDays_ivory', nil, true)
         return true
       end
     }))

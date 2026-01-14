@@ -7,25 +7,25 @@ SMODS.Atlas {
 
 local JokerAtlasKeys = {
   'burdenofgreatness',
-  'cloverfield',
-  'flipflop_even',
+  'slashed_joker',
+  'slashed_joker_soul',
   'feather_precious',
   'feather_silky',
   
   'feather_vibrant',
   'sediment',
   'heirloom',
-  'kintsugi',
+  'waveform',
   'lotteryticket',
   
-  'microwave',
+  'burdenofgreatness_soul',
   'bankaccount',
   'truffle',
   'cleanslate',
-  'waste_not',
+  'recycle',
   
   'flipflop_odd',
-  'kintsugi_vase',
+  'flipflop_even',
   'fabergeegg',
   'sextant',
   'hannysvoorwerp',
@@ -34,7 +34,25 @@ local JokerAtlasKeys = {
   'breakfast_cereal',
   'atom',
   'lady_of_the_lake',
-  'kudzu'
+  'kudzu',
+  
+  'cloverfield',
+  'feather_marvelous',
+  'feather_energetic',
+  'legions',
+  'grapes',
+  
+  'fabergeegg_soul',
+  'star_chart',
+  'delirium_alt0',
+  'skinner_box',
+  'lady_of_the_lake_soul',
+  
+  'waveform_soul',
+  'star_chart_soul',
+  'delirium_alt1',
+  'delirium_alt2',
+  'delirium_alt3'  
 }
 
 local JokerAtlasTable = {}
@@ -90,6 +108,13 @@ function GetConstellationAtlasTable(key)
 end
 
 SMODS.Atlas {
+  key = 'Enhancements',
+  path = 'Enhancements.png',
+  px = 71,
+  py = 95 
+}
+
+SMODS.Atlas {
   key = 'Seals',
   path = 'Seals.png',
   px = 71,
@@ -101,11 +126,4 @@ SMODS.Atlas {
   path = 'Spectrals.png',
   px = 71,
   py = 95 
-}
-
-SMODS.Atlas {
-  key = 'Tags',
-  path = 'Tags.png',
-  px = 34,
-  py = 34
 }

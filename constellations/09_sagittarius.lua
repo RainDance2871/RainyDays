@@ -1,6 +1,5 @@
 SMODS.Consumable {
   key = 'sagittarius',
-  name = 'Sagittarius',
   set = 'Constellation',
   atlas = "Constellations",
   pos = GetConstellationAtlasTable('sagittarius'),
@@ -22,7 +21,7 @@ SMODS.Consumable {
   
   use = function(self, card, area, copier)
     local table = {}
-    for key, value in ipairs(G.handlist) do
+    for _, value in ipairs(G.handlist) do
       table[#table + 1] = value
       if value == card.ability.border_hand then
         break

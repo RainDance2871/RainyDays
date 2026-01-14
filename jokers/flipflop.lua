@@ -1,6 +1,5 @@
 SMODS.Joker {
   key = 'flipflop',
-  name = 'Flip-flop',
   atlas = 'Jokers',
   rarity = 2,
   cost = 6,
@@ -18,16 +17,19 @@ SMODS.Joker {
     }
   },
   
-  loc_vars = function(self, info_queue, card)
-    local key = 'j_RainyDays_flipflop_odd'
-    if card.ability.extra.state == 0 then --do we really have two entirely different entries just to display one variable differently? yes.
-      key = 'j_RainyDays_flipflop_even'
+  set_ability = function(self, card, initial, delay_sprites)
+    card.ability.extra.state = pseudorandom_element({ 0, 1 }, pseudoseed('flipflop' .. G.GAME.round_resets.ante))
+    if card.ability and card.ability.extra.state == 1 then
+      card.children.center:set_sprite_pos(GetJokersAtlasTable('flipflop_odd'))
     end
+  end,
+  
+  loc_vars = function(self, info_queue, card)
     return {
-      key = key,
+      key = card.ability.extra.state == 0 and 'j_RainyDays_flipflop_even' or 'j_RainyDays_flipflop_odd',
       vars = {
         card.ability.extra.plus_xmult,
-        card.ability.extra.plus_chips,
+        card.ability.extra.plus_chips
       }
     }
   end,
@@ -56,13 +58,7 @@ SMODS.Joker {
           }))
         end
         return {
-          Xmult_mod = card.ability.extra.plus_xmult,
-          message = localize {
-            type = 'variable',
-            key = 'a_xmult',
-            vars = { card.ability.extra.plus_xmult }
-          },
-          colour = G.C.RED
+          xmult = card.ability.extra.plus_xmult
         }
       else
         if not context.blueprint then
@@ -80,13 +76,7 @@ SMODS.Joker {
           }))
         end
         return {
-          chip_mod =  card.ability.extra.plus_chips,
-          message = localize {
-            type = 'variable',
-            key = 'a_chips',
-            vars = { card.ability.extra.plus_chips }
-          },
-          colour = G.C.CHIPS,
+          chips = card.ability.extra.plus_chips
         }
       end
     end

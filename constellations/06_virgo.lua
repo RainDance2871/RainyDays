@@ -1,6 +1,5 @@
 SMODS.Consumable {
   key = 'virgo',
-  name = 'Virgo',
   set = 'Constellation',
   atlas = "Constellations",
   pos = GetConstellationAtlasTable('virgo'),

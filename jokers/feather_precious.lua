@@ -1,6 +1,5 @@
 SMODS.Joker {
   key = 'feather_precious',
-  name = 'Precious Feather',
   atlas = 'Jokers',
   pools = { Feather = true },
   rarity = 1,

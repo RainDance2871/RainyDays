@@ -1,6 +1,5 @@
 SMODS.Joker {
   key = 'heirloom',
-  name = 'Heirloom',
   atlas = 'Jokers',
   rarity = 2,
   cost = 5,
@@ -17,7 +16,8 @@ SMODS.Joker {
     end
     return false
   end,
-  pos = GetJokersAtlasTable('heirloom'),  
+  pos = GetJokersAtlasTable('heirloom'),
+  
   config = {
     extra = {
       chip_bonus = 12,

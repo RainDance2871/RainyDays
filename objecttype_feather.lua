@@ -7,11 +7,10 @@ SMODS.ObjectType {
 	default = 'j_RainyDays_feather_false'
 }
 
---a special joker that transform into one of our absent feathers if spawned. this the one object with our special rarity, allowing us to easily control the feather amount.
+--a special joker that transforms into one of our absent feathers if spawned. this the one object with our special rarity, allowing us to easily control the feather amount.
 SMODS.Joker {
   key = 'feather_false',
-  name = 'RainyDays False Feather',
-  atlas = 'RainyDays',
+  atlas = 'Jokers',
   rarity = "RainyDays_feather",
   cost = 0,
   no_collection = true,
@@ -28,7 +27,7 @@ SMODS.Rarity {
   default_weight = 0.031,
   get_weight = function(self, weight, object_type)
     if GetFeatherCount() > 0 and #GetAbsentFeathers() > 0 then --we only spawn extra feathers if the player has at least one and feathers are available
-      return 0.031 --if the player has no other extra rarities: then 0.031 / 1.031 * 100% = ~3% of jokers appearing will be feathers
+      return 0.04166666667 --if the player has no other extra rarities: then 0.04166666667 / 1.04166666667 * 100% = ~4% of jokers appearing will be feathers
     else
       return 0
     end
@@ -39,7 +38,7 @@ SMODS.Rarity {
 local old_func_create_card = create_card
 function create_card(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
   local ret = old_func_create_card(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
-  if ret.ability.name == 'RainyDays False Feather' then
+  if ret.config.center.key == 'j_RainyDays_feather_false' then
     local absent_feathers = GetAbsentFeathers()
     if #absent_feathers > 0 then
       local feather_key = pseudorandom_element(absent_feathers, pseudoseed('Feathers' .. G.GAME.round_resets.ante))
@@ -68,6 +67,8 @@ end
 
 function GetAbsentFeathers()
   local feathers_available = { --there probably is a function to simply pull all cards from the feather pool, but I am too tired to find out
+    'j_RainyDays_feather_energetic',
+    'j_RainyDays_feather_marvelous',
     'j_RainyDays_feather_precious',
     'j_RainyDays_feather_silky',
     'j_RainyDays_feather_vibrant'

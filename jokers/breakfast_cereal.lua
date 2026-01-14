@@ -1,85 +1,79 @@
 SMODS.Joker {
   key = 'breakfast_cereal',
-  name = 'Breakfast Cereal',
   atlas = 'Jokers',
   pools = { Food = true },
-  rarity = 1,
-  cost = 4,
+  rarity = 2,
+  cost = 5,
   unlocked = true, 
   discovered = true,
   blueprint_compat = true,
-  eternal_compat = true,
+  eternal_compat = false,
   perishable_compat = true,
   pos = GetJokersAtlasTable('breakfast_cereal'),
   config = {
     extra = {
-      poker_hand = 'High Card',
-      upgrades_left = 4,
-      repetitions = 1,
-      money_reward = 15
+      cards_amount = 12,
+      repetitions = 1
     }
   },
   
   loc_vars = function(self, info_queue, card)
+    info_queue[#info_queue + 1] = G.P_TAGS.tag_charm
     return {
       vars = {
-        localize(card.ability.extra.poker_hand, 'poker_hands'),
-        card.ability.extra.upgrades_left,
-        card.ability.extra.money_reward
+        math.max(0, card.ability.extra.cards_amount)
       }
     } 
   end,
   
   calculate = function (self, card, context)
-    if context.hand_upgrade_repetitions and list_contains(context.hands_upgraded, card.ability.extra.poker_hand) then
-      if context.blueprint then
-        if GetJokerPosition(context.blueprint_card) < GetJokerPosition(card) then
-           card.ability.extra.give_repetitition = (card.ability.extra.upgrades_left > 1)
-        end
-      else
-        card.ability.extra.give_repetitition = false
-        if card.ability.extra.upgrades_left > 0 then
-          card.ability.extra.give_repetitition = true
-          card.ability.extra.upgrades_left = card.ability.extra.upgrades_left - 1
-        end
+    if context.repetition and context.cardarea == G.play and next(SMODS.get_enhancements(context.other_card)) and card.ability.extra.cards_amount > 0 then
+      if not context.blueprint then
+        card.ability.extra.cards_amount = card.ability.extra.cards_amount - 1
       end
-
-      if card.ability.extra.give_repetitition then
-        local func_eaten = function()
-          card_eval_status_text(card, 'jokers', nil, nil, nil, { message = localize('k_eaten_ex'), colour = G.C.RED })
-          G.E_MANAGER:add_event(Event({
-            func = function()
-              play_sound('tarot1')
-              card.T.r = -0.2
-              card:juice_up(0.3, 0.4)
-              card.states.drag.is = true
-              card.children.center.pinch.x = true
-              G.E_MANAGER:add_event(Event({
-                trigger = 'after',
-                delay = 0.3,
-                blockable = false,
-                func = function()
-                  ease_dollars(card.ability.extra.money_reward)
-                  card_eval_status_text(card, 'extra', nil, nil, nil, {
-                    message = localize('$') .. card.ability.extra.money_reward,
-                    colour = G.C.MONEY,
-                    no_juice = true
-                  })
-                  card:remove()
-                  return true
-                end
-              }))
-              return true
-            end
-          }))
-        end
-
+      
+      return {
+        repetitions = card.ability.extra.repetitions
+      }
+    end
+    
+    if context.after and not context.blueprint then
+      if card.ability.extra.cards_amount <= 0 then
+        SMODS.destroy_cards(card, nil, nil, true)
+        card_eval_status_text(card, 'jokers', nil, nil, nil, { message = localize('k_eaten_ex'), colour = G.C.RED })
+        G.E_MANAGER:add_event(Event({
+          func = (function()
+            add_tag(Tag('tag_charm'))
+            play_sound('generic1', 0.9 + math.random() * 0.1, 0.8)
+            play_sound('holo1', 1.2 + math.random() * 0.1, 0.4)
+            return true
+          end)
+        }))
         return {
-          hands = { card.ability.extra.poker_hand },
-          repetitions = card.ability.extra.repetitions,
-          func = (not context.blueprint and card.ability.extra.upgrades_left <= 0) and func_eaten or nil
+          message = localize('rainydays_plus_charm_tag'),
+          colour = G.C.PURPLE
         }
       end
     end
   end
 }
+
+--meteor tags now open the moment you enter the shop after a blind, no need to open another pack or exit the shop first
+local old_update_shop_ref = Game.update_shop
+function Game:update_shop(dt)
+  local ret = old_update_shop_ref(self, dt)
+  for i = 1, #G.GAME.tags do
+    local lock = G.GAME.tags[i].ID
+    if G.CONTROLLER.locks[lock] then
+      return ret
+    end
+  end    
+    
+  for i = 1, #G.GAME.tags do
+    if G.GAME.tags[i].name == 'Charm Tag' and G.GAME.tags[i]:apply_to_run({type = 'new_blind_choice'}) then
+      break;
+    end
+  end
+  
+  return ret
+end

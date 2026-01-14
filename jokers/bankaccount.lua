@@ -1,6 +1,5 @@
 SMODS.Joker {
   key = 'bankaccount',
-  name = 'Bank Account',
   atlas = 'Jokers',
   rarity = 1,
   cost = 4,
@@ -26,13 +25,7 @@ SMODS.Joker {
   calculate = function(self, card, context)
     if context.joker_main then
       return {
-        chip_mod = card.ability.extra.plus_chips,
-        message = localize {
-          type = 'variable',
-          key = 'a_chips',
-          vars = { card.ability.extra.plus_chips }
-        },
-        colour = G.C.CHIPS,
+        chips = card.ability.extra.plus_chips
       }
     end
     
@@ -47,7 +40,7 @@ SMODS.Joker {
       end
       
       --increase this joker's value after the whole payout screen has appeared.
-      if context.RD_after_payout and card.ability.extra.interest_saved > 0 then
+      if context.RD_after_payout and to_big(card.ability.extra.interest_saved) > to_big(0) then
         G.E_MANAGER:add_event(Event({ --we do need this event, otherwise the piggybank-value will go up before the payout is drawn.
           func = function()
             card.ability.extra_value = (card.ability.extra_value or 0) + card.ability.extra.interest_saved

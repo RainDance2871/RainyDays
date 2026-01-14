@@ -1,75 +1,50 @@
 SMODS.Joker {
   key = 'truffle',
-  name = 'Truffle',
   atlas = 'Jokers',
   pools = { Food = true },
-  rarity = 3,
-  cost = 7,
+  rarity = 2,
+  cost = 6,
   unlocked = true, 
   discovered = true,
-  blueprint_compat = false,
+  blueprint_compat = true,
   eternal_compat = false,
   perishable_compat = true,
   pos = GetJokersAtlasTable('truffle'),
   config = {
     extra = {
-      amount = 4
+      chip_amount = 200,
+      chip_decrease = 1
     }
   },
   
   loc_vars = function(self, info_queue, card)
-    info_queue[#info_queue + 1] = G.P_CENTERS.e_foil
     return {
       vars = { 
-        card.ability.extra.amount
+        card.ability.extra.chip_amount,
+        card.ability.extra.chip_decrease
       }
     } 
   end,
   
   calculate = function(self, card, context)
-    if context.before and context.cardarea == G.jokers and not context.blueprint then
-      for i = 1, #context.scoring_hand do
-        local scoring_card = context.scoring_hand[i]
-        if scoring_card:is_face() and card.ability.extra.amount > 0 and not scoring_card.edition then
-          card.ability.extra.amount = card.ability.extra.amount - 1
-          scoring_card:set_edition('e_foil', true, true)
-          scoring_card.delay_edition = true
-          G.E_MANAGER:add_event(Event({
-            trigger = 'after', 
-            delay = 0.4, 
-            func = function()
-              scoring_card.delay_edition = nil
-              scoring_card:juice_up()
-              play_sound('foil1', 1.2, 0.4)
-              return true 
-            end 
-          }))
-          delay(0.3)
-        end
-      end
-      
-      if card.ability.extra.amount <= 0 then
-        G.E_MANAGER:add_event(Event({func = function()
-          play_sound('tarot1')
-          card.T.r = -0.2
-          card:juice_up(0.3, 0.4)
-          card.states.drag.is = true
-          card.children.center.pinch.x = true
-          G.E_MANAGER:add_event(Event({
-            trigger = 'after',
-            delay = 0.3,
-            blockable = false,
-            func = function()
-              card:remove()
-              return true
-            end
-          }))
-          return true
-          end
-        }))
+    if context.joker_main then
+      return {
+        chips = card.ability.extra.chip_amount
+      }
+    end
+    
+    if context.end_of_round and context.game_over == false and not context.repetition and not context.individual and not context.blueprint then
+      card.ability.extra.chip_amount = card.ability.extra.chip_amount - (card.ability.extra.chip_decrease * #G.deck.cards)
+      if card.ability.extra.chip_amount <= 0 then
+        SMODS.destroy_cards(card, nil, nil, true)
         return {
           message = localize('k_eaten_ex'),
           colour = G.C.RED
+        }
+      else 
+        return {
+          message = localize { type = 'variable', key = 'a_chips_minus', vars = { card.ability.extra.chip_decrease * #G.deck.cards } },
+          colour = G.C.CHIPS
         }
       end
     end

@@ -1,15 +1,18 @@
 SMODS.Joker {
   key = 'burdenofgreatness',
-  name = 'Burden of Greatness',
   atlas = 'Jokers',
   rarity = 3,
-  cost = 1,
+  cost = 5,
   unlocked = true, 
   discovered = true,
   blueprint_compat = false,
   eternal_compat = true,
   perishable_compat = true,
   pos = GetJokersAtlasTable('burdenofgreatness'),
+  soul_pos = GetJokersAtlasTable('burdenofgreatness_soul'),
+  soul_draw_as_highlight = true,
+  soul_draw_as_highlight_shader = 'polychrome',
+  
   config = {
     extra = {
       plus_money = 25,

@@ -1,45 +1,57 @@
 SMODS.Consumable {
   key = 'leo',
-  name = 'Leo',
   set = 'Constellation',
   atlas = "Constellations",
   pos = GetConstellationAtlasTable('leo'),
-  unlocked = true,
+  unlocked = true, 
   discovered = true,
+  in_pool = function(self, args) --only appears if player has at least one poker hand above level 1
+    local highest_level_poker_hand = highest_level_poker_hand()
+    return (highest_level_poker_hand and to_big(G.GAME.hands[highest_level_poker_hand].level) > to_big(1))
+  end,  
+  config = {
+    money_bonus = 12,
+    level_subtract = 1
+  },
   
   loc_vars = function(self, info_queue, card)
-    local last_hand_text = G.GAME.last_hand_played and localize(G.GAME.last_hand_played, 'poker_hands') or localize('k_none')
-    local colour = G.GAME.last_hand_played and G.C.GREEN or G.C.RED
-    
-    return {
-      main_end = generate_main_end(last_hand_text, colour)
+    local highest_level_poker_hand = highest_level_poker_hand()
+    local highest_level_poker_hand_text = localize('k_none')
+    local colour = G.C.RED
+    if highest_level_poker_hand and to_big(G.GAME.hands[highest_level_poker_hand].level) > to_big(1) then
+      highest_level_poker_hand_text = localize(highest_level_poker_hand, 'poker_hands')
+      colour = G.C.GREEN
+    end
+  
+    return {  
+      vars = { 
+        card.ability.money_bonus, 
+        card.ability.level_subtract 
+      },
+      main_end = generate_main_end(highest_level_poker_hand_text, colour) 
     }
   end,
-
-  use = function(self, card, area, copier)    
-    level_up_table_tailends(card, { G.GAME.last_hand_played }, nil, false, 1)
-    
-    local destructable_jokers = {}
-    for i = 1, #G.jokers.cards do
-      if G.jokers.cards[i] ~= card and not SMODS.is_eternal(G.jokers.cards[i], card) and not G.jokers.cards[i].getting_sliced then
-        destructable_jokers[#destructable_jokers + 1] = G.jokers.cards[i]
+  
+  use = function(self, card, area, copier)
+    --give money
+    G.E_MANAGER:add_event(Event({
+      trigger = 'after',
+      delay = 0.4,
+      func = function()
+        play_sound('timpani')
+        card:juice_up(0.3, 0.5)
+        ease_dollars(card.ability.money_bonus, true)
+        return true
       end
-    end
-    
-    local joker_to_destroy = pseudorandom_element(destructable_jokers, 'cetus')
-    if joker_to_destroy then
-      joker_to_destroy.getting_sliced = true
-      G.E_MANAGER:add_event(Event({
-        func = function()
-          card:juice_up(0.3, 0.5)
-          joker_to_destroy:start_dissolve(nil, _first_dissolve)
-          return true
-        end
-      }))
-    end
-  end,
+    }))
 
+    delay(0.6)
+    
+    level_up_table_tailends(card, { highest_level_poker_hand() }, nil, false, -1)
+  end,
+  
   can_use = function(self, card)
-    return G.GAME.last_hand_played
+    local highest_level_poker_hand = highest_level_poker_hand()
+    return to_big(G.GAME.hands[highest_level_poker_hand].level) > to_big(1)
   end
 }
