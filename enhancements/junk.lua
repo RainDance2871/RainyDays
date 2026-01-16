@@ -8,6 +8,7 @@ SMODS.Enhancement {
       plays_made = 0
     } 
   },
+  replace_base_card = true,
   no_rank = true,
   no_suit = true,
   never_scores = true,
@@ -50,4 +51,5 @@ SMODS.Enhancement {
       return { remove = true }
     end
   end
+
 }
