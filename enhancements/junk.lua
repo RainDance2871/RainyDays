@@ -59,3 +59,11 @@ SMODS.Enhancement {
     end
   end
 }
+
+local ref_view_deck = G.UIDEF.view_deck
+function G.UIDEF.view_deck(unplayed_only)
+  G.GAME.creating_junk = true
+  local ret = ref_view_deck(unplayed_only)
+  G.GAME.creating_junk = nil
+  return ret
+end
