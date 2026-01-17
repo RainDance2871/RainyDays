@@ -26,6 +26,7 @@ SMODS.Consumable {
     level_up_table_tailends(card, { G.GAME.last_hand_played }, nil, false, 1)
     
     local new_cards = {}
+    G.GAME.creating_junk = true
     for i = 1, card.ability.card_amount do
       new_cards[i] = SMODS.create_card { set = 'Base', enhancement = 'm_RainyDays_junk', area = G.discard }
       G.playing_card = (G.playing_card and G.playing_card + 1) or 1
@@ -33,6 +34,7 @@ SMODS.Consumable {
       table.insert(G.playing_cards, new_cards[i])
       new_cards[i].states.visible = nil
     end
+    G.GAME.creating_junk = nil
     
     if #new_cards > 0 then
       G.E_MANAGER:add_event(Event({
