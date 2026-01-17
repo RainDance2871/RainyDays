@@ -35,12 +35,14 @@ SMODS.Joker {
     
     if context.setting_blind then
       local new_cards = {}
+      G.GAME.creating_junk = true
       for i = 1, card.ability.extra.card_amount do
         new_cards[i] = SMODS.create_card { set = 'Base', enhancement = 'm_RainyDays_junk', area = G.discard }
         G.playing_card = (G.playing_card and G.playing_card + 1) or 1
         new_cards[i].playing_card = G.playing_card
         table.insert(G.playing_cards, new_cards[i])
       end
+      G.GAME.creating_junk = nil
       
       G.E_MANAGER:add_event(Event({
         func = function()
