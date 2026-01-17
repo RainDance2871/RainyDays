@@ -1,7 +1,7 @@
 SMODS.Enhancement {
   key = 'junk',
   atlas = 'Enhancements',
-  pos = { x = 3, y = 0 },
+  pos = GetEnhancementAtlasTable('junk3'),
   config = {
     extra = { 
       plays_needed = 3,
@@ -13,6 +13,13 @@ SMODS.Enhancement {
   no_suit = true,
   never_scores = true,
   weight = 0,
+  
+  set_ability = function(self, card, initial, delay_sprites)
+    if not G.GAME.creating_junk then
+      local enhancement = SMODS.poll_enhancement({ type_key = 'junk', guaranteed = false })
+      card:set_ability(enhancement, nil, true)
+    end
+  end,
   
   loc_vars = function(self, info_queue, card)
     return { 
@@ -26,7 +33,7 @@ SMODS.Enhancement {
   set_sprites = function(self, card, front)
     if card.ability and card.ability.extra then
       local xx = math.min(math.max(0, card.ability.extra.plays_needed - card.ability.extra.plays_made), 3)
-      card.children.center:set_sprite_pos({ x = xx, y = 0 })
+      card.children.center:set_sprite_pos(GetEnhancementAtlasTable('junk' .. xx))
     end
   end,
   
@@ -43,7 +50,7 @@ SMODS.Enhancement {
       if card_is_played() then
         card.ability.extra.plays_made = card.ability.extra.plays_made + 1
         local xx = math.min(math.max(0, card.ability.extra.plays_needed - card.ability.extra.plays_made), 3)
-        card.children.center:set_sprite_pos({ x = xx, y = 0 })
+        card.children.center:set_sprite_pos(GetEnhancementAtlasTable('junk' .. xx))
       end
     end
     
@@ -51,5 +58,4 @@ SMODS.Enhancement {
       return { remove = true }
     end
   end
-
 }
