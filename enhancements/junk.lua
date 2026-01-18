@@ -8,18 +8,14 @@ SMODS.Enhancement {
       plays_made = 0
     } 
   },
+  in_pool = function(self, args) --does not appear in packs normally
+    return false
+  end,
   replace_base_card = true,
   no_rank = true,
   no_suit = true,
   never_scores = true,
   weight = 0,
-  
-  set_ability = function(self, card, initial, delay_sprites)
-    if not G.GAME.creating_junk then
-      local enhancement = SMODS.poll_enhancement({ type_key = 'junk', guaranteed = false })
-      card:set_ability(enhancement, nil, true)
-    end
-  end,
   
   loc_vars = function(self, info_queue, card)
     return { 
@@ -31,7 +27,7 @@ SMODS.Enhancement {
   end,
   
   set_sprites = function(self, card, front)
-    if card.ability and card.ability.extra then
+    if card.ability and card.ability.extra and card.ability.extra.plays_needed then
       local xx = math.min(math.max(0, card.ability.extra.plays_needed - card.ability.extra.plays_made), 3)
       card.children.center:set_sprite_pos(GetEnhancementAtlasTable('junk' .. xx))
     end
@@ -59,11 +55,3 @@ SMODS.Enhancement {
     end
   end
 }
-
-local ref_view_deck = G.UIDEF.view_deck
-function G.UIDEF.view_deck(unplayed_only)
-  G.GAME.creating_junk = true
-  local ret = ref_view_deck(unplayed_only)
-  G.GAME.creating_junk = nil
-  return ret
-end
