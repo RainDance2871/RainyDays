@@ -52,7 +52,13 @@ local JokerAtlasKeys = {
   'star_chart_soul',
   'delirium_alt1',
   'delirium_alt2',
-  'delirium_alt3'  
+  'delirium_alt3',
+  
+  'purple_card',
+  'klondike',
+  'klondike_soul',
+  'long_road',
+  'lady_in_waiting'
 }
 
 local JokerAtlasTable = {}
@@ -113,6 +119,28 @@ SMODS.Atlas {
   px = 71,
   py = 95 
 }
+
+local EnhancementAtlasKeys = {
+  'junk0',
+  'junk1',
+  'junk2',
+  'junk3',
+  
+  'clay',
+  'plastic',
+  'wood',
+}
+
+local EnhancementAtlasTable = {}
+for i, key in ipairs(EnhancementAtlasKeys) do
+  EnhancementAtlasTable[key] = i - 1
+end
+EnhancementAtlasKeys = nil
+
+function GetEnhancementAtlasTable(key)
+  local pos = EnhancementAtlasTable[key]
+  return { x = pos % 4, y = math.floor(pos / 4) }
+end
 
 SMODS.Atlas {
   key = 'Seals',
