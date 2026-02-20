@@ -332,8 +332,8 @@ return {
         name = "Long Road",
         text = {
           "Gain {C:red}+#1#{} discards if",
-          "poker hand is a",
-          "{C:attention}#2#{} or higher",
+          "played {C:attention}poker hand{} is",
+          "a {C:attention}#2#{} or higher",
           "ranking {C:attention}poker hand"
         }
       },
@@ -348,7 +348,7 @@ return {
           "{s:0.8}Ranks change each round"
         },
         unlock = {
-          "During a run, succesfully",
+          "During a run, successfully",
           "trigger a {E:1,C:attention}Lucky Card{} at ",
           "least {E:1,C:attention}#1#{} times",
         }
@@ -819,4 +819,5 @@ return {
       rainydays_ivory_seal = "Ivory Seal"
     }
   }
+
 }
