@@ -1,10 +1,9 @@
 SMODS.Consumable {
   key = 'ophiuchus',
   set = 'Constellation',
-  atlas = "Constellations",
+  atlas = 'Constellations',
   pos = GetConstellationAtlasTable('ophiuchus'),
   unlocked = true,
-  discovered = true,
   
   in_pool = function(self, args) --only appears if player has revealed at least one secret hand.
     for _, value in ipairs(G.handlist) do

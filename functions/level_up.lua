@@ -27,9 +27,9 @@ function level_up_table_tailends(card, hands_upgraded, description, instant, lev
     local hand = (G.FUNCS.get_poker_hand_info(G.hand.highlighted))
     hand_info = { handname = localize(hand, 'poker_hands'), level = G.GAME.hands[hand].level, chips = G.GAME.hands[hand].chips, mult = G.GAME.hands[hand].mult }
   else
-    hand_info = { handname = "", level = "", chips = 0, mult = 0 }
+    hand_info = { handname = '', level = '', chips = 0, mult = 0 }
   end
-   update_hand_text({ sound = "button", volume = 0.7, pitch = 1.1, delay = 0 }, hand_info)
+  update_hand_text({ sound = 'button', volume = 0.7, pitch = 1.1, delay = 0 }, hand_info)
 end
 
 
@@ -131,7 +131,7 @@ function level_up_table(card, hands_upgraded, description, instant, level_up, ch
   end
   
   --check if any jokers if rewards as result of a hand upgrade
-  if G.jokers and G.jokers.cards then
+  --[[if G.jokers and G.jokers.cards then
     local context_sent = {
       hand_upgrade_response = true,
       card = card,
@@ -144,21 +144,19 @@ function level_up_table(card, hands_upgraded, description, instant, level_up, ch
     for i = 1, #G.jokers.cards do
       eval_card(G.jokers.cards[i], context_sent)
     end
-  end
+  end]]
   
-  if not instant then
-    --achievement check
-    if level_up > 0 then
-      for i = 1, #hands_upgraded do
-      local hand = G.GAME.hands[hands_upgraded[i]]
-        G.E_MANAGER:add_event(Event({
-          trigger = 'immediate',
-          func = function()
-            check_for_unlock{ type = 'upgrade_hand', hand = hands_upgraded[i], level = G.GAME.hands[hands_upgraded[i]].level } 
-            return true 
-          end
-        }))
-      end
+  --achievement check
+  if level_up > 0 then
+    for i = 1, #hands_upgraded do
+    local hand = G.GAME.hands[hands_upgraded[i]]
+      G.E_MANAGER:add_event(Event({
+        trigger = 'immediate',
+        func = function()
+          check_for_unlock{ type = 'upgrade_hand', hand = hands_upgraded[i], level = G.GAME.hands[hands_upgraded[i]].level } 
+          return true 
+        end
+      }))
     end
   end
   

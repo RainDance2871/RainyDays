@@ -1,10 +1,9 @@
 SMODS.Consumable {
   key = 'gemini',
   set = 'Constellation',
-  atlas = "Constellations",
+  atlas = 'Constellations',
   pos = GetConstellationAtlasTable('gemini'),
   unlocked = true, 
-  discovered = true,  
   in_pool = function(self, args) --only appears if player has another constellation card used
     return (G.GAME.last_constellation and G.GAME.last_constellation ~= 'c_RainyDays_gemini')
   end,  
@@ -14,7 +13,7 @@ SMODS.Consumable {
       info_queue[#info_queue + 1] = G.P_CENTERS[G.GAME.last_constellation]
     end
 
-    local last_constellation = G.GAME.last_constellation and localize{ type = 'name_text', key = G.GAME.last_constellation, set = 'Constellation' } or localize('k_none')
+    local last_constellation = G.GAME.last_constellation and localize{ type = 'name_text', set = 'Constellation', key = G.GAME.last_constellation } or localize('k_none')
     local colour = (G.GAME.last_constellation and G.GAME.last_constellation ~= 'c_RainyDays_gemini') and G.C.GREEN or G.C.RED
     
     return { main_end = generate_main_end(last_constellation, colour) }

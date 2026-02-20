@@ -1,12 +1,11 @@
 SMODS.Consumable {
   key = 'aries',
   set = 'Constellation',
-  atlas = "Constellations",
+  atlas = 'Constellations',
   pos = GetConstellationAtlasTable('aries'),
-  unlocked = true, 
-  discovered = true,
+  unlocked = true,
   config = {
-    chip_bonus = 15
+    chip_bonus = 12
   },
   
   loc_vars = function(self, info_queue, card)

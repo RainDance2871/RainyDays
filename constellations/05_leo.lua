@@ -1,16 +1,15 @@
 SMODS.Consumable {
   key = 'leo',
   set = 'Constellation',
-  atlas = "Constellations",
+  atlas = 'Constellations',
   pos = GetConstellationAtlasTable('leo'),
-  unlocked = true, 
-  discovered = true,
+  unlocked = true,
   in_pool = function(self, args) --only appears if player has at least one poker hand above level 1
     local highest_level_poker_hand = highest_level_poker_hand()
     return (highest_level_poker_hand and to_big(G.GAME.hands[highest_level_poker_hand].level) > to_big(1))
   end,  
   config = {
-    money_bonus = 12,
+    money_bonus = 9,
     level_subtract = 1
   },
   

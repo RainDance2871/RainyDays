@@ -3,12 +3,12 @@
 	"name": "Rainy Days",
 	"display_name": "Rainy Days",
 	"author": [ "RainDance" ],
-	"description": "Contains a total of 30 Vanilla-style Jokers and a module of new consumable cards: Constellations, which enhance your poker hands in new ways.",
+	"description": "Contains a total of 45 Vanilla-style Jokers and a module of new consumable cards: Constellations, which enhance your poker hands in new ways.",
 	"prefix": "RainyDays",
 	"main_file": "main.lua",
 	"priority": 1,
 	"badge_colour": "4846a4",
 	"badge_text_colour": "f8f8ff",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"dependencies": [ "Steamodded (>=1.0.0~BETA-1224a)" ]
 }

@@ -76,7 +76,7 @@ match_indent = true
 pattern = '''if edition.apply_to_float and self.children.floating_sprite then'''
 position = 'at'
 payload = '''local apply_edition = edition.apply_to_float
-if (self.config.center.soul_pos.draw_edition ~= nil) then
+if (self.config.center.soul_draw_edition ~= nil) then
     apply_edition = self.config.center.soul_draw_edition
 end
 if apply_edition and self.children.floating_sprite then'''
@@ -91,3 +91,30 @@ match_indent = true
 pattern = '''if self.config.center.soul_pos and (self.config.center.discovered or self.bypass_discovery_center) then'''
 position = 'after'
 payload = '''if self.config.center.soul_draw_as_highlight then return end'''
+
+
+
+#unlock constellation_count
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+match_indent = true
+pattern = '''if check_for_unlock then check_for_unlock({type = 'discover_amount','''
+position = 'after'
+payload = '''constellation_count = RainyDays.config.constellations and G.DISCOVER_TALLIES.constellations.tally or nil,'''
+
+
+
+#unlock lucky trigger count
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = '''self.lucky_trigger = true'''
+position = 'before'
+payload = '''if not self.lucky_trigger then
+    G.GAME.rainydays_lucky_trigger_count = (G.GAME.rainydays_lucky_trigger_count or 0) + 1
+    if G.GAME.rainydays_lucky_trigger_count >= 10 then
+        unlock_card(G.P_CENTERS['j_RainyDays_lotteryticket'])
+    end
+end'''

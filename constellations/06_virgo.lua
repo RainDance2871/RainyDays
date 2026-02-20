@@ -1,10 +1,9 @@
 SMODS.Consumable {
   key = 'virgo',
   set = 'Constellation',
-  atlas = "Constellations",
+  atlas = 'Constellations',
   pos = GetConstellationAtlasTable('virgo'),
   unlocked = true,
-  discovered = true,
   config = {
     level_amount = 3
   },

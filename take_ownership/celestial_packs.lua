@@ -1,4 +1,4 @@
-SMODS.Booster:take_ownership_by_kind('Celestial', {
+if RainyDays.config.constellations then SMODS.Booster:take_ownership_by_kind('Celestial', {
   loc_vars = function(self, info_queue, card)
     local cfg = (card and card.ability) or self.config
     return {
@@ -32,3 +32,4 @@ SMODS.Booster:take_ownership_by_kind('Celestial', {
     return _card
   end
 }, true)
+end

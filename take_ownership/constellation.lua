@@ -1,4 +1,4 @@
-SMODS.Joker:take_ownership('j_constellation', {
+if RainyDays.config.constellations then SMODS.Joker:take_ownership('j_constellation', {
   config = { 
     extra = { 
       Xmult = 1, 
@@ -7,7 +7,12 @@ SMODS.Joker:take_ownership('j_constellation', {
   },
   
   loc_vars = function(self, info_queue, card)
-    return { vars = { card.ability.extra.Xmult_mod, card.ability.extra.Xmult } }
+    return { 
+      vars = { 
+        card.ability.extra.Xmult_mod, 
+        card.ability.extra.Xmult
+      }
+    }
   end,
   
   calculate = function(self, card, context)
@@ -25,3 +30,4 @@ SMODS.Joker:take_ownership('j_constellation', {
     end
   end
 }, true)
+end

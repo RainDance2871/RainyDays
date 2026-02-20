@@ -1,10 +1,9 @@
 SMODS.Consumable {
   key = 'sagittarius',
   set = 'Constellation',
-  atlas = "Constellations",
+  atlas = 'Constellations',
   pos = GetConstellationAtlasTable('sagittarius'),
-  unlocked = true, 
-  discovered = true,
+  unlocked = true,
   config = {
     border_hand = 'Straight',
     money_bonus = 1

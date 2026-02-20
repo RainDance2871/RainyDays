@@ -57,31 +57,68 @@ function remove_by_value(list, value)
   end
 end
 
+function create_constellation(card, amount)
+  amount = math.min(amount or 1, G.consumeables.config.card_limit - (#G.consumeables.cards + G.GAME.consumeable_buffer))
+  G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + amount
+  if amount > 0 then
+    return {
+      message = localize('rainydays_plus') .. amount .. ' ' .. localize('rainydays_constellation'),
+      colour = G.C.SECONDARY_SET.Constellation,
+      message_card = card,
+      func = function()
+        G.E_MANAGER:add_event(Event({
+          func = function()
+            for i = 1, amount do 
+              SMODS.add_card({ set = 'Constellation' })
+            end
+            G.GAME.consumeable_buffer = 0
+            return true
+          end
+        }))
+      end
+    }
+  end
+end
+
 --returns a table with parts of a string, with no part being longer than the given length.
 function splitString(string, maxLength)
   local parts = {}
-  local currentPart = ""
+  local currentPart = ''
   
-  for word in string:gmatch("%S+") do
+  for word in string:gmatch('%S+') do
     if #currentPart + #word + 1 <= maxLength then
-      if currentPart ~= "" then
-        currentPart = currentPart .. " " .. word
+      if currentPart ~= '' then
+        currentPart = currentPart .. ' ' .. word
       else
         currentPart = word
       end
     else
-      if currentPart ~= "" then
+      if currentPart ~= '' then
         table.insert(parts, currentPart)
       end
       currentPart = word
     end
   end
   
-  if currentPart ~= "" then
+  if currentPart ~= '' then
     table.insert(parts, currentPart)
   end
   
   return parts
+end
+
+--sort the words in a string
+function sort_words_in_string(string)
+    local words = {}
+    for word in string:gmatch('[^,]+') do
+        word = word:match('^%s*(.-)%s*$')
+        if word ~= '' then
+          table.insert(words, word)
+        end
+    end
+
+    table.sort(words)
+    return table.concat(words, ', ') .. ', '
 end
 
 --get joker position in joker line up

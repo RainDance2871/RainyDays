@@ -1,10 +1,9 @@
 SMODS.Consumable {
   key = 'capricorn',
   set = 'Constellation',
-  atlas = "Constellations",
+  atlas = 'Constellations',
   pos = GetConstellationAtlasTable('capricorn'),
   unlocked = true, 
-  discovered = true,
   config = {
     money_bonus = 1,
     maximum = 15

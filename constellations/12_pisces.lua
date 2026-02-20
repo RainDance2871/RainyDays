@@ -1,10 +1,9 @@
 SMODS.Consumable {
   key = 'pisces',
   set = 'Constellation',
-  atlas = "Constellations",
+  atlas = 'Constellations',
   pos = GetConstellationAtlasTable('pisces'),
-  unlocked = true, 
-  discovered = true,
+  unlocked = true,
   config = {
     border_hand = 'Three of a Kind',
     mult_bonus = 3

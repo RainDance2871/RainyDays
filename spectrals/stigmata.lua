@@ -1,10 +1,9 @@
-SMODS.Consumable {
+if RainyDays.config.constellations then SMODS.Consumable {
   key = 'stigmata',
   set = 'Spectral',
   atlas = 'Spectrals',
   pos = { x = 0, y = 0 },
-  unlocked = true, 
-  discovered = true,
+  unlocked = true,
   
   config = {
     max_highlighted = 1 
@@ -50,4 +49,4 @@ SMODS.Consumable {
       card.children.center:draw_shader('booster', nil, card.ARGS.send_to_shader)
     end
   end
-}
+} end

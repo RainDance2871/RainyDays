@@ -4,12 +4,14 @@
 local game_init_ref = Game.init_game_object
 function Game:init_game_object()
   local ret = game_init_ref(self)
+  if RainyDays.config.constellations then
     ret.planet_rate = ret.planet_rate / 2
     ret.constellation_rate = ret.planet_rate
+  end
   return ret
 end
 
-SMODS.Voucher:take_ownership('planet_merchant', {
+if RainyDays.config.constellations then SMODS.Voucher:take_ownership('planet_merchant', {
   redeem = function(self, card)
     G.E_MANAGER:add_event(Event({
       func = function()
@@ -34,3 +36,4 @@ SMODS.Voucher:take_ownership('planet_tycoon', {
     }))
   end,
 }, true)
+end

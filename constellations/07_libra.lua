@@ -1,10 +1,9 @@
 SMODS.Consumable {
   key = 'libra',
   set = 'Constellation',
-  atlas = "Constellations",
+  atlas = 'Constellations',
   pos = GetConstellationAtlasTable('libra'),
   unlocked = true,
-  discovered = true,
   config = {
     chip_bonus = 25,
     mult_bonus = 3
