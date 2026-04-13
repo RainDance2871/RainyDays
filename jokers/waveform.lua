@@ -7,54 +7,39 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('waveform'),
-  soul_pos = GetJokersAtlasTable('waveform_soul'),
-  soul_draw_as_highlight = true,
-  soul_draw_as_highlight_shader = 'RainyDays_false_glow',
+  pos = RainyDays.GetJokersAtlasTable('waveform'),
+  soul_pos = RainyDays.GetJokersAtlasTable('waveform_soul'),
+  RD_soul_draw_as_highlight = true,
+  RD_soul_draw_as_highlight_shader = 'RainyDays_false_glow',
   
   config = {
     extra = {
-      mult_amount = 5,
-      card_gap = 3,
-      card_count = 3
+      numerator_in = 1,
+      denominator_in = 3,
+      mult_amount = 5
     }
   },
   
   loc_vars = function(self, info_queue, card)
-    local string, colour
-    if card.ability.extra.card_count > 0 then
-      string = (card.ability.extra.card_count - 1) .. ' ' .. localize('rainydays_remaining')
-      colour = G.C.UI.TEXT_INACTIVE
-    else
-      string = localize('rainydays_activated')
-      colour = G.C.FILTER
-    end
-    
-    local main_end = {
-      { n = G.UIT.T, config = { text = '(', colour = G.C.UI.TEXT_INACTIVE, scale = 0.32 }},
-      { n = G.UIT.T, config = { text = string, colour = colour, scale = 0.32 }},
-      { n = G.UIT.T, config = { text = ')', colour = G.C.UI.TEXT_INACTIVE, scale = 0.32 }},
-    }
-    
+    local numerator_out, denominator_out = SMODS.get_probability_vars(card, card.ability.extra.numerator_in, card.ability.extra.denominator_in)
     return {
-      main_end = main_end,
       vars = {
+        numerator_out,
+        denominator_out,
         card.ability.extra.mult_amount
       }
     } 
   end,
   
   calculate = function(self, card, context)
-    if context.individual and context.cardarea == G.play and context.is_repetition then
+    if context.individual and context.cardarea == G.play and context.rd_is_repetition then
       return {
         mult = card.ability.extra.mult_amount
       }
     end
     
     if context.repetition and context.cardarea == G.play then
-      card.ability.extra.card_count = card.ability.extra.card_count - 1
-      if card.ability.extra.card_count <= 0 then
-        card.ability.extra.card_count = card.ability.extra.card_gap
+      if SMODS.pseudorandom_probability(card, 'waveform', card.ability.extra.numerator_in, card.ability.extra.denominator_in) then
         return {
           repetitions = 1
         }

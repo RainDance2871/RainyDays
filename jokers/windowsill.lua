@@ -1,4 +1,4 @@
-if RainyDays.config.constellations then SMODS.Joker {
+SMODS.Joker {
   key = 'windowsill',
   atlas = 'Jokers',
   rarity = 1,
@@ -7,13 +7,13 @@ if RainyDays.config.constellations then SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('windowsill'),
+  pos = RainyDays.GetJokersAtlasTable('windowsill'),
   
   config = {
     extra = {
       per_drawn = 7,
       drawn_counter = 0,
-      create_card = false
+      planet_cards = 2
     }
   },
   
@@ -21,39 +21,39 @@ if RainyDays.config.constellations then SMODS.Joker {
     return {
       vars = {
         card.ability.extra.per_drawn,
-        card.ability.extra.per_drawn - card.ability.extra.drawn_counter
+        card.ability.extra.per_drawn - card.ability.extra.drawn_counter,
+        card.ability.extra.planet_cards
       }
     }
   end,
   
   calculate = function(self, card, context)
-    if context.hand_drawn then
-      local count = 0
-      for i = 1, #context.hand_drawn do
-        if context.hand_drawn[i]:is_suit('Diamonds') then
-          count = count + 1
-        end
-      end
-      
-      if count <= 0 then 
-        return
-      end
-      
-      if context.blueprint then
-        if GetJokerPosition(context.blueprint_card) < GetJokerPosition(card) then
-          card.ability.extra.create_card = math.floor((card.ability.extra.drawn_counter + count) / card.ability.extra.per_drawn)
+     if context.rd_draw_individual and G.GAME.facing_blind and context.other_card:is_suit('Diamonds') and not context.other_card.debuff then
+       local create_card
+       if not context.blueprint then
+        card.ability.extra.drawn_counter = card.ability.extra.drawn_counter + 1
+        if card.ability.extra.drawn_counter >= card.ability.extra.per_drawn then
+          card.ability.extra.drawn_counter = card.ability.extra.drawn_counter - card.ability.extra.per_drawn
+          card.ability.extra.create_card = true
+          create_card = true
+        else
+          card.ability.extra.create_card = nil
         end
       else
-        card.ability.extra.drawn_counter = card.ability.extra.drawn_counter + count
-        card.ability.extra.create_card = math.floor(card.ability.extra.drawn_counter / card.ability.extra.per_drawn)
-        for i = 1, card.ability.extra.create_card do
-          card.ability.extra.drawn_counter = card.ability.extra.drawn_counter - card.ability.extra.per_drawn
+        if RainyDays.GetJokerPosition(context.blueprint_card) < RainyDays.GetJokerPosition(card) then
+          create_card = (card.ability.extra.drawn_counter + 1 >= card.ability.extra.per_drawn)
+        else
+          create_card = card.ability.extra.create_card
         end
       end
       
-      if card.ability.extra.create_card > 0 then
-        return create_constellation(card, card.ability.extra.create_card)
+      if create_card then
+        if RainyDays.Constellations then
+          return RainyDays.create_consumable(context.blueprint_card or card, 'CN_Constellation')
+        else
+          return RainyDays.create_consumable(context.blueprint_card or card, 'Planet', card.ability.extra.planet_cards)
+        end
       end
     end
   end
-} end
+}
