@@ -1,4 +1,4 @@
 return {
-  feathers = true,
-  constellations = true
+  feathers = true
+  metallic_hightlights = false
 }

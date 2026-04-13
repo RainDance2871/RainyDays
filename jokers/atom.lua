@@ -7,7 +7,7 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('atom'),
+  pos = RainyDays.GetJokersAtlasTable('atom'),
   config = {
     extra = {
       rank = 'Ace',
@@ -22,7 +22,7 @@ SMODS.Joker {
     return {
       vars = {
         localize(card.ability.extra.rank, 'ranks'),
-        numerator_out, 
+        numerator_out,
         denominator_out,
         card.ability.extra.mult_rewards
       }
@@ -30,13 +30,14 @@ SMODS.Joker {
   end,
   
   calculate = function(self, card, context)    
-    if context.individual and context.cardarea == G.play and context.other_card.base.value == card.ability.extra.rank and not context.other_card.debuff then
-      if SMODS.pseudorandom_probability(card, 'atom', card.ability.extra.numerator_in, card.ability.extra.denominator_in) then
+    if context.individual and context.cardarea == G.play and context.other_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank] then
+      if not context.other_card.debuff and SMODS.pseudorandom_probability(card, 'atom', card.ability.extra.numerator_in, card.ability.extra.denominator_in) then
         card_eval_status_text(context.other_card, 'jokers', nil, nil, nil, {
           message = localize('rainydays_hands_upgraded'),
           colour = G.C.FILTER
         })
-      level_up_table_tailends(context.blueprint_card or card, { context.scoring_name }, nil, false, 0, nil, card.ability.extra.mult_rewards, nil, context.other_card)
+        local message_card = context.blueprint_card or card
+        RainyDays.level_up_table_tailends(message_card, { context.scoring_name }, nil, false, 0, nil, card.ability.extra.mult_rewards, nil, context.other_card)
       end
     end
   end

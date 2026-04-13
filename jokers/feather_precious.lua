@@ -9,9 +9,9 @@ if RainyDays.config.feathers then SMODS.Joker {
   eternal_compat = true,
   perishable_compat = true,
   in_pool = function(self, args) --does not appear in packs normally if player already has a feather
-    return not FeatherOwned()
+    return not RainyDays.FeatherOwned()
   end,
-  pos = GetJokersAtlasTable('feather_precious'),
+  pos = RainyDays.GetJokersAtlasTable('feather_precious'),
   config = {
     extra = {
       plus_money = 3
@@ -26,10 +26,17 @@ if RainyDays.config.feathers then SMODS.Joker {
     } 
   end,
   
+  add_to_deck = function(self, card, from_debuff)
+    G.GAME.rd_feather_payout = (G.GAME.rd_feather_payout or 0) + card.ability.extra.plus_money
+  end,
+  
+  remove_from_deck = function(self, card, from_debuff)
+    G.GAME.rd_feather_payout = (G.GAME.rd_feather_payout or 0) - card.ability.extra.plus_money
+  end,
+  
   calc_dollar_bonus = function(self, card)
-    local bonus = card.ability.extra.plus_money * #SMODS.find_card('j_RainyDays_feather_precious')
-    if bonus > 0 then
-      return bonus
+    if G.GAME.rd_feather_payout and G.GAME.rd_feather_payout > 0 then
+      return G.GAME.rd_feather_payout
     end
 	end
 } end

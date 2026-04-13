@@ -7,9 +7,9 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('slashed_joker'),
-  soul_pos = GetJokersAtlasTable('slashed_joker_soul'),
-  soul_draw_edition = true,
+  pos = RainyDays.GetJokersAtlasTable('slashed_joker'),
+  soul_pos = RainyDays.GetJokersAtlasTable('slashed_joker_soul'),
+  RD_soul_draw_edition = true,
   
   config = {
     extra = {

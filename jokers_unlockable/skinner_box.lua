@@ -7,7 +7,7 @@ SMODS.Joker {
   blueprint_compat = false,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('skinner_box'),
+  pos = RainyDays.GetJokersAtlasTable('skinner_box'),
   
   config = {
     extra = {
@@ -21,7 +21,7 @@ SMODS.Joker {
     local main_end = card.ability.extra.current_card_value and {
       { n = G.UIT.T, config = { text = '(' .. localize('rainydays_currently') .. ' ', colour = G.C.UI.TEXT_INACTIVE, scale = 0.32 }},
       { n = G.UIT.T, config = { text = localize('$') .. card.ability.extra.current_card_value, colour = G.C.MONEY, scale = 0.32 }},
-      { n = G.UIT.T, config = { text = ')', colour = G.C.UI.TEXT_INACTIVE, scale = 0.32 }},
+      { n = G.UIT.T, config = { text = ')', colour = G.C.UI.TEXT_INACTIVE, scale = 0.32 }}
     } or nil
     
     return {
@@ -63,14 +63,26 @@ SMODS.Joker {
   end,
   
   locked_loc_vars = function(self, info_queue, card)
-    return { vars = { 50 }}
+    local total = 0
+    if G.jokers and G.jokers.cards then
+      for i = 1, #G.jokers.cards do
+        total = total + math.max(0, G.jokers.cards[i].sell_cost)
+      end
+    end
+      
+    return { 
+      main_end = not self.unlocked and RainyDays.generate_main_end_counter(localize('$') .. total) or nil,
+      vars = { 
+        50
+      }
+    }
   end,
   
   check_for_unlock = function(self, args)
     if args.type == 'modify_jokers_cost' and G.jokers then
       local total = 0
       for i = 1, #G.jokers.cards do
-        total = total + G.jokers.cards[i].sell_cost
+        total = total + math.max(0, G.jokers.cards[i].sell_cost)
         if total >= 50 then
           return true
         end
@@ -102,19 +114,14 @@ function get_edition_cost(card)
 end
 
 function generate_sell_value_sprite(card, value, force)
-  if not card.ability.canvas_sprite or force then
-    card.ability.canvas_sprite = CanvasSprite(card.children.center.T.x, card.children.center.T.y, card.children.center.T.w, card.children.center.T.h)
+  if not card.canvas_text then
+    card.canvas_text = SMODS.CanvasSprite({
+      text_colour = G.C.UI.TEXT_DARK,
+      text_offset = { x = 65, y = 21 },
+      text_h_align = 'right',
+      text_width = 59, 
+      text_height = 20
+    })
   end
-  
-  love.graphics.push()
-  love.graphics.origin()
-  local old = love.graphics.getCanvas()
-  love.graphics.setCanvas(card.ability.canvas_sprite.canvas)
-  love.graphics.clear()
-  love.graphics.setFont(RainyDays_skinner_box_font)
-  love.graphics.setColor(0.309803921569, 0.388235294118, 0.403921568627, 1)
-  local string = localize('$') .. value
-  love.graphics.print(string, 65 - RainyDays_skinner_box_font:getWidth(string), 10, 0)
-  love.graphics.setCanvas(old)
-  love.graphics.pop()
+  card.canvas_text.text = localize('$') .. value
 end

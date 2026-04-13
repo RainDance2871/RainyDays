@@ -8,7 +8,7 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = false,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('grapes'),
+  pos = RainyDays.GetJokersAtlasTable('grapes'),
   config = {
     extra = {
       card_amount = 30,
@@ -35,12 +35,12 @@ SMODS.Joker {
       
       local mult_to_give = pseudorandom('grapes', card.ability.extra.mult_lower, card.ability.extra.mult_higher) 
       return {
-        mult_mod = mult_to_give,
-        message = localize {
+        mult = mult_to_give ~= 0 and mult_to_give or nil,
+        message = mult_to_give == 0 and localize {
           type = 'variable',
           key = 'a_mult',
           vars = { mult_to_give }
-        },
+        } or nil,
         colour = G.C.MULT
       }
     end

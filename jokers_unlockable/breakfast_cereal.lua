@@ -8,7 +8,7 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = false,
   perishable_compat = false,
-  pos = GetJokersAtlasTable('breakfast_cereal'),
+  pos = RainyDays.GetJokersAtlasTable('breakfast_cereal'),
   config = {
     extra = {
       cards_amount = 12,
@@ -41,52 +41,31 @@ SMODS.Joker {
         SMODS.destroy_cards(card, nil, nil, true)
         card_eval_status_text(card, 'jokers', nil, nil, nil, { message = localize('k_eaten_ex'), colour = G.C.RED })
         G.E_MANAGER:add_event(Event({
-          func = (function()
+          func = function()
             add_tag(Tag('tag_charm'))
             play_sound('generic1', 0.9 + math.random() * 0.1, 0.8)
             play_sound('holo1', 1.2 + math.random() * 0.1, 0.4)
             return true
-          end)
+          end
         }))
         return {
           message = localize('rainydays_plus') .. '1 ' .. localize('rainydays_charm_tag'),
-          colour = G.C.PURPLE
+          colour = G.C.SECONDARY_SET.Tarot
         }
       end
     end
   end,
   
   locked_loc_vars = function(self, info_queue, card)
-    return { vars = { 10 }}
+    return { 
+      main_end = not self.unlocked and RainyDays.generate_main_end_counter(G.GAME and G.GAME.rainydays_tag_count or 0) or nil,
+      vars = { 
+        10
+      }
+    }
+  end,
+  
+  check_for_unlock = function(self, args)
+    return args.type == 'rd_tag_count' and G.GAME.rd_tag_count and G.GAME.rd_tag_count >= 10
   end
 }
-
-local ref_add_tag = add_tag
-function add_tag(_tag)
-  local ret = ref_add_tag(_tag)
-  G.GAME.rainydays_tag_count = (G.GAME.rainydays_tag_count or 0) + 1
-  if G.GAME.rainydays_tag_count >= 10 then
-    unlock_card(G.P_CENTERS['j_RainyDays_breakfast_cereal'])
-  end
-  return ret
-end
-
---meteor tags now open the moment you enter the shop after a blind, no need to open another pack or exit the shop first
-local old_update_shop_ref = Game.update_shop
-function Game:update_shop(dt)
-  local ret = old_update_shop_ref(self, dt)
-  for i = 1, #G.GAME.tags do
-    local lock = G.GAME.tags[i].ID
-    if G.CONTROLLER.locks[lock] then
-      return ret
-    end
-  end    
-    
-  for i = 1, #G.GAME.tags do
-    if G.GAME.tags[i].name == 'Charm Tag' and G.GAME.tags[i]:apply_to_run({type = 'new_blind_choice'}) then
-      break;
-    end
-  end
-  
-  return ret
-end

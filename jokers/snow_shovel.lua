@@ -7,7 +7,7 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = false,
-  pos = GetJokersAtlasTable('snow_shovel'),
+  pos = RainyDays.GetJokersAtlasTable('snow_shovel'),
   
   config = {
     extra = {

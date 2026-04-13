@@ -7,22 +7,16 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('lady_of_the_lake'),
-  soul_pos = GetJokersAtlasTable('lady_of_the_lake_soul'),
-  soul_draw_as_highlight = true,
-  soul_draw_as_highlight_shader = 'RainyDays_metallic_highlight',
+  pos = RainyDays.GetJokersAtlasTable('lady_of_the_lake'),
+  soul_pos = RainyDays.GetJokersAtlasTable('lady_of_the_lake_soul'),
+  RD_soul_draw_as_highlight = true,
+  RD_soul_draw_as_highlight_shader = 'RainyDays_metallic_highlight',
 
   calculate = function (self, card, context)
     if context.before and context.main_eval then
-      for i = 1, #context.full_hand do
-        if not context.full_hand[i].ladylaked and next(SMODS.get_enhancements(context.full_hand[i])) then
-          return
-        end
-      end
-      
       local choices = {}
       for i = 1, #context.scoring_hand do 
-        if not context.scoring_hand[i].ladylaked then
+        if not context.scoring_hand[i].ladylaked and context.scoring_hand[i].config.center.key ~= 'c_base' and not context.scoring_hand[i].debuff then
           choices[#choices + 1] = context.scoring_hand[i]
         end
       end
@@ -60,7 +54,7 @@ SMODS.Joker {
       for i = 1, #args.cards do
         local enhancements = SMODS.get_enhancements(args.cards[i])
         for key, _ in pairs(enhancements) do
-          if not list_contains(list_enhance, key) then
+          if not RainyDays.list_contains(list_enhance, key) then
             list_enhance[#list_enhance + 1] = key
             if #list_enhance >= 5 then
               return true

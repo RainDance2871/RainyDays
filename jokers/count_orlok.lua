@@ -7,10 +7,11 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = false,
-  pos = GetJokersAtlasTable('count_orlok'),
+  pos = RainyDays.GetJokersAtlasTable('count_orlok'),
   
   config = {
     extra = {
+      face_cards = 3,
       xmult = 1,
       xmult_gain = 0.1
     }
@@ -19,6 +20,7 @@ SMODS.Joker {
   loc_vars = function(self, info_queue, card)
     return {
       vars = {
+        card.ability.extra.face_cards,
         card.ability.extra.xmult_gain,
         card.ability.extra.xmult
       }
@@ -33,19 +35,16 @@ SMODS.Joker {
     end
     
     if context.before and context.main_eval and not context.blueprint then
-      card.ability.extra.face_card = nil
-      for i = 1, #context.scoring_hand do
-        if context.scoring_hand[i]:is_face() then
-          if not card.ability.extra.face_card then
-            card.ability.extra.face_card = context.scoring_hand[i]
-          else
-            card.ability.extra.face_card = nil
-            return
-          end
+      card.ability.extra.card_to_destroy = nil
+      local face_cards = {}
+      for i = 1, #context.full_hand do
+        if context.full_hand[i]:is_face() then
+          face_cards[#face_cards + 1] = context.full_hand[i]
         end
       end
       
-      if card.ability.extra.face_card then
+      if #face_cards >= card.ability.extra.face_cards then
+        card.ability.extra.card_to_destroy = pseudorandom_element(face_cards, pseudoseed('orlok'))
         card.ability.extra.xmult = card.ability.extra.xmult + card.ability.extra.xmult_gain
         return {
           message = localize('k_upgrade_ex'),
@@ -54,13 +53,9 @@ SMODS.Joker {
       end
     end
     
-    
-    if card.ability.extra.face_card and context.destroy_card == card.ability.extra.face_card and context.cardarea == G.play and not context.blueprint then
-      card.ability.extra.face_card = nil
+    if card.ability.extra.card_to_destroy and context.destroy_card == card.ability.extra.card_to_destroy and context.cardarea == G.play and not context.blueprint then
+      card.ability.extra.card_to_destroy = nil
       return {
-        message_card = context.destroy_card,
-        message = localize('rainydays_destroyed'),
-        colour = G.C.FILTER,
         remove = true
       }
     end

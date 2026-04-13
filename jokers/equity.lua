@@ -4,33 +4,36 @@ SMODS.Joker {
   rarity = 1,
   cost = 5,
   unlocked = true,
-  blueprint_compat = false,
+  blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('equity'),
+  pos = RainyDays.GetJokersAtlasTable('equity'),
   pixel_size = { w = 71, h = 94 },
   
   config = {
     extra = {
-      mult = 15
+      mult = 15,
+      poker_hand = 'Pair'
     }
   },
   
   loc_vars = function(self, info_queue, card)
     return {
       vars = {
-        card.ability.extra.mult
+        card.ability.extra.mult,
+        localize(card.ability.extra.poker_hand, 'poker_hands')
       }
     }
   end,
   
   calculate = function(self, card, context)
-    if not context.blueprint and context.initial_scoring_step then
-      mult = mod_mult(card.ability.extra.mult)
-      card_eval_status_text(card, 'jokers', nil, nil, nil, { 
-        message = localize('rainydays_base_mult_set'), 
-        colour = G.C.MULT 
-      })
+    if context.joker_main then
+      local _, _, pokerhands = G.FUNCS.get_poker_hand_info(G.hand.cards)
+      if not next(pokerhands[card.ability.extra.poker_hand]) then
+        return {
+          mult = card.ability.extra.mult
+        }
+      end
     end
   end
 }

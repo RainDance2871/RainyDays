@@ -1,0 +1,29 @@
+[manifest]
+version = '1.0.0'
+dump_lua = true
+priority = 0
+
+
+
+#unlock event used consumeables
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+pattern = '''if not card.config.center.discovered then'''
+position = 'before'
+match_indent = true
+payload = '''check_for_unlock({ type = 'rd_used_consumeable' })'''
+
+
+
+#lottery ticket unlock event and lucky trigger count
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = '''self.lucky_trigger = true'''
+position = 'before'
+payload = '''if not self.lucky_trigger then
+    G.GAME.rd_lucky_trigger_count = (G.GAME.rd_lucky_trigger_count or 0) + 1
+    check_for_unlock({ type = 'rd_lucky_trigger_count' })
+end'''

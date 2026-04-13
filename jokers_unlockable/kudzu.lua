@@ -7,7 +7,7 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = false,
-  pos = GetJokersAtlasTable('kudzu'), 
+  pos = RainyDays.GetJokersAtlasTable('kudzu'), 
   config = {
     extra = {
       mult_bonus = 1,
@@ -51,7 +51,26 @@ SMODS.Joker {
   end,
   
   locked_loc_vars = function(self, info_queue, card)
-    return { vars = { 3 }}
+    local max_count = 0
+    if G.jokers and G.jokers.cards then
+      for i = 1, #G.jokers.cards do
+        local count = 0
+        local key = G.jokers.cards[i].config.center.key
+        for j = i, #G.jokers.cards do
+          if G.jokers.cards[j].config.center.key == key then
+            count = count + 1
+          end
+        end
+        max_count = math.max(max_count, count)
+      end
+    end
+    
+    return {
+      main_end = not self.unlocked and RainyDays.generate_main_end_counter(max_count) or nil,
+      vars = { 
+        3
+      }
+    }
   end,
   
   check_for_unlock = function(self, args)

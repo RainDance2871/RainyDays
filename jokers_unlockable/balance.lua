@@ -1,58 +1,61 @@
 SMODS.Joker {
   key = 'balance',
   atlas = 'Jokers',
-  rarity = 3,
-  cost = 8,
+  rarity = 2,
+  cost = 6,
   unlocked = false,
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('balance'),
+  pos = RainyDays.GetJokersAtlasTable('balance'),
+  soul_pos = RainyDays.GetJokersAtlasTable('indicator_hands'),
+  RD_soul_draw_as_highlight = true,
+  RD_soul_draw_as_highlight_shader = 'RainyDays_indicator',
+  RD_soul_draw_always = true,
   
   config = {
-    played_hands = {},
     extra = {
-      xmult = 0,
-      plus_xmult = 1
+      xmult = 1
     }
   },
   
   loc_vars = function(self, info_queue, card)
-    local string_hands_played = '(' .. localize('rainydays_hands_played') .. ': '
     local count = 0
     for _, value in ipairs(G.handlist) do
-      if list_contains(card.ability.played_hands, value) then
+       if G.GAME.hands[value].played_this_round > 0 then
         count = count + 1
-        string_hands_played = string_hands_played .. localize(value, 'poker_hands') .. (count < #card.ability.played_hands and ', ' or ')')
       end
     end
-
+    
     return {
-      main_end = #card.ability.played_hands > 0 and main_end_string(string_hands_played, 23) or nil,
       vars = {
-        card.ability.extra.plus_xmult,
-        card.ability.extra.xmult
+        card.ability.extra.xmult,
+        count * card.ability.extra.xmult
       }
     }
   end,
   
   calculate = function(self, card, context)    
     if context.joker_main then
+      local count = 0
+      for _, value in ipairs(G.handlist) do
+        if G.GAME.hands[value].played_this_round > 0 then
+          count = count + 1
+        end
+      end
+      local xmult_given = count * card.ability.extra.xmult
       return {
-        xmult = card.ability.extra.xmult
+        xmult = xmult_given ~= 1 and xmult_given or nil,
+        message = xmult_given == 1 and localize {
+          type = 'variable',
+          key = 'a_xmult',
+          vars = { xmult_given }
+        } or nil,
+        colour = G.C.MULT
       }
     end
     
-    if context.before and not context.blueprint then
-      if not list_contains(card.ability.played_hands, context.scoring_name) then
-        card.ability.extra.xmult = card.ability.extra.xmult + card.ability.extra.plus_xmult
-        card.ability.played_hands[#card.ability.played_hands + 1] = context.scoring_name
-      end
-    end
-    
     if context.end_of_round and context.game_over == false and context.main_eval and not context.blueprint then
-      card.ability.extra.xmult = 0
-      card.ability.played_hands = {}
       return {
         message = localize('k_reset'),
         colour = G.C.RED
@@ -61,7 +64,24 @@ SMODS.Joker {
   end,
   
   locked_loc_vars = function(self, info_queue, card)
-    return { vars = { 9 }}
+    local count = 0
+    if G.GAME then
+      for _, value in ipairs(G.handlist) do
+        if G.GAME.hands[value].played > 0 then
+          count = count + 1
+          if count >= 9 then
+            return true
+          end
+        end
+      end
+    end
+    
+    return { 
+      main_end = not self.unlocked and RainyDays.generate_main_end_counter(count) or nil,
+      vars = { 
+        9
+      }
+    }
   end,
   
   check_for_unlock = function(self, args)

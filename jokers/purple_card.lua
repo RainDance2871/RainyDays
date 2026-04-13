@@ -1,4 +1,4 @@
-if RainyDays.config.constellations then SMODS.Joker {
+SMODS.Joker {
   key = 'purple_card',
   atlas = 'Jokers',
   rarity = 1,
@@ -7,11 +7,11 @@ if RainyDays.config.constellations then SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('purple_card'),
+  pos = RainyDays.GetJokersAtlasTable('purple_card'),
   
   calculate = function(self, card, context)      
     if context.skipping_booster then
-      return create_constellation(card)
+      return RainyDays.create_consumable(context.blueprint_card or card, RainyDays.Constellations and 'CN_Constellation' or 'Tarot')
     end
   end
-} end
+}

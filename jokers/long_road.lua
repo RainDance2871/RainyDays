@@ -7,11 +7,12 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('long_road'), 
+  pos = RainyDays.GetJokersAtlasTable('long_road'), 
   config = {
     extra = {
       discard_bonus = 2,
-      hand_border = 'Straight'
+      hand1 = 'Flush',
+      hand2 = 'Straight'
     }
   },
   
@@ -19,27 +20,18 @@ SMODS.Joker {
     return {
       vars = {
         card.ability.extra.discard_bonus,
-        localize(card.ability.extra.hand_border, 'poker_hands')
+        localize(card.ability.extra.hand1, 'poker_hands'),
+        localize(card.ability.extra.hand2, 'poker_hands')
       }
     }
   end,
 
   calculate = function(self, card, context)
-    local function poker_hand_played()
-      for _, poker_hand in ipairs(G.handlist) do
-        if next(context.poker_hands[poker_hand]) then
-          return true
-        elseif poker_hand == card.ability.extra.hand_border then
-          return false
-        end
-      end
-    end
-      
-    if context.joker_main and poker_hand_played() then
+    if context.joker_main and (next(context.poker_hands[card.ability.extra.hand1]) or next(context.poker_hands[card.ability.extra.hand2])) then
       G.E_MANAGER:add_event(Event({
         func = function()
           ease_discard(card.ability.extra.discard_bonus)
-          local string = '+' .. card.ability.extra.discard_bonus .. ' ' .. localize('k_hud_discards')
+          local string = localize('rainydays_plus') .. card.ability.extra.discard_bonus .. ' ' .. localize('k_hud_discards')
           card_eval_status_text(context.blueprint_card or card, 'jokers', nil, nil, nil, { message = string, colour = G.C.RED })
           return true
         end

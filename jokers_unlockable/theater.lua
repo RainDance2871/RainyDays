@@ -7,7 +7,7 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('theater'),
+  pos = RainyDays.GetJokersAtlasTable('theater'),
   
   config = {
     sort = false,
@@ -45,7 +45,7 @@ SMODS.Joker {
         for i = 1, amount do
           local card_drawn = G.deck.cards[i]
           G.hand.cards[#G.hand.cards + 1] = card_drawn
-          G.GAME.theater_drawn_cards[card_drawn] = true
+          G.GAME.theater_drawn_cards[card_drawn.ID] = true
           draw_card(G.deck, G.hand, i * 100 / amount, 'up', false, card_drawn)
         end
         
@@ -57,9 +57,9 @@ SMODS.Joker {
     if context.after and G.GAME.theater_drawn_cards and not context.blueprint then
       for i = #G.hand.cards, 1, -1 do
         local card_in_hand = G.hand.cards[i]
-        if G.GAME.theater_drawn_cards[card_in_hand] then
+        if G.GAME.theater_drawn_cards[card_in_hand.ID] then
           table.remove(G.hand.cards, i)
-          G.GAME.theater_drawn_cards[card_in_hand] = nil
+          G.GAME.theater_drawn_cards[card_in_hand.ID] = nil
         end
       end
       G.GAME.theater_drawn_cards = nil

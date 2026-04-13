@@ -1,14 +1,9 @@
---allows us to create a feather pool.
-SMODS.ObjectType {
-	key = 'Feather'
-}
-
---override of the create card. if the odds are right, we transform it into a feather. This keep feathers consistently appearing regardless of how many jokers were added by mods. not that this is only applied if the player has at least one feather already.
+--override of the create card. if the odds are right, we transform it into a feather. This keep feathers consistently appearing regardless of how many jokers were added by mods. note that this is only applied if the player has at least one feather already.
 local old_func_create_card = create_card
 function create_card(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
   local ret = old_func_create_card(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
-  if FeatherOwned() then
-    local absent_feathers = GetAbsentFeathers(ret.config.center.rarity)
+  if RainyDays.config.feathers and RainyDays.FeatherOwned() then
+    local absent_feathers = RainyDays.GetAbsentFeathers(ret.config.center.rarity)
     if absent_feathers and #absent_feathers > 0 and pseudorandom('feathers') <= #absent_feathers / 65 then
       local feather_key = pseudorandom_element(absent_feathers, pseudoseed('Feathers' .. G.GAME.round_resets.ante))
       ret:set_ability(feather_key, true)
@@ -18,15 +13,10 @@ function create_card(_type, area, legendary, _rarity, skip_materialize, soulable
   return ret
 end
 
-function IsFeather(card)
-  local center = (type(card) == "string" and G.P_CENTERS[card]) or (card.config and card.config.center)
-  return (center and center.pools and center.pools.Feather)
-end
-
-function FeatherOwned()
+function RainyDays.FeatherOwned()
   if G.jokers and G.jokers.cards then
     for i = 1, #G.jokers.cards do
-      if IsFeather(G.jokers.cards[i]) then
+      if RainyDays.IsInPool(G.jokers.cards[i], 'Feather') then
         return true
       end
     end
@@ -34,11 +24,10 @@ function FeatherOwned()
   return false
 end
 
-function GetAbsentFeathers(rarity)
+function RainyDays.GetAbsentFeathers(rarity)
   local feathers_available
   if (rarity == 1 or rarity == 'Common') then
     feathers_available = {
-      'j_RainyDays_feather_mystic',
       'j_RainyDays_feather_precious',
       'j_RainyDays_feather_silky',
       'j_RainyDays_feather_vibrant'

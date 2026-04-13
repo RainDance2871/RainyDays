@@ -1,0 +1,30 @@
+[manifest]
+version = '1.0.0'
+dump_lua = true
+priority = 0
+
+
+
+#draw soul with edition 
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+match_indent = true
+pattern = '''if edition.apply_to_float and self.children.floating_sprite then'''
+position = 'at'
+payload = '''local apply_edition = edition.apply_to_float
+if (self.config.center.RD_soul_draw_edition ~= nil) then
+    apply_edition = self.config.center.RD_soul_draw_edition
+end
+if apply_edition and self.children.floating_sprite then'''
+
+
+
+#dont draw soul if soul draw early is set active
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+match_indent = true
+pattern = '''if self.config.center.soul_pos and (self.config.center.discovered or self.bypass_discovery_center) then'''
+position = 'after'
+payload = '''if self.config.center.RD_soul_draw_as_highlight then return end'''

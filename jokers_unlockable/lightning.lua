@@ -8,14 +8,16 @@ SMODS.Joker {
   eternal_compat = true,
   perishable_compat = true,
   in_pool = function(self, args) --only appears if player has at least one mult card in deck.
-    for i = 1, #G.playing_cards do
-      if SMODS.has_enhancement(G.playing_cards[i], 'm_mult') then
-        return true
+    if G.playing_cards then
+      for i = 1, #G.playing_cards do
+        if SMODS.has_enhancement(G.playing_cards[i], 'm_mult') then
+          return true
+        end
       end
     end
     return false
   end,
-  pos = GetJokersAtlasTable('lightning'),
+  pos = RainyDays.GetJokersAtlasTable('lightning'),
   
   config = {
     extra = {
@@ -33,6 +35,14 @@ SMODS.Joker {
     }
   end,
   
+  add_to_deck = function(self, card, from_debuff)
+    G.GAME.rd_block_mult = (G.GAME.rd_block_mult or 0) + 1
+  end,
+  
+  remove_from_deck = function(self, card, from_debuff)
+    G.GAME.rd_block_mult = (G.GAME.rd_block_mult or 0) - 1
+  end,
+  
   calculate = function(self, card, context)    
     if context.individual and context.cardarea == G.play then
       if SMODS.has_enhancement(context.other_card, 'm_mult') then
@@ -44,7 +54,21 @@ SMODS.Joker {
   end,
   
   locked_loc_vars = function(self, info_queue, card)
-    return { vars = { 5, localize { type = 'name_text', key = 'm_wild', set = 'Enhanced' } } }
+    local count = 0
+    if G.playing_cards then
+      for i = 1, #G.playing_cards do
+        if SMODS.has_enhancement(G.playing_cards[i], 'm_mult') then
+          count = count + 1
+        end
+      end
+    end
+    
+    return { 
+      main_end = not self.unlocked and RainyDays.generate_main_end_counter(count) or nil,
+      vars = { 
+        5
+      }
+    }
   end,
   
   check_for_unlock = function(self, args)
@@ -66,7 +90,7 @@ SMODS.Joker {
 local get_chip_mult_ref = Card.get_chip_mult
 function Card.get_chip_mult(self)
   local mult_amount = get_chip_mult_ref(self)
-  if SMODS.has_enhancement(self, 'm_mult') and next(SMODS.find_card('j_RainyDays_lightning')) then
+  if SMODS.has_enhancement(self, 'm_mult') and G.GAME.rd_block_mult and G.GAME.rd_block_mult > 0 then
     mult_amount = mult_amount - G.P_CENTERS.m_mult.config.mult
   end
   return mult_amount

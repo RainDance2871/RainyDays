@@ -1,10 +1,4 @@
-function level_up_hand(card, hand, instant, level_up, chip_upgrade, mult_upgrade, money_upgrade)
-  level_up_table_tailends(card, { hand }, nil, instant, level_up, chip_upgrade, mult_upgrade, money_upgrade)
-end
-
-
-
-function level_up_table_tailends(card, hands_upgraded, description, instant, level_up, chip_upgrade, mult_upgrade, money_upgrade, juice_cards)
+function RainyDays.level_up_table_tailends(card, hands_upgraded, description, instant, level_up, chip_upgrade, mult_upgrade, money_upgrade, juice_cards)
   --set init visual values
   local desc
   if #hands_upgraded == 1 then
@@ -16,7 +10,7 @@ function level_up_table_tailends(card, hands_upgraded, description, instant, lev
   update_hand_text({ sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3 }, desc)
   
   --upgrade
-  level_up_table(card, hands_upgraded, description, instant, level_up, chip_upgrade, mult_upgrade, money_upgrade, juice_cards)
+  RainyDays.level_up_table(card, hands_upgraded, description, instant, level_up, chip_upgrade, mult_upgrade, money_upgrade, juice_cards)
   
   --set visual values after
   local hand_info
@@ -34,8 +28,7 @@ end
 
 
 
---new function that allows upgrading multiple hands at once
-function level_up_table(card, hands_upgraded, description, instant, level_up, chip_upgrade, mult_upgrade, money_upgrade, juice_cards)
+function RainyDays.level_up_table(card, hands_upgraded, description, instant, level_up, chip_upgrade, mult_upgrade, money_upgrade, juice_cards)
   --set vars
   local play_hand, play_chips, play_mult
   
@@ -48,7 +41,6 @@ function level_up_table(card, hands_upgraded, description, instant, level_up, ch
   level_up = level_up or 1
   chip_upgrade = chip_upgrade or 0
   mult_upgrade = mult_upgrade or 0
-  money_upgrade = money_upgrade or 0
     
   --upgrade all hands
   local individual_hand_money_change = false
@@ -63,13 +55,7 @@ function level_up_table(card, hands_upgraded, description, instant, level_up, ch
     hand.level = math.max(1, hand.level + level_up)
     hand.chips = hand.s_chips + hand.chips_bonus + hand.l_chips * (hand.level - 1)
     hand.mult = hand.s_mult + hand.mult_bonus + hand.l_mult * (hand.level - 1)
-    hand.money = (hand.money or 0) + money_upgrade
-    
-    --alter game info page if needed
-    if hand.money ~= 0 then 
-      G.GAME.money_bonus_given = true
-    end
-    
+
     --prevent negative scores
     if to_big(hand.chips) < to_big(0) then
       hand.chips_bonus = hand.chips_bonus - hand.chips
@@ -101,6 +87,18 @@ function level_up_table(card, hands_upgraded, description, instant, level_up, ch
     end
     
     --update values visual
+    local function shakeit(card, juice_secondary, stat_type, tarot_pulse)
+      play_sound('tarot1')
+      if card then
+        card:juice_up(0.8, 0.5)
+      end
+      if juice_secondary then
+        juice_secondary:juice_up(0.8, 0.5)
+      end
+      G.TAROT_INTERRUPT_PULSE = tarot_pulse
+      return true
+    end
+
     --mult
     G.E_MANAGER:add_event(Event({ trigger = 'after', delay = 0.2, func = function()
       return shakeit(card, juice_cards, true) end 
@@ -113,14 +111,6 @@ function level_up_table(card, hands_upgraded, description, instant, level_up, ch
     }))
     update_hand_text({ delay = 0 }, { chips = desc_chips_up, StatusText = true })
     
-    --money
-    if money_upgrade ~= 0 or individual_hand_money_change then
-      local desc_money_up = money_upgrade ~= 0 and ((money_upgrade > 0 and '+' or '-') .. localize('$') .. math.abs(money_upgrade)) or localize('$')
-      G.E_MANAGER:add_event(Event({ trigger = 'after', delay = 0.9, func = function()
-        return shakeit_money(desc_money_up, card, juice_cards, true) end 
-      }))
-    end
-    
     --level
     G.E_MANAGER:add_event(Event({ trigger = 'after', delay = 0.9, func = function()
       return shakeit(card, juice_cards, nil) end 
@@ -129,22 +119,6 @@ function level_up_table(card, hands_upgraded, description, instant, level_up, ch
     
     delay(1.3)
   end
-  
-  --check if any jokers if rewards as result of a hand upgrade
-  --[[if G.jokers and G.jokers.cards then
-    local context_sent = {
-      hand_upgrade_response = true,
-      card = card,
-      hands_upgraded = hands_upgraded,
-      level_up = level_up,
-      chip_upgrade = chip_upgrade,
-      mult_upgrade = mult_upgrade,
-      money_upgrade = money_upgrade
-    }
-    for i = 1, #G.jokers.cards do
-      eval_card(G.jokers.cards[i], context_sent)
-    end
-  end]]
   
   --achievement check
   if level_up > 0 then
@@ -165,53 +139,4 @@ function level_up_table(card, hands_upgraded, description, instant, level_up, ch
     hand_chips = mod_chips(hand_chips + G.GAME.hands[play_hand].chips - play_chips)
     mult = mod_mult(mult + G.GAME.hands[play_hand].mult - play_mult)
   end
-end
-
-
-
---payout of the money bonus
-local old_func_evaluate = G.FUNCS.evaluate_play
-function G.FUNCS.evaluate_play(e)
-  local ret = old_func_evaluate(e)
-  local poker_hand = G.FUNCS.get_poker_hand_info(G.play.cards)
-  if G.GAME.hands[poker_hand] and G.GAME.hands[poker_hand].money and G.GAME.hands[poker_hand].money ~= 0 then
-    ease_dollars(G.GAME.hands[poker_hand].money)
-    card_eval_status_text(G.play, 'extra', nil, nil, nil, {
-      message = localize('rainydays_money_bonus') .. ': ' .. localize('$') .. G.GAME.hands[poker_hand].money,
-      colour = G.C.MONEY,
-      no_juice = true
-    })
-    delay(0.6)
-  end
-  return ret
-end
-
-
-
-function shakeit(card, juice_secondary, stat_type, tarot_pulse)
-  play_sound('tarot1')
-  if card then
-    card:juice_up(0.8, 0.5)
-  end
-  if juice_secondary then
-    juice_secondary:juice_up(0.8, 0.5)
-  end
-  G.TAROT_INTERRUPT_PULSE = tarot_pulse
-  return true
-end
-
-
-
-function shakeit_money(money_text, card, juice_secondary, stat_type, tarot_pulse)
-  attention_text({ 
-    text = money_text, 
-    scale = 0.8, 
-    hold = 1, 
-    cover = G.hand_text_area.handname.parent, 
-    cover_colour = G.C.MONEY, 
-    emboss = 0.05, 
-    align = 'cm', 
-    cover_align = 'cm'
-  })
-  return shakeit(card, juice_secondary, stat_type, tarot_pulse)
 end

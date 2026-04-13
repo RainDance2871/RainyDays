@@ -7,7 +7,7 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('bankaccount'),
+  pos = RainyDays.GetJokersAtlasTable('bankaccount'),
   config = {
     extra = {
       plus_chips = 70,
@@ -64,7 +64,7 @@ function G.FUNCS.evaluate_round()
   
   --a custom eval_card_moment, just before the payout.
   for i = 1, #G.jokers.cards do
-    eval_card(G.jokers.cards[i], {cardarea = G.jokers, RD_before_payout = true})
+    eval_card(G.jokers.cards[i], { cardarea = G.jokers, RD_before_payout = true })
   end
   
   if G.GAME.current_round.RD_skip_interest then
@@ -79,7 +79,7 @@ function G.FUNCS.evaluate_round()
   
   --a custom eval_card_moment, just after the payout.
   for i = 1, #G.jokers.cards do
-    eval_card(G.jokers.cards[i], {cardarea = G.jokers, RD_after_payout = true})
+    eval_card(G.jokers.cards[i], { cardarea = G.jokers, RD_after_payout = true })
   end
   
   return ret

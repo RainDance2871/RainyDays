@@ -7,7 +7,7 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  pos = GetJokersAtlasTable('legions'),
+  pos = RainyDays.GetJokersAtlasTable('legions'),
   
   calculate = function(self, card, context)    
     if context.individual and context.cardarea == G.play then
