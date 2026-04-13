@@ -3,7 +3,7 @@
 	"name": "Rainy Days",
 	"display_name": "Rainy Days",
 	"author": [ "RainDance" ],
-	"description": "A hefty collection of 60 vanilla-style Jokers designed to feel right at home in classic Balatro. Each one keeps to the game's short descriptions and is balanced to complement the existing roster, offering fresh synergies without overshadowing the originals.",
+	"description": "A hefty collection of 75 vanilla-style Jokers designed to feel right at home in classic Balatro. Each one keeps to the game's short descriptions and is balanced to complement the existing roster, offering fresh synergies without overshadowing the originals.",
 	"prefix": "RainyDays",
 	"main_file": "main.lua",
 	"priority": 1,
