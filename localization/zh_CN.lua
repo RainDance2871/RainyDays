@@ -15,9 +15,9 @@ return {
       j_RainyDays_absent_heart = {
         name = "缺心",
         text = {
-          "生成一张{C:tarot}塔罗牌{}",
-          "每有{C:attention}#1#{C:inactive}[#2#]{}张打出但",
+          "每打出{C:attention}#1#{C:inactive}[#2#]{}张",
           "未计分的{C:hearts}红心{}花色牌",
+          "生成一张{C:tarot}塔罗牌{}",
           "{C:inactive}(必须有空位)"
         }
       },
@@ -25,8 +25,9 @@ return {
       j_RainyDays_accountant = {
         name = "会计师",
         text = {
-          "本回合每{C:attention}抽{}一张牌",
+          "回合内每抽一张牌",
           "获得{C:mult}+#1#{}倍率",
+          "{C:attention}回合{}结束时重置倍率",
           "{C:inactive}(当前{C:mult}+#2#{C:inactive}倍率)"
         },
         unlock = {
@@ -39,7 +40,7 @@ return {
         name = "原子",
         text = {
           "打出的{C:attention}#1#{}计分时",
-          "{C:green}#2#/#3#{}几率使本次",
+          "有{C:green}#2#/#3#{}几率使本次",
           "打出的{C:attention}牌型{}获得",
           "{C:mult}+#4#{}倍率"
         }
@@ -72,9 +73,8 @@ return {
         name = "银行账户",
         text = {
           "{C:chips}+#1#{}筹码",
-          "当你获得{C:attention}利息{}时",
-          "将其添加到",
-          "这张小丑牌的{C:attention}售价{}上"
+          "获得{C:attention}利息{}时，改为等额",
+          "添加到这张小丑牌的{C:attention}售价{}上",
         }
       },
 
@@ -166,11 +166,10 @@ return {
       j_RainyDays_checklist = {
         name = "清单",
         text = {
-          "每张打出的卡牌",
-          "若其{C:attention}点数{}本回合打出过",
-          "则每张打出的{C:attention}卡牌{}",
-          "在计分时给予",
-          "{X:mult,C:white}X#1#{}倍率"
+          "本回合中每张打出的牌",
+          "若此前的出牌中",
+          "打出过其{C:attention}点数{}",
+          "则在计分时给予{X:mult,C:white}X#1#{}倍率"
         }
       },
 
@@ -188,8 +187,7 @@ return {
         text = {
           "每弃掉{C:attention}#3#{C:inactive}[#4#]{}张",
           "{C:clubs}梅花{}花色牌",
-          "这张小丑牌",
-          "获得{C:mult}+#1#{}倍率",
+          "这张小丑牌获得{C:mult}+#1#{}倍率",
           "{C:inactive}(当前{C:mult}+#2#{C:inactive}倍率)"
         }
       },
@@ -210,11 +208,10 @@ return {
       j_RainyDays_count_orlok = {
         name = "奥洛克伯爵",
         text = {
-          "如果出牌包含至少",
+          "如果出牌中包含至少",
           "{C:attention}#1#{}张{C:attention}人头牌{}",
           "计分后随机摧毁其中一张",
-          "这张小丑牌",
-          "获得{X:mult,C:white}X#2#{}倍率",
+          "这张小丑牌获得{X:mult,C:white}X#2#{}倍率",
           "{C:inactive}(当前{X:mult,C:white}X#3#{C:inactive}倍率)"
         }
       },
@@ -222,8 +219,8 @@ return {
       j_RainyDays_dancing_moves = {
         name = "舞步",
         text = {
-          "如果出牌中包含",
-          "{C:attention}万能牌{}",
+          "如果打出的牌中",
+          "包含{C:attention}万能牌{}",
           "重新触发",
           "每张打出的{C:attention}卡牌{}"
         }
@@ -237,8 +234,8 @@ return {
           "获得{C:blue}+#1#{}次出牌"
         },
         unlock = {
-          "打出{E:1,C:attention}#1#{}次或",
-          "更多出牌后",
+          "打出{E:1,C:attention}#1#{}或",
+          "更多次出牌后",
           "打败盲注"
         }
       },
@@ -257,7 +254,7 @@ return {
       j_RainyDays_desolate = {
         name = "荒芜",
         text = {
-          "如果本赛局",
+          "如果本赛局内",
           "{C:attention}弃掉{}了{C:attention}#2#{}或更多种",
           "{C:attention}牌型{}，{X:mult,C:white}X#1#{}倍率",
           "{C:inactive}({V:1}#3#{C:inactive})"
@@ -267,7 +264,7 @@ return {
       j_RainyDays_equity = {
         name = "净值",
         text = {
-          "如果手中卡牌",
+          "如果手牌中",
           "不包含{C:attention}#2#{}",
           "{C:mult}+#1#{}倍率"
         }
@@ -351,8 +348,8 @@ return {
       j_RainyDays_golden_idol = {
         name = "黄金偶像",
         text = {
-          "回合内抽到{C:attention}黄金牌{}时",
-          "这张小丑牌",
+          "回合内每抽到一张",
+          "{C:attention}黄金牌{}，这张小丑牌",
           "获得{X:mult,C:white}X#1#{}倍率",
           "{C:inactive}(当前{X:mult,C:white}X#2#{C:inactive}倍率)"
         }
@@ -362,8 +359,7 @@ return {
         name = "金鱼",
         text = {
           "如果打出的牌中",
-          "不含{C:attention}#2#{}",
-          "获得{C:money}$#1#"
+          "不含{C:attention}#2#{}，获得{C:money}$#1#",
         }
       },
 
@@ -402,8 +398,7 @@ return {
       j_RainyDays_hecate = {
         name = "赫卡忒",
         text = {
-          "如果本回合每次打出的",
-          "{C:attention}牌型{}都是{C:attention}#1#{}",
+          "如果本回合只打出{C:attention}#1#{}",
           "生成一张{C:spectral}幻灵牌{}",
           "{C:inactive}(必须有空位)"
         }
@@ -412,8 +407,8 @@ return {
       j_RainyDays_heirloom = {
         name = "传家宝",
         text = {
-          "每张与{C:attention}奖励牌{}或",
-          "{C:attention}倍率牌{}相邻的打出牌",
+          "每张打出的与{C:attention}奖励牌{}",
+          "或{C:attention}倍率牌{}相邻的牌",
           "有{C:green}#1#/#2#{}几率获得",
           "相同{C:attention}增强效果{}"
         }
@@ -452,7 +447,7 @@ return {
       j_RainyDays_lady_in_waiting = {
         name = "侍女",
         text = {
-          "回合内抽到{C:attention}#1#{}时",
+          "回合内每抽到一张{C:attention}#1#{}",
           "{C:attention}完整牌组{}中的每张牌",
           "永久获得{C:chips}+#2#{}筹码"
         },
@@ -465,10 +460,10 @@ return {
       j_RainyDays_lady_of_the_lake = {
         name = "湖中夫人",
         text = {
-          "每次出牌时",
-          "一张随机的",
-          "{C:attention}未增强{}的{C:attention}计分{}卡牌",
-          "获得随机{C:attention}增强效果{}"
+          "每次出牌时一张",
+          "随机的{C:attention}未增强{}的",
+          "{C:attention}计分{}卡牌获得",
+          "随机{C:attention}增强效果{}"
         },
         unlock = {
           "打出包含{E:1,C:attention}#1#{}种",
@@ -522,20 +517,20 @@ return {
       j_RainyDays_lotteryticket_long = {
         name = "彩票",
         text = {
-          "本回合第一张打出的",
+          "每回合第一张打出的",
           "{C:attention}#1#{}、{C:attention}#2#{}、{C:attention}#3#{}、{C:attention}#4#{}和{C:attention}#5#{}",
           "在计分时获得{C:money}$#6#{}",
-          "{s:0.8}每回合改变点数{}"
+          "{s:0.8}每个回合点数都会变{}"
         }
       },
 
       j_RainyDays_lotteryticket_short = {
         name = "彩票",
         text = {
-          "本回合第一张打出的",
+          "每回合第一张打出的",
           "{C:attention}#1#{}、{C:attention}#2#{}、{C:attention}#3#{}、{C:attention}#4#{}和{C:attention}#5#{}",
           "在计分时获得{C:money}$#6#{}",
-          "{s:0.8}回合时改变点数{}"
+          "{s:0.8}每个回合点数都会变{}"
         }
       },
 
@@ -565,7 +560,7 @@ return {
       j_RainyDays_minimalist = {
         name = "极简主义者",
         text = {
-          "如果有{C:attention}小丑牌槽位{}为空",
+          "如果有空的{C:attention}小丑牌{}槽位",
           "{C:chips}+#1#{}筹码"
         },
         unlock = {
@@ -578,8 +573,8 @@ return {
       j_RainyDays_mirror_lake = {
         name = "镜湖",
         text = {
-          "如果打出的牌中包含",
-          "{C:attention}玻璃牌{}",
+          "如果打出的牌中",
+          "包含{C:attention}玻璃牌{}",
           "生成一张{C:tarot}塔罗牌{}",
           "{C:inactive}(必须有空位)"
         }
@@ -588,8 +583,8 @@ return {
       j_RainyDays_overflow = {
         name = "溢出",
         text = {
-          "如果{C:attention}弃牌{}中包含",
-          "{C:attention}#2#{}或{C:attention}#3#{}",
+          "如果{C:attention}弃牌{}中",
+          "包含{C:attention}#2#{}或{C:attention}#3#{}",
           "本回合{C:attention}+#1#{}手牌上限"
         }
       },
@@ -597,9 +592,9 @@ return {
       j_RainyDays_parrot = {
         name = "鹦鹉",
         text = {
-          "复制右侧{C:attention}小丑牌{}的",
-          "能力，每{C:attention}底注{}最多",
-          "复制一次"
+          "复制{C:attention}右侧{}小丑牌的",
+          "能力，若其在本{C:attention}底注{}",
+          "此前的回合未被复制过"
         }
       },
 
@@ -632,8 +627,9 @@ return {
       j_RainyDays_prehistory = {
         name = "史前",
         text = {
-          "本赛局每拥有一张{C:attention}不同的小丑牌",
-          "这张小丑牌给予{C:chips}+#1#{}筹码",
+          "本赛局内每拥有过一张",
+          "{C:attention}不同的小丑牌",
+          "这张小丑牌获得{C:chips}+#1#{}筹码",
           "{C:inactive}(当前{C:chips}+#2#{C:inactive}筹码)"
         },
         unlock = {
@@ -647,7 +643,7 @@ return {
         name = "质数",
         text = {
           "每张计分的",
-          "{C:attention}2{}、{C:attention}3{}、{C:attention}5{}或{C:attention}7{}变成",
+          "{C:attention}2{}、{C:attention}3{}、{C:attention}5{}和{C:attention}7{}变成",
           "{C:attention}万能牌{}"
         }
       },
@@ -665,7 +661,7 @@ return {
         name = "回收利用",
         text = {
           "每张弃掉的",
-          "{C:attention}2{}、{C:attention}3{}、{C:attention}4{}或{C:attention}5{}",
+          "{C:attention}2{}、{C:attention}3{}、{C:attention}4{}和{C:attention}5{}",
           "永久获得{C:mult}+#1#{}倍率",
           "并洗回牌组"
         }
@@ -674,7 +670,7 @@ return {
       j_RainyDays_roller_skates = {
         name = "轮滑鞋",
         text = {
-          "回合内弃掉的{C:attention}牌型{}是",
+          "如果本回合{C:attention}弃掉过{}",
           "{C:attention}#2#{}或{C:attention}#3#{}",
           "{X:mult,C:white}X#1#{}倍率",
           "{C:inactive}(当前{V:1}#4#{C:inactive})"
@@ -719,9 +715,9 @@ return {
       j_RainyDays_skinner_box = {
         name = "斯金纳箱",
         text = {
-          "回合结束时",
-          "将基础{C:attention}售价{}设为",
-          "{C:money}$#1#{}到{C:money}$#2#{}之间",
+          "回合结束时将",
+          "这张小丑牌的基础{C:attention}售价{}",
+          "设在{C:money}$#1#{}到{C:money}$#2#{}之间",
           "然后上限提高{C:money}$#3#"
         },
         unlock = {
@@ -755,7 +751,7 @@ return {
         name = "阴森小丑",
         text = {
           "本赛局每打出一种不同的",
-          "隐藏{C:attention}牌型{}，",
+          "隐藏{C:attention}牌型{}",
           "{X:mult,C:white}X#1#{}倍率",
           "{C:inactive}(当前{X:mult,C:white}X#2#{C:inactive}倍率)"
         },
@@ -779,8 +775,8 @@ return {
       j_RainyDays_star_chart = {
         name = "星图",
         text = {
-          "本赛局每使用一张{C:planet}星球牌{}",
-          "{C:chips}+#1#{}筹码",
+          "本赛局内每使用过一张{C:planet}星球牌{}",
+          "这张小丑牌获得{C:chips}+#1#{}筹码",
           "{C:inactive}(当前{C:chips}+#2#{C:inactive}筹码)"
         },
         unlock = {
@@ -792,9 +788,8 @@ return {
       j_RainyDays_theater = {
         name = "剧院",
         text = {
-          "计分前，抽牌至",
-          "{C:attention}手牌上限{}",
-          "手牌中每张{C:attention}人头{}牌",
+          "计分前抽牌至{C:attention}手牌上限{}",
+          "手牌中的每张{C:attention}人头{}牌",
           "给予{C:mult}+#1#{}倍率"
         },
         unlock = {
@@ -816,9 +811,9 @@ return {
       j_RainyDays_train_ticket = {
         name = "火车票",
         text = {
-          "如果出牌包含{C:attention}#2#{}张",
-          "或更多{C:attention}连续{}点数的牌",
-          "这张小丑牌{C:mult}+#1#{}倍率",
+          "如果打出的牌中包含",
+          "{C:attention}#2#{}张或更多{C:attention}连续{}点数的牌",
+          "这张小丑获得{C:mult}+#1#{}倍率",
           "{C:inactive}(当前{C:mult}+#3#{C:inactive}倍率)"
         },
         unlock = {
@@ -842,7 +837,7 @@ return {
         text = {
           "售出{C:attention}#1#",
           "{C:attention}#2#{}以获得{C:money}$#3#",
-          "{s:0.8}回合开始时改变小丑牌",
+          "{s:0.8}每个回合小丑都会变",
         }
       },
 
@@ -859,8 +854,8 @@ return {
       j_RainyDays_windowsill = {
         name = "窗台",
         text = {
-          "每抽到{C:attention}#1#{}{C:inactive}[#2#]{}张",
-          "{C:diamonds}方块{}花色牌",
+          "回合内每累计抽到",
+          "{C:attention}#1#{}{C:inactive}[#2#]{}张{C:diamonds}方块{}花色牌",
           "生成{C:attention}#3#{}张{C:planet}星球牌{}",
           "{C:inactive}(必须有空位)"
         }
@@ -873,7 +868,7 @@ return {
           "售出此牌以生成",
           "{C:tarot}#2#",
           "{C:tarot}#3#",
-          "回合开始时改变{C:tarot}塔罗牌",
+          "每个回合{C:tarot}塔罗牌{}都会改变",
           "{C:inactive}(必须有空位)"
         }
       },
@@ -883,7 +878,7 @@ return {
         text = {
           "{C:chips}+#1#{}筹码",
           "售出此牌以生成{C:tarot}#2#",
-          "回合开始时改变{C:tarot}塔罗牌",
+          "每个回合{C:tarot}塔罗牌{}都会改变",
           "{C:inactive}(必须有空位)"
         }
       }
@@ -911,7 +906,7 @@ return {
       rainydays_hand_cap = "次出牌",
       rainydays_hands = "次出牌",
       rainydays_hand_size = "手牌上限",
-      rainydays_hands_upgraded = "手牌已升级！",
+      rainydays_hands_upgraded = "牌型已升级！",
       rainydays_hidden = "隐藏",
       rainydays_inactive = "未激活",
       rainydays_include_feathers = "包含羽毛小丑牌",
