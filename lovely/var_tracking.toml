@@ -1,0 +1,28 @@
+[manifest]
+version = '1.0.0'
+dump_lua = true
+priority = 0
+
+
+
+#plump joker consumeable ante count
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+match_indent = true
+pattern = '''G.GAME.consumeable_usage_total.all = G.GAME.consumeable_usage_total.all + 1'''
+position = 'after'
+payload = '''G.GAME.rd_consumeable_usage_round = G.GAME.rd_consumeable_usage_round + 1
+G.GAME.rd_consumeable_usage_ante = G.GAME.rd_consumeable_usage_ante + 1'''
+
+
+
+#count amount jokers sold
+[[patches]]
+[patches.pattern]
+target =  'card.lua'
+match_indent = true
+pattern = '''inc_career_stat('c_cards_sold', 1)
+if self.ability.set == 'Joker' then '''
+position = 'after'
+payload = '''G.GAME.rd_jokers_sold = (G.GAME.rd_jokers_sold or 0) + 1'''

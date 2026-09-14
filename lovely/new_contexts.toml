@@ -1,0 +1,47 @@
+[manifest]
+version = '1.0.0'
+dump_lua = true
+priority = 0
+
+
+
+#add draw individual context
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+match_indent = true
+pattern = '''end
+
+function highlight_card(card, percent, dir)'''
+position = 'before'
+payload = '''if from == G.deck and to == G.hand and card then
+	local rd_effects = {}
+	SMODS.calculate_context({ rd_draw_individual = true, other_card = card }, rd_effects)
+	if G.GAME.facing_blind then
+  		G.GAME.rd_cards_drawn_this_round = G.GAME.rd_cards_drawn_this_round + 1
+		if SMODS.has_enhancement(card, 'm_steel') then
+			G.GAME.rd_steel_cards_drawn_this_round = G.GAME.rd_steel_cards_drawn_this_round + 1
+		end
+  		card.ability.rd_early_bird = not G.GAME.current_round.any_hand_drawn and true or nil
+	end
+	SMODS.trigger_effects(rd_effects)
+end'''
+
+
+
+#retrigger joker react
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/utils.lua"]'''
+match_indent = true
+pattern = '''context.individual = true'''
+position = 'after'
+payload = '''context.rd_is_repetition = (reps[j] ~= 1)'''
+
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/utils.lua"]'''
+match_indent = true
+pattern = '''context.individual = nil'''
+position = 'after'
+payload = '''context.rd_is_repetition = nil'''

@@ -1,0 +1,46 @@
+[manifest]
+version = '1.0.0'
+dump_lua = true
+priority = 0
+
+
+
+#unlock event used consumeables
+[[patches]]
+[patches.pattern]
+target = 'functions/misc_functions.lua'
+pattern = '''if not card.config.center.discovered then'''
+position = 'before'
+match_indent = true
+payload = '''check_for_unlock({ type = 'rd_used_consumeable' })'''
+
+
+
+#lottery ticket unlock event and lucky trigger count
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = '''self.lucky_trigger = true'''
+position = 'before'
+payload = '''if not self.lucky_trigger then
+	G.GAME.rd_lucky_trigger_count = (G.GAME.rd_lucky_trigger_count or 0) + 1
+    	check_for_unlock({ type = 'rd_lucky_trigger_count' })
+end'''
+
+
+
+#polished joker unlock event and enhancement count
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/overrides.lua"]'''
+match_indent = true
+pattern = '''SMODS.calculate_context({setting_ability = true, old = old_center.key, new = self.config.center_key, other_card = self, unchanged = old_center.key == self.config.center.key})'''
+position = 'after'
+payload = '''if self.config.center_key ~= 'c_base' and (self.ability.set == 'Default' or self.ability.set == 'Enhanced') then
+	G.GAME.rd_enhancements_given_count = (G.GAME.rd_enhancements_given_count or 0) + 1
+	if old_center.key ~= 'c_base' and self.config.center_key ~= old_center.key then
+		G.GAME.rd_enhancements_override_count = (G.GAME.rd_enhancements_override_count or 0) + 1
+	end
+	check_for_unlock({ type = 'rd_enhancements_given' })
+end'''

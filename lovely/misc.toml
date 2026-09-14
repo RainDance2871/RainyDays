@@ -1,0 +1,28 @@
+[manifest]
+version = '1.0.0'
+dump_lua = true
+priority = 0
+
+
+
+#hide changed ranks
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = '''self:set_sprites(nil, card)'''
+position = 'at'
+payload = '''if not self.rainydays_hide_rank_change then
+    	self:set_sprites(nil, card)
+end'''
+
+
+
+#save game after drawing cards. necessary to prevent hand size bugs with troupe
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+match_indent = true
+pattern = '''if G.GAME.facing_blind then G.GAME.current_round.any_hand_drawn = true end'''
+position = 'after'
+payload = '''save_run()'''

@@ -1,0 +1,80 @@
+[manifest]
+version = '1.0.0'
+dump_lua = true
+priority = 0
+
+
+
+#draw soul with edition 
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+match_indent = true
+pattern = '''if edition.apply_to_float and self.children.floating_sprite then'''
+position = 'at'
+payload = '''local apply_edition = edition.apply_to_float
+if (self.config.center.rd_soul_draw_edition ~= nil) then
+    	apply_edition = self.config.center.rd_soul_draw_edition
+end
+if apply_edition and self.children.floating_sprite then'''
+
+
+
+#canvas drawing should disable basic drawing
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+match_indent = true
+pattern = '''SMODS.DrawStep {
+    key = 'center',
+    order = -10,
+    func = function(self, layer)'''
+position = 'after'
+payload = '''        if self.config.center.rd_canvas_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
+
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+match_indent = true
+pattern = '''SMODS.DrawStep {
+    key = 'front',
+    order = 0,
+    func = function(self, layer)'''
+position = 'after'
+payload = '''        if self.config.center.rd_canvas_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
+
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+match_indent = true
+pattern = '''SMODS.DrawStep {
+    key = 'edition',
+    order = 20,
+    func = function(self, layer)'''
+position = 'after'
+payload = '''        if self.config.center.rd_canvas_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
+
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+match_indent = true
+pattern = '''SMODS.DrawStep {
+    key = 'canvas_text',
+    order = 45,
+    func = function(self, layer)'''
+position = 'after'
+payload = '''        if self.config.center.rd_canvas_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
+
+
+
+#dont draw soul if skip_soul is true
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+match_indent = true
+pattern = '''SMODS.DrawStep {
+    key = 'floating_sprite',
+    order = 60,
+    func = function(self)'''
+position = 'after'
+payload = '''if self.config.center.rd_skip_soul then return end'''

@@ -1,0 +1,37 @@
+[manifest]
+version = '1.0.0'
+dump_lua = true
+priority = 0
+
+
+
+#tarot card enhancements
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = '''for i=1, #G.hand.highlighted do
+                G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function() G.hand.highlighted[i]:set_ability(G.P_CENTERS[self.ability.consumeable.mod_conv]);return true end }))
+            end '''
+position = 'at'
+payload = '''local ret = RainyDays.set_ability_multiple(self, G.hand.highlighted, self.ability.consumeable.mod_conv, { delay = 0.1, no_message = true })
+ret.func ()'''
+
+
+
+#delay enhancement sprites further
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = '''if delay_sprites then'''
+position = 'before'
+payload = '''if not RainyDays.setting_ability_multiple then'''
+
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = '''if self.ability and old_center and old_center.config.bonus then'''
+position = 'before'
+payload = '''end'''
