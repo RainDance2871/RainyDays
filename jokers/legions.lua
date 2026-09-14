@@ -1,0 +1,22 @@
+SMODS.Joker {
+  key = 'legions',
+  atlas = 'Jokers',
+  rarity = 1,
+  cost = 4,
+  unlocked = true,
+  blueprint_compat = true,
+  eternal_compat = true,
+  perishable_compat = true,
+  pos = RainyDays.GetJokersAtlasTable('legions'),
+  attributes = { 'mult' },
+  
+  calculate = function(self, card, context)    
+    if context.individual and context.cardarea == G.play and not context.other_card.debuff then
+      if context.other_card:get_id() <= 10 and context.other_card:get_id() >= 2 then
+        return {
+          mult = context.other_card:get_id() / 2
+        }
+      end
+    end
+  end
+}
