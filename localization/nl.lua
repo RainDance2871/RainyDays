@@ -1127,7 +1127,8 @@ return {
         "Laat geen van beide zien"
       },
       rainydays_discover_all = "Ontdek alles",
-      rainydays_include_feathers = "Veer Jokers includeren",
+      rainydays_include_feathers = "Veer Jokers toevoegen",
+      rainydays_include_satellite = "Inclusief Satelliet",
       rainydays_metallic_highlight_info = {
         "Als een puur visueel effect hebben",
         "sommige Jokers metalen highlights"

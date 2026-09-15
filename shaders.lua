@@ -16,7 +16,7 @@ SMODS.Shader {
   
   send_vars = function(sprite, card)
     return {
-      time2 = love.timer.getTime(),      
+      time2 = love.timer.getTime(),
       sparkle_density = 10,
       sparkle_speed = 1,
       sparkle_size = 0.15,
@@ -62,6 +62,11 @@ SMODS.Shader {
       sphere = function(i)
         return (G.GAME.hands[RainyDays.balatro_hands[i]].played >= 3) and 1 or 0
       end
+    elseif RainyDays.card_drawn.config.center.key == 'j_satellite' then
+      sphere = function(i)
+        local planets = { 'c_eris', 'c_ceres', 'c_planet_x', 'c_neptune', 'c_mars', 'c_earth', 'c_jupiter', 'c_saturn', 'c_venus', 'c_uranus', 'c_mercury', 'c_pluto' }
+        return G.GAME.consumeable_usage[planets[i]] and 1 or 0
+      end
     end
   
     return {
@@ -94,7 +99,7 @@ SMODS.Shader {
       
       row_x = { 12, 12 },
       row_y = { 67, 79 },
-      row_start = { 0, 4 },      
+      row_start = { 0, 4 },
       sphere_size = { 12, 12 }
     }
   end
@@ -121,7 +126,7 @@ SMODS.Shader {
       
       row_x = { 16, 11, 16 },
       row_y = { 61, 71, 81 },
-      row_start = { 0, 4, 9 },      
+      row_start = { 0, 4, 9 },
       sphere_size = { 10, 10 }
     }
   end

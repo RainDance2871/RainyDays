@@ -117,7 +117,8 @@ local JokerAtlasKeys = {
   'indicator_enhancements',
   'indicator_hands',
   'indicator_planets',
-  'indicator_ranks'
+  'indicator_ranks',
+  'satellite'
 }
 
 local JokerAtlasTable = {}

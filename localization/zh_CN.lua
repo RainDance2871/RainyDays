@@ -1254,6 +1254,7 @@ return {
       },
       rainydays_discover_all = "全部发现",
       rainydays_include_feathers = "包含羽毛小丑牌",
+      rainydays_include_satellite = "Include Satellite",
       rainydays_metallic_highlight_info = {
         "纯视觉效果：部分小丑牌的贴图",
         "带有金属质感的高光"

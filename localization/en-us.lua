@@ -1122,6 +1122,7 @@ return {
       },
       rainydays_discover_all = "Discover all",
       rainydays_include_feathers = "Include Feather Jokers",
+      rainydays_include_satellite = "Include Satellite",
       rainydays_metallic_highlight_info = {
         "As a purely visual effect, some Jokers have",
         "metallic hightlights in their sprites"
@@ -1180,6 +1181,8 @@ return {
       rainydays_parrot_copied_before = "Copied Before",
       
       rainydays_prehistory_box_name = "Eligible Jokers",
+      
+      rainydays_satellite_box_name = "Planets used",
       
       rainydays_sputnik_box_name = "Hands played",
       
