@@ -499,15 +499,18 @@ jd_def['j_RainyDays_collage'] = {
   
   calc_function = function(card)
     local table = {}
-    for key in pairs(G.GAME.rd_enhancements_played_this_ante) do
+    for key in pairs(G.GAME.rd_enhancements_scored_this_ante) do
       table[key] = true
     end
     
-    for i = 1, #JokerDisplay.current_hand do
-      if JokerDisplay.current_hand[i].facing and JokerDisplay.current_hand[i].facing ~= 'back' then
-        local enhancements = SMODS.get_enhancements(JokerDisplay.current_hand[i])
-        for key in pairs(enhancements) do
-          table[key] = true
+    if G.GAME.facing_blind then
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        for _, scoring_card in pairs(scoring_hand) do
+          local enhancements = SMODS.get_enhancements(scoring_card)
+          for key in pairs(enhancements) do
+            table[key] = true
+          end
         end
       end
     end
@@ -642,6 +645,23 @@ jd_def['j_RainyDays_desolate'] = {
     
     card.joker_display_values.hands = math.min(count, card.ability.extra.hands)
     card.joker_display_values.xmult = (count >= card.ability.extra.hands) and card.ability.extra.Xmult or 1
+  end,
+  
+  style_function = function(card, text, reminder_text, extra)
+    if reminder_text then
+      local count = 0
+      for _, value in ipairs(G.handlist) do
+        if G.GAME.hands[value].rd_discarded and G.GAME.hands[value].rd_discarded > 0 then
+          count = count + 1
+        end
+      end
+      
+      for i = 2, 4 do
+        if reminder_text.children[i] then
+          reminder_text.children[i].config.colour = (count >= card.ability.extra.hands) and G.C.GREEN or nil
+        end
+      end
+    end
   end
 }
 

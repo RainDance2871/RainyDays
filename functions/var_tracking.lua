@@ -15,7 +15,7 @@ function Game:init_game_object()
   --cards played
   ret.rd_ranks_played_this_round = {}
   ret.rd_ranks_scored_this_round = {}
-  ret.rd_enhancements_played_this_ante = {}
+  ret.rd_enhancements_scored_this_ante = {}
   
   --consumeable use
   ret.rd_consumeable_usage_round = 0
@@ -47,11 +47,6 @@ G.FUNCS.evaluate_play = function(e)
       local id = G.play.cards[i]:get_id()
       G.GAME.rd_ranks_played_this_round[id] = (G.GAME.rd_ranks_played_this_round[id] or 0) + 1
     end
-
-    local enhancements = SMODS.get_enhancements(G.play.cards[i])
-    for key in pairs(enhancements) do
-      G.GAME.rd_enhancements_played_this_ante[key] = (G.GAME.rd_enhancements_played_this_ante[key] or 0) + 1
-    end
   end
 
   local _, _, _, scoring_hand = G.FUNCS.get_poker_hand_info(G.play.cards)
@@ -60,6 +55,11 @@ G.FUNCS.evaluate_play = function(e)
     if not SMODS.has_no_rank(scoring_hand[i]) then
       local id = scoring_hand[i]:get_id()
       G.GAME.rd_ranks_scored_this_round[id] = (G.GAME.rd_ranks_scored_this_round[id] or 0) + 1
+    end
+    
+    local enhancements = SMODS.get_enhancements(G.play.cards[i])
+    for key in pairs(enhancements) do
+      G.GAME.rd_enhancements_scored_this_ante[key] = (G.GAME.rd_enhancements_scored_this_ante[key] or 0) + 1
     end
   end
   
@@ -130,8 +130,8 @@ function end_round()
         for _, value in pairs(G.GAME.hands) do
           value.rd_discarded_this_ante = 0
         end
-        for key in pairs(G.GAME.rd_enhancements_played_this_ante) do
-          G.GAME.rd_enhancements_played_this_ante[key] = nil
+        for key in pairs(G.GAME.rd_enhancements_scored_this_ante) do
+          G.GAME.rd_enhancements_scored_this_ante[key] = nil
         end
       end
       return true

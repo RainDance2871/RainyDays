@@ -63,7 +63,7 @@ return {
         text = {
           "{X:mult,C:white}X#1#{} Multi voor elke",
           "verschillende tijdens",
-          "deze rond gespeelde",
+          "deze ronde gespeelde",
           "{C:attention}pokerhand",
           "{C:inactive}(Momenteel {X:mult,C:white}X#2#{C:inactive} Multi)"
         },
@@ -101,8 +101,8 @@ return {
         text = {
           "Deze Joker ontvangt {X:mult,C:white}X#1#{} Multi",
           "voor elke opeenvolgende ronde",
-          "waarin {C:attention}#2#{} of meer {C:attention}consumpties",
-          "zijn gebruikt",
+          "waarin {C:attention}#2#{} of meer {C:attention}consumptie{}-",
+          "kaarten zijn gebruikt",
           "{C:inactive}(Momenteel {X:mult,C:white}X#3#{C:inactive} Multi)",
           "{C:inactive}(#4#{C:attention}#5#{C:inactive}#6#)"
         }
@@ -242,10 +242,10 @@ return {
       j_RainyDays_collage = {
         name = "Collage",
         text = {
-          "{X:mult,C:white}X#1#{} Multi voor elke",
-          "{C:attention}unieke verbetering",
-          "onder deze {C:attention}ante",
-          "gespeelde kaarten",
+          "{X:mult,C:white}X#1#{} Multi voor elke",-- {C:attention}",
+          "{C:attention}verschillende verbetering",
+          "onder deze {C:attention}ante{} gespeelde",
+          "scorende kaarten",
           "{C:inactive}(Momenteel {X:mult,C:white}X#2#{C:inactive} Multi)"
         }
       },
@@ -440,8 +440,8 @@ return {
         name = "Gouden Kalf",
         text = {
           "Deze Joker ontvangt {X:mult,C:white}X#1#{} Multi",
-          "wanneer een {C:attention}gouden kaart{} wordt",
-          "getrokken",
+          "wanneer tijdens een ronde een",
+          "{C:attention}gouden kaart{} wordt getrokken",
           "{C:inactive}(Momenteel {X:mult,C:white}X#2#{C:inactive} Multi)"
         }
       },
@@ -466,9 +466,10 @@ return {
       j_RainyDays_grey_joker = {
         name = "Grijze Joker",
         text = {
-          "Deze Joker ontvangt {X:mult,C:white}X#2#{} Multi",
-          "als {C:attention}weggegooide{} hand een {C:attention}#1#",
-          "bevat",
+          "Deze Joker ontvangt",
+          "{X:mult,C:white}X#2#{} Multi als {C:attention}weg-",
+          "{C:attention}gegooide{} hand een",
+          "{C:attention}#1#{} bevat",
           "{C:inactive}(Momenteel {X:mult,C:white}X#3#{C:inactive} Multi)"
         },
         unlock = {
@@ -668,7 +669,7 @@ return {
       },
       
       j_RainyDays_membership_card = {
-        name = "Lidmaatschapskaart",
+        name = "Lidmaatschap",
         text = {          
           "Elk {C:attention}voorwerp{} in de",
           "winkel kost {C:money}$#1#{} minder",
@@ -749,7 +750,7 @@ return {
         text = {
           "{C:mult}+#1#{} Multi voor elke",
           "deze {C:attention}ante{} gebruikte",
-          "{C:attention}consumptie",
+          "{C:attention}consumptie{}-kaart",
           "{C:inactive}(Momenteel {C:mult}+#2#{C:inactive} Multi)"
         },
         unlock = {

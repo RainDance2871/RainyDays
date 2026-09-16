@@ -15,7 +15,7 @@ SMODS.Joker {
   
   config = {
     extra = {
-      chip_amount = RainyDays.Constellations and 10 or 5
+      chip_amount = RainyDays.Constellations and 7 or 5
     }
   },
   

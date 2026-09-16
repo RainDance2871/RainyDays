@@ -89,7 +89,7 @@ SMODS.Shader {
     if RainyDays.card_drawn.config.center.key == 'j_RainyDays_collage' then
       sphere = function(i)
         local enhancements = { 'm_bonus', 'm_mult', 'm_wild', 'm_glass', 'm_steel', 'm_stone', 'm_gold', 'm_lucky' }
-        return (G.GAME.rd_enhancements_played_this_ante and G.GAME.rd_enhancements_played_this_ante[enhancements[i]] and G.GAME.rd_enhancements_played_this_ante[enhancements[i]] > 0) and 1 or 0
+        return (G.GAME.rd_enhancements_scored_this_ante and G.GAME.rd_enhancements_scored_this_ante[enhancements[i]] and G.GAME.rd_enhancements_scored_this_ante[enhancements[i]] > 0) and 1 or 0
       end
     end
   

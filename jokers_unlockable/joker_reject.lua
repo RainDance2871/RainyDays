@@ -36,6 +36,9 @@ SMODS.Joker {
     G.GAME.round_resets.discards = G.GAME.round_resets.discards - card.ability.extra.discards
     ease_discard(-card.ability.extra.discards)
     G.GAME.modifiers.discard_cost = (G.GAME.modifiers.discard_cost or 0) - card.ability.extra.money_pay
+    if G.GAME.G.GAME.modifiers.discard_cost == 0 then
+      G.GAME.G.GAME.modifiers.discard_cost = nil
+    end
   end,
   
   locked_loc_vars = function(self, info_queue, card)   

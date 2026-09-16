@@ -7,8 +7,8 @@ return {
           "A hefty collection of {C:attention}90{} vanilla-style {C:attention}Jokers",
           "designed to feel right at home in classic {C:attention}Balatro{}.",
           "Each one keeps to the game's short descriptions",
-          "and is balanced to complement the existing roster,",
-          "offering fresh synergies without overshadowing",
+          "and is {C:attention}balanced{} to complement the existing roster,",
+          "offering fresh {C:attention}synergies{} without overshadowing",
           "the originals."
         }
       }
@@ -241,10 +241,9 @@ return {
       j_RainyDays_collage = {
         name = "Collage",
         text = {
-          "{X:mult,C:white}X#1#{} Mult for each",
-          "{C:attention}unique enhancement",
-          "among cards played",
-          "this {C:attention}Ante",
+          "{X:mult,C:white}X#1#{} Mult for each {C:attention}unique",
+          "{C:attention}enhancement{} among played",
+          "scoring cards this {C:attention}Ante",
           "{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)"
         }
       },

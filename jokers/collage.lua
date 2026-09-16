@@ -15,7 +15,7 @@ SMODS.Joker {
   
   config = { 
     extra = { 
-      xmult = 0.5,
+      xmult = 0.3,
       xmult_base = 1
     }
   },
@@ -26,9 +26,9 @@ SMODS.Joker {
   
   loc_vars = function(self, info_queue, card)
     local contents = {}
-    if G.GAME and G.GAME.rd_enhancements_played_this_ante then
-      for key in pairs(G.GAME.rd_enhancements_played_this_ante) do
-        if G.GAME.rd_enhancements_played_this_ante[key] > 0 then
+    if G.GAME and G.GAME.rd_enhancements_scored_this_ante then
+      for key in pairs(G.GAME.rd_enhancements_scored_this_ante) do
+        if G.GAME.rd_enhancements_scored_this_ante[key] > 0 then
           contents[#contents + 1] = key
         end
       end
@@ -86,9 +86,9 @@ SMODS.Joker {
 
 function RainyDays.collage_amount_of_enhancements()
   local amount = 0;
-  if G.GAME and G.GAME.rd_enhancements_played_this_ante then
-    for key in pairs(G.GAME.rd_enhancements_played_this_ante) do
-      if G.GAME.rd_enhancements_played_this_ante[key] > 0 then
+  if G.GAME and G.GAME.rd_enhancements_scored_this_ante then
+    for key in pairs(G.GAME.rd_enhancements_scored_this_ante) do
+      if G.GAME.rd_enhancements_scored_this_ante[key] > 0 then
         amount = amount + 1
       end
     end
