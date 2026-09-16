@@ -10,5 +10,6 @@
 	"badge_colour": "4846a4",
 	"badge_text_colour": "f8f8ff",
 	"version": "0.6.0",
+	"icon_path": "icon.png",
 	"dependencies": [ "Steamodded (>=26.829.0)" ]
 }
