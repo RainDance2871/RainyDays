@@ -23,7 +23,7 @@ SMODS.Joker {
   config = {
     extra = {
       numerator_in = 1,
-      denominator_in = 4
+      denominator_in = 3
     }
   },
   
