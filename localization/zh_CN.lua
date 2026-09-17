@@ -1310,7 +1310,10 @@ return {
       rainydays_metropolis_prefix_inactive = "当前",
       
       rainydays_parrot_box_name = "Copied Jokers",
-      rainydays_parrot_copied_before = "已复制过",
+      rainydays_parrot_wait_postfix_plural = " more rounds",
+      rainydays_parrot_wait_postfix_singular = " more round",
+      rainydays_parrot_wait_prefix_plural = "Wait ",
+      rainydays_parrot_wait_prefix_singular = "Wait ",
       
       rainydays_prehistory_box_name = "Eligible Jokers",
       
@@ -1349,8 +1352,8 @@ return {
       --terms
       rainydays_constellation = "星座",
       rainydays_feather = "Feather",
-      rainydays_hand = "次出牌",
-      rainydays_hand_size = "手牌上限"
+      rainydays_hands = "次出牌",
+      rainydays_hand_size = "手牌上限",
       
       --JokerDisplay
       rainydays_JD_booster_pack = " Booster Pack",

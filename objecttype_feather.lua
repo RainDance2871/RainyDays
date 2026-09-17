@@ -1,10 +1,12 @@
 --override of the create card. if the odds are right, we transform it into a feather. This keep feathers consistently appearing regardless of how many jokers were added by mods. note that this is only applied if the player has at least one feather already.
 local old_func_create_card = create_card
+local feather_rate = 75
+
 function create_card(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
   local ret = old_func_create_card(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
   if RainyDays.config.feathers and RainyDays.FeatherOwned() then
     local absent_feathers = RainyDays.GetAbsentFeathers(ret.config.center.rarity)
-    if absent_feathers and #absent_feathers > 0 and pseudorandom('feathers') <= #absent_feathers / 65 then
+    if absent_feathers and #absent_feathers > 0 and pseudorandom('feathers') <= #absent_feathers / feather_rate then
       local feather_key = pseudorandom_element(absent_feathers, pseudoseed('Feathers' .. G.GAME.round_resets.ante))
       ret:set_ability(feather_key, true)
       ret:set_cost()

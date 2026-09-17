@@ -570,10 +570,10 @@ return {
       j_RainyDays_lady_in_waiting = {
         name = "Hofdame",
         text = {
-          "Wanneer een {C:attention}#1#{} tijdens",
-          "een ronde wordt getrok-",
-          "ken, ontvangt deze een",
-          "nieuwe {C:attention}verbetering",
+          "Wanneer een {C:attention}#1#{}, {C:attention}#2#{} of {C:attention}#3#",
+          "tijdens een ronde wordt",
+          "getrokken, ontvangt deze",
+          "een nieuwe {C:attention}verbetering",
           "{C:inactive}(Kaart verliest rang niet)"
         },
         unlock = {
@@ -737,10 +737,9 @@ return {
         name = "Papegaai",
         text = {
           "Als {C:attention}blind{} is geselecteerd,",
-          "kopieer {C:attention}Joker{} aan de rech-",
-          "terkant tot einde van ronde",
-          "als die deze {C:attention}ante{} nog niet",
-          "gekopieerd is",
+          "kopieert {C:attention}Joker{} aan de rechter-",
+          "kant deze ronde als die niet is",
+          "gekopieerd in vorige {C:attention}#2#{} rondes",
           "{C:inactive}(Momenteel {V:1}#1#{C:inactive})"
         }
       },
@@ -1185,7 +1184,10 @@ return {
       rainydays_metropolis_prefix_inactive = "Momenteel ",
       
       rainydays_parrot_box_name = "Gekopieerde Jokers",
-      rainydays_parrot_copied_before = "Eerder Gekopieerd",
+      rainydays_parrot_wait_postfix_plural = " rondes",
+      rainydays_parrot_wait_postfix_singular = " ronde",
+      rainydays_parrot_wait_prefix_plural = "Wacht nog ",
+      rainydays_parrot_wait_prefix_singular = "Wacht nog ",
       
       rainydays_prehistory_box_name = "Jokers in aanmerking",
       
@@ -1224,8 +1226,8 @@ return {
       --terms
       rainydays_constellation = "Sterrenbeeld",
       rainydays_feather = "Veer",
-      rainydays_hand = "Hand",
       rainydays_hand_size = "Handomvang",
+      rainydays_hands = "Handen",
       
       --JokerDisplay
       rainydays_JD_booster_pack = " boosterpakket",

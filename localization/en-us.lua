@@ -564,9 +564,10 @@ return {
       j_RainyDays_lady_in_waiting = {
         name = "Lady-in-waiting",
         text = {
-          "When a {C:attention}#1#{} is drawn",
-          "during a round, it gains",
-          "a random new {C:attention}enhancement",
+          "When a {C:attention}#1#{}, {C:attention}#2#{}, or {C:attention}#3#",
+          "is drawn during a round,",
+          "it gains a random new",
+          "{C:attention}enhancement",
           "{C:inactive}(Card won't lose rank)"
         },
         unlock = {
@@ -729,10 +730,10 @@ return {
       j_RainyDays_parrot = {
         name = "Parrot",
         text = {
-          "When {C:attention}Blind{} is selected,",
-          "if not copied this {C:attention}Ante{},",
-          "copies ability of {C:attention}Joker",
-          "to its right this round",
+          "When {C:attention}Blind{} is selected, copies",
+          "ability of {C:attention}Joker{} to its right",
+          "this round if not copied in",
+          "last {C:attention}#2#{} rounds",
           "{C:inactive}(Currently {V:1}#1#{C:inactive})"
         }
       },
@@ -1177,7 +1178,10 @@ return {
       rainydays_metropolis_prefix_inactive = "Currently ",
       
       rainydays_parrot_box_name = "Copied Jokers",
-      rainydays_parrot_copied_before = "Copied Before",
+      rainydays_parrot_wait_postfix_plural = " more rounds",
+      rainydays_parrot_wait_postfix_singular = " more round",
+      rainydays_parrot_wait_prefix_plural = "Wait ",
+      rainydays_parrot_wait_prefix_singular = "Wait ",
       
       rainydays_prehistory_box_name = "Eligible Jokers",
       
@@ -1218,8 +1222,8 @@ return {
       --terms
       rainydays_constellation = "Constellation",
       rainydays_feather = "Feather",
-      rainydays_hand = "Hand",
       rainydays_hand_size = "Hand size",
+      rainydays_hands = "Hands",
       
       --JokerDisplay
       rainydays_JD_booster_pack = " Booster Pack",

@@ -12,9 +12,14 @@ SMODS.Joker {
   
   config = {
     extra = {
-      copied_before = {}
+      copied_before = {},
+      round_limit = 5
     }
   },
+  
+  add_to_deck = function(self, card, from_debuff)
+    card.ability.extra.round = card.ability.extra.round or G.GAME.round
+  end,
   
   loc_vars = function(self, info_queue, card)
     local contents = {}
@@ -23,7 +28,7 @@ SMODS.Joker {
     
     if card.area and card.area == G.jokers and G.GAME.blind then
       for i = 1, #G.jokers.cards do
-        if RainyDays.list_contains(card.ability.extra.copied_before, G.jokers.cards[i].ability.rd_joker_id) then
+        if RainyDays.parrot_copied_before(card, G.jokers.cards[i]) then
           local name = localize{ type = 'name_text', set = 'Joker', key = G.jokers.cards[i].config.center_key }
           
           local function amount_of_copies(card)
@@ -57,8 +62,19 @@ SMODS.Joker {
         local box = RainyDays.create_infobox_list(localize('rainydays_parrot_box_name'), contents)
         info_queue[#info_queue + 1] = { set = 'Other', key = box }
       end
+      
+      
+      local other_joker
+      if card.ability.extra.other_joker_id then
+        for i = 1, #G.jokers.cards do
+          if card.ability.extra.other_joker_id == G.jokers.cards[i].ability.rd_joker_id then
+            other_joker = G.jokers.cards[i]
+            break
+          end
+        end
+      end
     
-      if not G.GAME.blind.in_blind then
+      if not other_joker then
         local next_joker
         for i = 1, #G.jokers.cards do
           if G.jokers.cards[i] == card then 
@@ -68,9 +84,14 @@ SMODS.Joker {
         
         local compatible = next_joker and next_joker.config.center.blueprint_compat
         local string = localize('k_' .. (compatible and 'compatible' or 'incompatible'))
-        if compatible and RainyDays.list_contains(card.ability.extra.copied_before, next_joker.ability.rd_joker_id) then
+        if compatible and RainyDays.parrot_copied_before(card, next_joker) then
           compatible = false
-          string = string.lower(localize('rainydays_parrot_copied_before'))
+          local rounds_remain = card.ability.extra.copied_before[next_joker.ability.rd_joker_id] + card.ability.extra.round_limit - card.ability.extra.round + 1
+          if rounds_remain > 1 then
+            string = string.lower(localize('rainydays_parrot_wait_prefix_plural') .. rounds_remain .. localize('rainydays_parrot_wait_postfix_plural'))
+          else
+            string = string.lower(localize('rainydays_parrot_wait_prefix_singular') .. rounds_remain .. localize('rainydays_parrot_wait_postfix_singular'))
+          end
         end
         
         main_end = {{
@@ -91,7 +112,8 @@ SMODS.Joker {
         colours = { 
           other_joker_name and G.C.FILTER or G.C.UI.TEXT_INACTIVE
         },
-        other_joker_name or string.lower(localize('k_none'))
+        other_joker_name or string.lower(localize('k_none')),
+        card.ability.extra.round_limit
       }
     }
   end,
@@ -100,25 +122,52 @@ SMODS.Joker {
     if context.setting_blind and not context.blueprint then
       for i = 1, #G.jokers.cards do
         if G.jokers.cards[i] == card and G.jokers.cards[i + 1] and G.jokers.cards[i + 1].config.center.blueprint_compat then
-          if not RainyDays.list_contains(card.ability.extra.copied_before, G.jokers.cards[i + 1].ability.rd_joker_id) then
+          if not RainyDays.parrot_copied_before(card, G.jokers.cards[i + 1]) then
             card.ability.extra.other_joker_id = G.jokers.cards[i + 1].ability.rd_joker_id
-            card.ability.extra.copied_before[#card.ability.extra.copied_before + 1] = card.ability.extra.other_joker_id
+            card.ability.extra.copied_before[card.ability.extra.other_joker_id] = card.ability.extra.round
             card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('rainydays_found_target'), colour = G.C.GREEN })
           end
         end
       end
     end
     
+    if (context.joker_type_destroyed or context.selling_card) and context.card and context.card.ability and not card.ability.extra.target_destroyed then
+      if context.card.ability.rd_joker_id and context.card.ability.rd_joker_id == card.ability.extra.other_joker_id then
+        card.ability.extra.target_destroyed = true
+        
+        local reset = {
+          message = localize('k_reset'),
+          colour = G.C.GREEN,
+          func = function()
+            card.ability.extra.target_destroyed = nil
+            card.ability.extra.other_joker_id = nil
+          end
+        }
+        
+        local ret = SMODS.blueprint_effect(card, context.card, context)
+        if ret then
+          ret.colour = G.C.GREEN
+          if not ret.extra then
+            ret.extra = reset
+          else
+            ret.extra.extra = reset
+          end
+          return ret
+        end
+        return reset
+      end
+    end
+    
     if context.end_of_round then
       if not context.repetition and not context.individual then
-        if G.GAME.blind.boss and #card.ability.extra.copied_before > 0 then
-          card.ability.extra.other_joker_id = nil
-          card.ability.extra.copied_before = {}
-          return {
-            message = localize('rainydays_full_reset'),
-            colour = G.C.GREEN
-          }
-        elseif card.ability.extra.other_joker_id then
+        card.ability.extra.round = G.GAME.round + 1
+        for key, round in pairs(card.ability.extra.copied_before) do
+          if card.ability.extra.round - round >= card.ability.extra.round_limit + 1 then
+            card.ability.extra.copied_before[key] = nil
+          end
+        end
+        
+        if card.ability.extra.other_joker_id then
           card.ability.extra.other_joker_id = nil
           return {
             message = localize('k_reset'),
@@ -142,9 +191,18 @@ SMODS.Joker {
         local ret = SMODS.blueprint_effect(card, other_joker, context)
         if ret then
           ret.colour = G.C.GREEN
+          return ret
         end
-        return ret
       end
     end
   end
 }
+
+function RainyDays.parrot_copied_before(parrot, copied_card)
+  for key in pairs(parrot.ability.extra.copied_before) do    
+    if key == copied_card.ability.rd_joker_id then
+      return true
+    end
+  end
+  return false
+end

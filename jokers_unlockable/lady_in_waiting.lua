@@ -8,32 +8,39 @@ SMODS.Joker {
   eternal_compat = true,
   perishable_compat = true,
   pos = RainyDays.GetJokersAtlasTable('lady_in_waiting'),
-  attributes = { 'rank', 'queen', 'modify_card', 'enhancements' },
+  attributes = { 'rank', 'queen', 'six', 'four', 'modify_card', 'enhancements' },
   
   config = {
     extra = {
-      rank = 'Queen'
+      rank1 = 'Queen',
+      rank2 = '6',
+      rank3 = '4'
     }
   },
   
   loc_vars = function(self, info_queue, card)
     return {
       vars = {
-        localize(card.ability.extra.rank, 'ranks')
+        localize(card.ability.extra.rank1, 'ranks'),
+        localize(card.ability.extra.rank2, 'ranks'),
+        localize(card.ability.extra.rank3, 'ranks')
       }
     }
   end,
   
   calculate = function(self, card, context)    
-    if context.rd_draw_individual and G.GAME.facing_blind and context.other_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank] then
-      local options = {}
-      for _, value in pairs(G.P_CENTER_POOLS['Enhanced']) do
-        if value.key ~= context.other_card.config.center.key and value.key ~= 'm_stone' and not value.overrides_base_rank then
-          options[#options + 1] = value.key
+    if context.rd_draw_individual and G.GAME.facing_blind then
+      local id= context.other_card:get_id() 
+      if id == RainyDays.balatro_ranks_to_id[card.ability.extra.rank1] or id == RainyDays.balatro_ranks_to_id[card.ability.extra.rank2] or id == RainyDays.balatro_ranks_to_id[card.ability.extra.rank3] then
+        local options = {}
+        for _, value in pairs(G.P_CENTER_POOLS['Enhanced']) do
+          if value.key ~= context.other_card.config.center.key and value.key ~= 'm_stone' and not value.overrides_base_rank then
+            options[#options + 1] = value.key
+          end
         end
+        local enhancement = SMODS.poll_enhancement({ type_key = 'lady_in_waiting', guaranteed = true, options = options })
+        return RainyDays.set_ability_multiple(card, context.other_card, enhancement, { delay = 0.3 })
       end
-      local enhancement = SMODS.poll_enhancement({ type_key = 'lady_in_waiting', guaranteed = true, options = options })
-      return RainyDays.set_ability_multiple(card, context.other_card, enhancement, { delay = 0.3 })
     end
   end,
   
