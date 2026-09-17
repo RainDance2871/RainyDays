@@ -1307,13 +1307,19 @@ jd_def['j_RainyDays_kudzu'] = {
 jd_def['j_RainyDays_lady_in_waiting'] = {
   reminder_text = {
     { text = "(" },
-    { ref_table = 'card.joker_display_values', ref_value = 'localized_text' },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank1' },
+    { text = ", " },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank2' },
+    { text = ", " },    
+    { ref_table = 'card.joker_display_values', ref_value = 'rank3' },
     { text = ")" }
   },
   reminder_text_config = { scale = reminder_text_scale },
   
   calc_function = function(card)
-    card.joker_display_values.localized_text = localize(card.ability.extra.rank, 'ranks')
+    card.joker_display_values.rank1 = localize(card.ability.extra.rank1, 'ranks')
+    card.joker_display_values.rank2 = localize(card.ability.extra.rank2, 'ranks')
+    card.joker_display_values.rank3 = localize(card.ability.extra.rank3, 'ranks')
   end
 }
 
@@ -1664,7 +1670,7 @@ jd_def['j_RainyDays_overflow'] = {
 
 jd_def['j_RainyDays_parrot'] = {
   text = {
-    { ref_table = 'card.joker_display_values', ref_value = 'blueprint_compat', scale = 0.35 }
+    { ref_table = 'card.joker_display_values', ref_value = 'text', scale = 0.35 }
   },
   
   reminder_text = {
@@ -1675,23 +1681,30 @@ jd_def['j_RainyDays_parrot'] = {
   reminder_text_config = { scale = reminder_text_scale },
   
   calc_function = function(card)
-    local blueprint_compat = 'k_incompatible'
     local next_joker
     for i = 1, #G.jokers.cards do
       if G.jokers.cards[i] == card then 
         next_joker = G.jokers.cards[i + 1]
       end
     end
-      
+    
+    local text
     if next_joker and next_joker.config.center.blueprint_compat then
-      if not RainyDays.list_contains(card.ability.extra.copied_before, next_joker.ability.rd_joker_id) then
-        blueprint_compat = 'k_compatible'
+      if not RainyDays.parrot_copied_before(card, next_joker) then
+        text = localize('k_compatible')
       else
-        blueprint_compat = 'rainydays_parrot_copied_before'
+        local rounds_remain = card.ability.extra.copied_before[next_joker.ability.rd_joker_id] + card.ability.extra.round_limit - card.ability.extra.round + 1
+        if rounds_remain > 1 then
+          text = localize('rainydays_parrot_wait_prefix_plural') .. rounds_remain .. localize('rainydays_parrot_wait_postfix_plural')
+        else
+          text = localize('rainydays_parrot_wait_prefix_singular') .. rounds_remain .. localize('rainydays_parrot_wait_postfix_singular')
+        end
       end
+    else
+      text = localize('k_incompatible')
     end
     
-    card.joker_display_values.blueprint_compat = string.upper(string.sub(localize(blueprint_compat), 1, 1)) .. string.sub(localize(blueprint_compat), 2)
+    card.joker_display_values.text = string.upper(string.sub(text, 1, 1)) .. string.sub(text, 2)
     local copied_joker, copied_debuff = JokerDisplay.calculate_blueprint_copy(card)
     card.joker_display_values.copying = localize('rainydays_JD_not_copying')
     JokerDisplay.copy_display(card, copied_joker, copied_debuff)
@@ -1705,7 +1718,7 @@ jd_def['j_RainyDays_parrot'] = {
           next_joker = G.jokers.cards[i + 1]
         end
       end
-      local compatible = next_joker and next_joker.config.center.blueprint_compat and not RainyDays.list_contains(card.ability.extra.copied_before, next_joker.ability.rd_joker_id)
+      local compatible = next_joker and next_joker.config.center.blueprint_compat and not RainyDays.parrot_copied_before(card, next_joker)
       text.children[1].config.colour = compatible and mix_colours(G.C.GREEN, G.C.JOKER_GREY, 0.8) or mix_colours(G.C.RED, G.C.JOKER_GREY, 0.8)
     end
   end,
