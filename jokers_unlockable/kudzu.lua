@@ -37,10 +37,10 @@ SMODS.Joker {
         func = function()
           if #G.jokers.cards + G.GAME.joker_buffer < G.jokers.config.card_limit then
             play_sound('timpani')
-            SMODS.add_card { key = 'j_RainyDays_kudzu' }
+            SMODS.add_card { key = card.config.center.key }
           end
           
-          local count = #SMODS.find_card('j_RainyDays_kudzu')
+          local count = #SMODS.find_card(card.config.center.key)
           if count > 1 then 
             SMODS.scale_card(card, {
               ref_table = card.ability.extra,

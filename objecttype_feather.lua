@@ -1,19 +1,5 @@
---override of the create card. if the odds are right, we transform it into a feather. This keep feathers consistently appearing regardless of how many jokers were added by mods. note that this is only applied if the player has at least one feather already.
-local old_func_create_card = create_card
-local feather_rate = 75
-
-function create_card(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
-  local ret = old_func_create_card(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
-  if RainyDays.config.feathers and RainyDays.FeatherOwned() then
-    local absent_feathers = RainyDays.GetAbsentFeathers(ret.config.center.rarity)
-    if absent_feathers and #absent_feathers > 0 and pseudorandom('feathers') <= #absent_feathers / feather_rate then
-      local feather_key = pseudorandom_element(absent_feathers, pseudoseed('Feathers' .. G.GAME.round_resets.ante))
-      ret:set_ability(feather_key, true)
-      ret:set_cost()
-    end
-  end
-  return ret
-end
+--sea also transform_encountered_card
+RainyDays.feather_rate = 75
 
 function RainyDays.FeatherOwned()
   if G.jokers and G.jokers.cards then
@@ -40,9 +26,9 @@ function RainyDays.GetAbsentFeathers(rarity)
     }
   end
   
-  if feathers_available and not next(SMODS.find_card('j_ring_master')) then --if the player has showman, doubles will appear.
+  if feathers_available and not SMODS.showman() then
     for i = #feathers_available, 1, -1 do
-      if G.GAME.used_jokers[feathers_available[i]] then --remove feathers already present in the game
+      if G.GAME.used_jokers[feathers_available[i]] then
         table.remove(feathers_available, i)
       end
     end

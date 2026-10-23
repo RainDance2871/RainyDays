@@ -4,17 +4,28 @@ return {
       rainydays = {
         name = "Rainy Days",
         text = {
-          "A hefty collection of {C:attention}90{} vanilla-style {C:attention}Jokers",
-          "designed to feel right at home in classic {C:attention}Balatro{}.",
-          "Each one keeps to the game's short descriptions",
-          "and is {C:attention}balanced{} to complement the existing roster,",
-          "offering fresh {C:attention}synergies{} without overshadowing",
-          "the originals."
+          "A hefty collection of more than a {C:attention}100{} vanilla-style Jokers",
+          "designed to feel right at home in classic {C:attention}Balatro{}. Each one",
+          "keeps to the game's short descriptions and is balanced to",
+          "complement the existing roster, offering fresh synergies",
+          "without overshadowing the originals."
         }
       }
     },
     
     Joker = {
+      j_RainyDays_abacus = {
+        name = "Abacus",
+        text = {
+          "When a played {C:attention}#1#{}, {C:attention}#2#{},",
+          "or {C:attention}#3#{} is scored, this",
+          "Joker gains {X:mult,C:white}X#4#{} Mult",
+          "{C:inactive}(Currently {X:mult,C:white}X#5#{C:inactive} Mult)",
+          "{s:0.8}Consecutive numbered",
+          "{s:0.8}ranks change each round"
+        }
+      },
+      
       j_RainyDays_absent_heart = {
         name = "Absent Heart",
         text = {
@@ -37,6 +48,16 @@ return {
           "Defeat a Blind",
           "while the deck",
           "is {E:1,C:attention}empty"
+        }
+      },
+      
+      j_RainyDays_algebra = {
+        name = "Algebra",
+        text = {
+          "This Joker gains {C:chips}+#1#{} Chips",
+          "if {C:attention}discard{} contains only",
+          "{C:attention}numbered{} cards",
+          "{C:inactive}(Currently {C:chips}+#2# {C:inactive}Chips)"
         }
       },
       
@@ -64,7 +85,7 @@ return {
         name = "Balance",
         text = {
           "{X:mult,C:white}X#1#{} Mult for each",
-          "unique {C:attention}poker hand",
+          "different {C:attention}poker hand",
           "played this round",
           "{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)"
         },
@@ -104,7 +125,29 @@ return {
           "where {C:attention}#2#{} or more {C:attention}consumable",
           "cards are used",
           "{C:inactive}(Currently {X:mult,C:white}X#3#{C:inactive} Mult)",
-          "{C:inactive}(#4#{C:attention}#5#{C:inactive}#6#)"
+          "{C:inactive}({C:attention}#4#{C:inactive} more#5#)"
+        }
+      },
+      
+      j_RainyDays_beanstalk_grown = {
+        name = "Beanstalk",
+        text = {
+          "This Joker gains {X:mult,C:white}X#1#{} Mult",
+          "for each {C:attention}consecutive{} round",
+          "where {C:attention}#2#{} or more {C:attention}consumable",
+          "cards are used",
+          "{C:inactive}(Currently {X:mult,C:white}X#3#{C:inactive} Mult)"
+        }
+      },
+      
+      j_RainyDays_bingo_balls = {
+        name = "Bingo Balls",
+        text = {
+          "When a {C:attention}consumable{} card",
+          "is used, this Joker's",
+          "Chips are set between",
+          "{C:chips}+#2#{} and {C:chips}+#3#",
+          "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
         }
       },
       
@@ -121,14 +164,14 @@ return {
       j_RainyDays_bonsai = {
         name = "Bonsai",
         text = {
-          "{C:mult}+#1#{} Mult for every",
-          "{C:attention}#2#{} cards with {V:1}#4#",
-          "suit remaining in {C:attention}deck",
-          "{C:inactive}(Currently {C:mult}+#3# {C:inactive}Mult)"
+          "{C:mult}+#1#{} Mult for each",
+          "card with {V:1}#3#{} suit",
+          "remaining in {C:attention}deck",
+          "{C:inactive}(Currently {C:mult}+#2# {C:inactive}Mult)"
         },
         unlock = {
           "Have {E:1,C:attention}#1#{} or fewer",
-          "cards with {E:1,C:clubs}Club",
+          "cards with {E:1,V:1}#2#",
           "suit in full deck"
         }
       },
@@ -136,10 +179,9 @@ return {
       j_RainyDays_breakdance = {
         name = "Breakdance",
         text = {
-          "{X:mult,C:white}X#1#{} Mult if each played",
-          "hand this round contained",
-          "only scoring cards with",
-          "{C:attention}odd{} rank",
+          "{X:mult,C:white}X#1#{} Mult if each played hand",
+          "this round contained only",
+          "scoring cards with {C:attention}odd{} rank",
           "{C:inactive}(Currently {V:1}#2#{C:inactive})",
           "{C:inactive}(A, 9, 7, 5, 3)"
         },
@@ -153,16 +195,33 @@ return {
       j_RainyDays_breakfast_cereal = {
         name = "Breakfast Cereal",
         text = {
-          "Retrigger the next",
-          "{C:attention}#1#{} played scoring",
-          "{C:attention}enhanced{} cards.",
-          "Create a {C:tarot}Charm",
-          "{C:tarot}Tag{} afterwards"
+          "Retrigger next {C:attention}#1#{} played",
+          "scoring {C:attention}enhanced{} cards,",
+          "create a {C:tarot}#2#{} after"
         },
         unlock = {
           "During a run,",
-          "obtain {E:1,C:attention}#1#{} or",
+          "acquire {E:1,C:attention}#1#{} or",
           "more {E:1,C:attention}Tags"
+        }
+      },
+      
+      j_RainyDays_bud = {
+        name = "Bud",
+        text = {
+          "At end of round,",
+          "pay {C:money}$#1#{}. Sell this",
+          "Joker to create",
+          "a {C:attention}#6#{} copy"
+        }
+      },
+      
+      j_RainyDays_bud_bloomed = {
+        name = "Bloom",
+        text = {
+          "{C:chips}+#2#{} Chips for each",
+          "{C:money}$#3#{} spent as {C:attention}#5#",
+          "{C:inactive}(Currently {C:chips}+#4# {C:inactive}Chips)"
         }
       },
       
@@ -178,6 +237,15 @@ return {
           "while scoring at least",
           "{E:1,C:attention}#1#{} times the required",
           "score"
+        }
+      },
+      
+      j_RainyDays_canine = {
+        name = "Canine",
+        text = {
+          "Each played {C:attention}#1#{} or {C:attention}#2#",
+          "gives {C:chips}+#3#{} Chips or",
+          "{C:mult}+#4#{} Mult when scored"
         }
       },
       
@@ -200,6 +268,22 @@ return {
         }
       },
       
+      j_RainyDays_ceremonial_bowl = {
+        name = "Ceremonial Bowl",
+        text = {
+          "When {C:attention}Blind{} is selected,",
+          "earn {C:money}$#1#{} for each {C:attention}Joker{} to",
+          "the right and randomly",
+          "destroy one of them",
+          "{C:inactive}(Currently {C:money}$#2#{C:inactive})"          
+        },
+        unlock = {
+          "During a run,",
+          "destroy {E:1,C:attention}#1#{} or",
+          "more {E:1,C:attention}Jokers"
+        }
+      },
+      
       j_RainyDays_checklist = {
         name = "Checklist",
         text = {
@@ -207,15 +291,6 @@ return {
           "{C:attention}rank{} played in a {C:attention}previous",
           "hand this round gives",
           "{X:mult,C:white}X#1#{} Mult when scored"
-        }
-      },
-      
-      j_RainyDays_checklist_list = {
-        name = "Ranks played",
-        text = {
-          "{V:1}A {V:2}K {V:3}Q {V:4}J",
-          "{V:5}10 {V:6}9 {V:7}8 {V:8}7 {V:9}6",
-          "{V:10}5 {V:11}4 {V:12}3 {V:13}2"
         }
       },
       
@@ -238,13 +313,23 @@ return {
         }
       },
       
-      j_RainyDays_collage = {
-        name = "Collage",
+      j_RainyDays_collection = {
+        name = "Collection",
         text = {
-          "{X:mult,C:white}X#1#{} Mult for each {C:attention}unique",
-          "{C:attention}enhancement{} among played",
-          "scoring cards this {C:attention}Ante",
-          "{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)"
+          "{X:mult,C:white}X#1#{} Mult if {C:attention}#2#{} or more",
+          "different {C:attention}Jokers{} were",
+          "acquired this run",
+          "{C:inactive}({C:attention}#3#{C:inactive} more)"
+        }
+      },
+      
+      j_RainyDays_collection_active = {
+        name = "Collection",
+        text = {
+          "{X:mult,C:white}X#1#{} Mult if {C:attention}#2#{} or more",
+          "different {C:attention}Jokers{} were",
+          "acquired this run",
+          "{C:inactive}(Currently {C:attention}active{C:inactive})"
         }
       },
       
@@ -313,7 +398,49 @@ return {
           "{X:mult,C:white}X#1#{} Mult if {C:attention}#2#{} or more",
           "different {C:attention}poker hands",
           "were {C:attention}discarded{} this run",
-          "{C:inactive}(#3#{C:attention}#4#{C:inactive}#5#)"
+          "{C:inactive}({C:attention}#3#{C:inactive} more)"
+        }
+      },
+      
+      j_RainyDays_desolate_active = {
+        name = "Desolate",
+        text = {
+          "{X:mult,C:white}X#1#{} Mult if {C:attention}#2#{} or more",
+          "different {C:attention}poker hands",
+          "were {C:attention}discarded{} this run",
+          "{C:inactive}(Currently {C:attention}active{C:inactive})"
+        }
+      },
+      
+      j_RainyDays_doubling_joker = {
+        name = "Doubling Joker",
+        text = {
+          "When a played {C:attention}#1#{} or {C:attention}#2#",
+          "is scored, it gives",
+          "{C:mult}+#3#{} Mult, then {C:attention}double",
+          "that amount this hand"
+        }
+      },
+      
+      j_RainyDays_duality = {
+        name = "Duality",
+        text = {
+          "{C:chips}+#1#{} Chips if last used",
+          "consumable card this run",
+          "is a Planet card, {C:mult}+#2#{} Mult",
+          "otherwise",
+          "{C:inactive}(Currently {C:mult}+#2#{C:inactive} Mult)"
+        }
+      },
+      
+      j_RainyDays_duality_night = {
+        name = "Duality",
+        text = {
+          "{C:chips}+#1#{} Chips if last used",
+          "consumable card this run",
+          "is a Planet card, {C:mult}+#2#{} Mult",
+          "otherwise",
+          "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
         }
       },
       
@@ -340,10 +467,10 @@ return {
       j_RainyDays_fabergeegg = {
         name = "Fabergé Egg",
         text = {
-          "Each played {C:attention}#2#{} or",
-          "{C:attention}#3#{} adds {C:money}$#1#{} of {C:attention}sell",
-          "{C:attention}value{} to this Joker",
-          "when scored"
+          "When a played {C:attention}#2#",
+          "or {C:attention}#3#{} is scored,",
+          "add {C:money}$#1#{} of {C:attention}sell value",
+          "to this Joker"
         }
       },
       
@@ -372,9 +499,9 @@ return {
       j_RainyDays_feather_precious = {
         name = "Precious Feather",
         text = {
-          "At end of round,",
-          "each {C:attention}Feather",
-          "{C:attention}Joker{} earns {C:money}$#1#"
+          "At end of round, add",
+          "{C:money}$#1#{} of {C:attention}sell value{} to",
+          "each {C:attention}Feather Joker"
         }
       },
       
@@ -434,6 +561,24 @@ return {
         }
       },
       
+      j_RainyDays_frowny_face = {
+        name = "Frowny Face",
+        text = {
+          "{C:mult}+#1#{} Mult for each",
+          "{C:attention}non-scoring{} or {C:attention}debuffed",
+          "{C:attention}face{} card in played hand"
+        }
+      },
+      
+      j_RainyDays_fruit_punch = {
+        name = "Fruit Punch",
+        text = {
+          "Sell this Joker",
+          "to create a",
+          "{C:attention}#1#"
+        }
+      },
+      
       j_RainyDays_golden_idol = {
         name = "Golden Idol",
         text = {
@@ -449,6 +594,21 @@ return {
         text = {
           "Earn {C:money}$#1#{} if played hand",
           "does not contain a {C:attention}#2#"
+        }
+      },
+      
+      j_RainyDays_goose = {
+        name = "Goose",
+        text = {
+          "Whenever a {C:attention}Tag{} is acquired,",
+          "destroy it and this Joker",
+          "gains {X:mult,C:white}X#1#{} Mult",
+          "{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)"
+        },
+        unlock = {
+          "During a run,",
+          "acquire {E:1,C:attention}#1#{} or",
+          "more {E:1,C:attention}Tags"
         }
       },
       
@@ -475,8 +635,17 @@ return {
         }
       },
       
+      j_RainyDays_grindstone = {
+        name = "Grindstone",
+        text = {
+          "When a played {C:attention}#1#{} is",
+          "scored, each {C:attention}#1#{} in full deck",
+          "permanently gains {C:chips}+#2#{} Chips"
+        }
+      },
+      
       j_RainyDays_hannysvoorwerp = {
-        name = "Hanny's Voorwerp",
+        name = "Ceremonial Mask",
         text =  {
           "While owning a {C:planet}Planet{} card,",
           "play its listed {C:attention}poker hand",
@@ -500,11 +669,20 @@ return {
       j_RainyDays_heirloom = {
         name = "Heirloom",
         text = {
-          "When a played {C:attention}Bonus{} or",
-          "{C:attention}Mult Card{} is scored,",
-          "{C:green}#1# in #2#{} chance card to",
-          "its right gains its",
-          "{C:attention}enhancement"
+          "When a played {C:attention}Bonus{} or {C:attention}Mult",
+          "{C:attention}Card{} is scored, {C:attention}numbered",
+          "card to its right gains",
+          "its {C:attention}enhancement"
+        }
+      },
+      
+      j_RainyDays_horseshoe = {
+        name = "Horseshoe",
+        text = {
+          "If played hand contains",
+          "a scoring {C:attention}#1#{}, a random",
+          "{C:attention}unenhanced{} scoring card",
+          "becomes a {C:attention}Lucky Card"
         }
       },
       
@@ -544,6 +722,22 @@ return {
         }
       },
       
+      j_RainyDays_kimono = {
+        name = "Kimono",
+        text = {
+          "This Joker gains {C:mult}+#1#{} Mult",
+          "for every {C:attention}#2#{} cards with",
+          "{V:1}#3#{} suit remaining in",
+          "deck at end of round",
+          "{C:inactive}(Currently {C:mult}+#4# {C:inactive}Mult)"
+        },
+        unlock = {
+          "Have {E:1,C:attention}#1#{} or fewer",
+          "cards with {E:1,V:1}#2#",
+          "suit in full deck"
+        }
+      },
+      
       j_RainyDays_kudzu = {
         name = "Kudzu",
         text = {
@@ -564,8 +758,8 @@ return {
       j_RainyDays_lady_in_waiting = {
         name = "Lady-in-waiting",
         text = {
-          "When a {C:attention}#1#{}, {C:attention}#2#{}, or {C:attention}#3#",
-          "is drawn during a round,",
+          "When a {C:attention}face{} card is",
+          "drawn during a round,",
           "it gains a random new",
           "{C:attention}enhancement",
           "{C:inactive}(Card won't lose rank)"
@@ -587,7 +781,7 @@ return {
         },
         unlock = {
           "Play a hand with",
-          "{E:1,C:attention}#1#{} or more unique",
+          "{E:1,C:attention}#1#{} or more different",
           "{E:1,C:attention}enhancements"
         }
       },
@@ -607,7 +801,8 @@ return {
         text = {
           "{C:chips}+#1#{} Chips if played",
           "hand contains no",
-          "{C:attention}numbered{} cards"
+          "scoring {C:attention}numbered",
+          "cards"
         }
       },
       
@@ -631,7 +826,7 @@ return {
         text = {
           "Gain {C:red}+#1#{} discards if",
           "played hand contains",
-          "a {C:attention}#2#{} or {C:attention}#3#"
+          "a {C:attention}#2#"
         }
       },
       
@@ -681,7 +876,17 @@ return {
           "If played hand contains",
           "a {C:attention}#1#{}, {X:mult,C:white}X#2#{} Mult",
           "next {C:attention}#3#{} played hands",
-          "{C:inactive}(#4#{V:1}#5#{C:inactive}#6#{C:attention}#7#{C:inactive}#8#)"
+          "{C:inactive}(Currently inactive)"
+        }
+      },
+      
+      j_RainyDays_metropolis_active = {
+        name = "Metropolis",
+        text = {
+          "If played hand contains",
+          "a {C:attention}#1#{}, {X:mult,C:white}X#2#{} Mult",
+          "next {C:attention}#3#{} played hands",
+          "{C:inactive}({C:attention}Active {C:inactive}for next {C:attention}#4#{C:inactive} #5#)"
         }
       },
       
@@ -708,6 +913,16 @@ return {
         }
       },
       
+      j_RainyDays_musketeers = {
+        name = "Musketeers",
+        text = {
+          "A {C:attention}#1#",
+          "can be made with",
+          "{C:attention}#2#{} cards with",
+          "{C:attention}consective{} ranks"
+        }
+      },
+      
       j_RainyDays_orange = {
         name = "Orange",
         text = {
@@ -715,6 +930,21 @@ return {
           "{C:mult}-#2#{} Mult if played hand",
           "contains fewer than",
           "{C:attention}#3#{} scoring cards"
+        }
+      },
+      
+      j_RainyDays_origami = {
+        name = "Origami",
+        text = {
+          "Earn {C:money}$#1#{} for every {C:attention}#2#{} cards",
+          "with {V:1}#3#{} suit remaining",
+          "in deck at end of round",
+          "{C:inactive}(Currently {C:money}$#4#{C:inactive})"
+        },
+        unlock = {
+          "Have {E:1,C:attention}#1#{} or fewer",
+          "cards with {E:1,V:1}#2#",
+          "suit in full deck"
         }
       },
       
@@ -738,6 +968,17 @@ return {
         }
       },
       
+      j_RainyDays_pigeon = {
+        name = "Pigeon",
+        text = {
+          "{C:green}#1# in #2#{} Jokers is a {C:attention}Pigeon{}.",
+          "When a {C:attention}Pigeon{} is acquired,",
+          "destroy it and this Joker",
+          "gains {X:mult,C:white}X#3#{} Mult",
+          "{C:inactive}(Currently {X:mult,C:white}X#4#{C:inactive} Mult)"
+        }
+      },
+      
       j_RainyDays_plump_joker = {
         name = "Plump Joker",
         text = {
@@ -758,14 +999,13 @@ return {
         text = {
           "This Joker gains {X:mult,C:white}X#1#{} Mult",
           "whenever an {C:attention}enhanced{} card",
-          "is given a new {C:attention}enhancement",
+          "gains new {C:attention}enhancement",
           "{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)"
         },
         unlock = {
-          "During a run, give",
-          "a new {E:1,C:attention}enhancement{} to",
-          "{E:1,C:attention}#1#{} or more {E:1,C:attention}enhanced",
-          "cards"
+          "During a run, give a ",
+          "new {E:1,C:attention}enhancement{} to at",
+          "least {E:1,C:attention}#1# enhanced{} cards"
         }
       },
       
@@ -791,8 +1031,8 @@ return {
         },
         unlock = {
           "During a run,",
-          "obtain {E:1,C:attention}#1#{} or",
-          "more unique",
+          "acquire {E:1,C:attention}#1#{} or",
+          "more different",
           "{E:1,C:attention}Jokers"   
         }
       },
@@ -816,6 +1056,51 @@ return {
         }
       },
       
+      j_RainyDays_quasar = {
+        name = "Quasar",
+        text = {
+          "If level of played",
+          "{C:attention}poker hand{} is {C:attention}#1#{} or higher,",
+          "decrease its level by {C:attention}#2#{} and",
+          "this Joker gains {X:mult,C:white}X#3#{} Mult",
+          "{C:inactive}(Currently {X:mult,C:white}X#4#{C:inactive} Mult)"
+        },
+        unlock = {
+          "During a run, use at",
+          "least {E:1,C:attention}#1#{} different",
+          "{E:1,C:planet}Planet{} cards"
+        }
+      },
+      
+      j_RainyDays_queue_ticket = {
+        name = "Queue Ticket",
+        text = {
+          "Retrigger each played or",
+          "held in hand {C:attention}#1#{} or {C:attention}#2#"
+        }
+      },
+      
+      j_RainyDays_receipt = {
+        name = "Receipt",
+        text = {
+          "Once per shop, this Joker",
+          "gains {C:mult}+#1#{} Mult if {C:money}$#2#{} or",
+          "more was spent",
+          "{C:inactive}(Currently {C:mult}+#3# {C:inactive}Mult)"
+        }
+      },
+      
+      j_RainyDays_receipt_in_shop = {
+        name = "Receipt",
+        text = {
+          "Once per shop, this Joker",
+          "gains {C:mult}+#1#{} Mult if {C:money}$#2#{} or",
+          "more was spent",
+          "{C:inactive}(Currently {C:mult}+#3# {C:inactive}Mult)",
+          "{C:inactive}({C:money}$#4# {C:inactive}more)"
+        }
+      },
+      
       j_RainyDays_recycle = {
         name = "Recycle",
         text = {
@@ -823,6 +1108,37 @@ return {
           "or {C:attention}#5#{} permanently gains",
           "{C:mult}+#1#{} Mult and is shuffled",
           "back into the deck"
+        }
+      },
+      
+      j_RainyDays_report_card = {
+        name = "Report Card",
+        text = {
+          "{X:mult,C:white}X#1#{} Mult for each",
+          "time a played {C:attention}#2#",
+          "was scored this {C:attention}Ante",
+          "{C:inactive}(Currently {X:mult,C:white}X#3#{C:inactive} Mult)"
+        },
+        unlock = {
+          "During a run,",
+          "score a played",
+          "{E:1,C:attention}#1#{} at least",
+          "{E:1,C:attention}#2#{} times"
+        }
+      },
+      
+      j_RainyDays_return_to_sender = {
+        name = "Return to Sender",
+        text = {
+          "Copies ability of last",
+          "acquired compatible {C:attention}Joker",
+          "{C:inactive}(Currently {V:1}#1#{C:inactive})"
+        },
+        unlock = {
+          "Win a run after",
+          "acquiring {E:1,C:attention}#1#{} or",
+          "more different",
+          "{E:1,C:attention}Jokers"
         }
       },
       
@@ -838,6 +1154,16 @@ return {
           "During a run, discard",
           "at least {E:1,C:attention}#1#{} different",
           "{E:1,C:attention}poker hands"
+        }
+      },
+      
+      j_RainyDays_secret_agent = {
+        name = "Secret Agent",
+        text = {
+          "Each played {C:attention}#1#{} or",
+          "{C:attention}#2#{} counts in scoring",
+          "and gives {C:mult}+#3#{} Mult",
+          "when scored"     
         }
       },
       
@@ -886,6 +1212,31 @@ return {
         }
       },
       
+      j_RainyDays_simple_joker = {
+        name = "Simple Joker",
+        text = {
+          "{C:mult}+#1#{} Mult if played hand",
+          "contains no scoring",
+          "{C:attention}enhanced{} cards"
+        },
+        unlock = {
+          "Win a run while",
+          "having {E:1,C:attention}#1#{} or fewer",
+          "{E:1,C:attention}enhanced{} cards in",
+          "full deck"
+        }
+      },
+      
+      j_RainyDays_sketch_pad = {
+        name = "Sketch Pad",
+        text = {
+          "{X:mult,C:white}X#1#{} Mult for each {C:attention}different",
+          "{C:attention}enhancement{} among played",
+          "cards scored this {C:attention}Ante",
+          "{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)"
+        }
+      },
+      
       j_RainyDays_skinner_box = {
         name = "Skinner Box",
         text = {
@@ -904,10 +1255,9 @@ return {
       j_RainyDays_slashed_joker = {
         name = "Slashed Joker",
         text = {
-          "Retrigger each {C:attention}played",
-          "card if played hand",
-          "contains {C:attention}#1#{} or fewer",
-          "cards"
+          "Retrigger each {C:attention}played{} card",
+          "if played hand contains",
+          "{C:attention}#1#{} or fewer cards"
         }
       },
       
@@ -921,17 +1271,32 @@ return {
         }
       },
       
+      j_RainyDays_spire = {
+        name = "Spire",
+        text = {
+          "At end of round, earn {C:money}$#1#{},",
+          "{C:green}#3# in #4#{} chance to increase",
+          "payout by {C:money}$#2#{} when a",
+          "{C:attention}Booster Pack{} is opened"
+        },
+        unlock = {
+          "During a run,",
+          "use {E:1,C:attention}#1#{} or more",
+          "{E:1,C:attention}Booster Packs"
+        }
+      },
+      
       j_RainyDays_spooky_joker = {
         name = "Spooky Joker",
         text = {
           "{X:mult,C:white}X#1#{} Mult for each",
-          "unique secret {C:attention}poker",
+          "different secret {C:attention}poker",
           "{C:attention}hand{} played this run",
           "{C:inactive}(Currently {X:mult,C:white}X#2#{C:inactive} Mult)"
         },
         unlock = {
           "During a run, play",
-          "at least {E:1,C:attention}#1#{} unique",
+          "at least {E:1,C:attention}#1#{} different",
           "secret {E:1,C:attention}poker hands"
         }
       },
@@ -939,9 +1304,10 @@ return {
       j_RainyDays_sputnik = {
         name = "Sputnik",
         text = {
-          "Create a corresponding {C:planet}Planet",
-          "card if played {C:attention}poker hand{} has",
-          "not been played yet this {C:attention}Ante",
+          "If played {C:attention}poker hand",
+          "has not yet been played",
+          "this {C:attention}Ante{}, pay {C:money}$#1#{} and",
+          "create a {C:tarot}Tarot{} card",
           "{C:inactive}(Must have room)"
         }
       },
@@ -980,6 +1346,21 @@ return {
         }
       },
       
+      j_RainyDays_tessen = {
+        name = "Tessen",
+        text = {
+          "{C:chips}+#1#{} Chips for each",
+          "card with {V:1}#3#{} suit",
+          "remaining in {C:attention}deck",
+          "{C:inactive}(Currently {C:chips}+#2# {C:inactive}Chips)"
+        },
+        unlock = {
+          "Have {E:1,C:attention}#1#{} or fewer",
+          "cards with {E:1,V:1}#2#",
+          "suit in full deck"
+        }
+      },
+      
       j_RainyDays_theater = {
         name = "Theater",
         text = {
@@ -1008,15 +1389,15 @@ return {
       j_RainyDays_trading_stamps = {
         name = "Trading Stamps",
         text = {
-          "Every {C:money}$#1#{} spent adds",
-          "{C:money}$#2#{} of {C:attention}sell value{} to",
-          "this Joker",
+          "Every {C:money}$#1#{} spent, add",
+          "{C:money}$#2#{} of {C:attention}sell value",
+          "to this Joker",
           "{C:inactive}({C:money}$#3# {C:inactive}more)"
         },
         unlock = {
           "During a run,",
           "spend {E:1,C:money}$#1#{} or",
-          "more"
+          "more in shops"
         }
       },
       
@@ -1049,8 +1430,19 @@ return {
       j_RainyDays_wanted = {
         name = "Wanted!",
         text = {
-          "Sell {C:attention}#1#",
-          "{C:attention}#2#{}to earn {C:money}$#3#",
+          "Sell a Joker named",
+          "{C:attention}#1#{} to earn {C:money}$#2#",
+          "{s:0.8}Joker changes",
+          "{s:0.8}each round",
+        }
+      },
+      
+      j_RainyDays_wanted_long = {
+        name = "Wanted!",
+        text = {
+          "Sell a Joker named",
+          "{C:attention}#1#{} to",
+          "earn {C:money}$#2#",
           "{s:0.8}Joker changes",
           "{s:0.8}each round",
         }
@@ -1064,6 +1456,15 @@ return {
           "to retrigger and",
           "gives {C:mult}+#3#{} Mult when",
           "{C:attention}retriggered"
+        }
+      },
+      
+      j_RainyDays_whirlpool = {
+        name = "Whirlpool",
+        text = {
+          "A {C:attention}#2#{} can be made with",
+          "{C:attention}#1#{} or more cards with a",
+          "different suit each"
         }
       },
       
@@ -1083,8 +1484,8 @@ return {
         text = {
           "{C:chips}+#1#{} Chips",
           "Sell this card to",
-          "create {C:tarot}#2#",
-          "{C:tarot}#3#",
+          "create {C:tarot}#3#",
+          "{C:tarot}#4#",
           "{s:0.8,C:tarot}Tarot {s:0.8}card changes",
           "{s:0.8}each round",
           "{C:inactive}(Must have room)"
@@ -1101,12 +1502,121 @@ return {
           "{s:0.8}each round",
           "{C:inactive}(Must have room)"
         }
+      },
+      
+      j_RainyDays_wuxing = {
+        name = "Wuxing",
+        text = {
+          "When a played {C:attention}#1#",
+          "is scored, {C:green}#2# in #3#",
+          "chance to create",
+          "an {C:attention}#4#"
+        }
+      },
+      
+      j_RainyDays_xylophone = {
+        name = "Xylophone ",
+        text = {
+          "{C:mult}+#1#{} Mult for each",
+          "different {C:attention}poker hand",
+          "played this run",
+          "{C:inactive}(Currently {C:mult}+#2# {C:inactive}Mult)"
+        }
+      }
+    },
+    
+    Other = {      
+      rainydays_checklist_list = {
+        name = "Ranks played",
+        text = {
+          "{V:1}A {V:2}K {V:3}Q {V:4}J",
+          "{V:5}10 {V:6}9 {V:7}8 {V:8}7 {V:9}6",
+          "{V:10}5 {V:11}4 {V:12}3 {V:13}2"
+        }
+      },
+      
+      rainydays_collection_contributes = {
+        name = "Collection",
+        text = {
+          "No copies of this",
+          "Joker have been",
+          "acquired this run"
+        }
+      },
+      
+      rainydays_return_to_sender_compatible = {
+        name = "Compatible",
+        text = {
+          "Will be copied by",
+          "{C:attention}#1#"
+        }
+      },
+      
+      rainydays_return_to_sender_compatible_bloom = {
+        name = "Compatible",
+        text = {
+          "{C:attention}#1#{} will be copied",
+          "by {C:attention}#2#"
+        }
+      },
+      
+      rainydays_return_to_sender_second_best = {
+        name = "Next Target",
+        text = {
+          "Will copy ability of",
+          "{C:attention}#1#{} if",
+          "current target is",
+          "no longer available"
+        }
+      },
+      
+      rainydays_return_to_sender_second_best_short = {
+        name = "Next Target",
+        text = {
+          "Will copy ability of",
+          "{C:attention}#1#{} if current",
+          "target is no longer",
+          "available"
+        }
+      },
+      
+      rainydays_tag_charm = {
+        name = "Charm Tag",
+        text = {
+          "Open a free {C:tarot}Mega",
+          "{C:tarot}Arcana Pack{} when",
+          "next entering",
+          "the shop"
+        }
+      },
+      
+      rainydays_tag_edition = {
+        name = "Edition Tag",
+        text = {
+          "Next base edition {C:attention}Joker",
+          "in the shop is free and",
+          "becomes {C:dark_edition}Foil{}, {C:dark_edition}Holographic{},",
+          "{C:dark_edition}Polychrome{} or {C:dark_edition}Negative",
+        }
+      },
+      
+      rainydays_tag_voucher = {
+        name = "Voucher Tag",
+        text = {
+          "Add a {C:attention}Voucher{} to",
+          "the current or",
+          "next shop"
+        }
       }
     }
   },
   
   misc = {
     dictionary = {
+      --vars
+      rainydays_return_to_sender_split = false,
+      rainydays_wishbone_split = true,
+      
       --config
       rainydays_clarifiers_info = {
         "Some Jokers have a need for the player to track",
@@ -1146,53 +1656,40 @@ return {
       
       rainydays_bazaar_message = "Must play hand with 5 scoring cards",
       
-      rainydays_beanstalk_grown = "Already grown this round",
-      rainydays_beanstalk_message_postfix = " more",
-      rainydays_beanstalk_message_prefix = "",
       rainydays_beanstalk_or_will_reset = " or reset at end of round",
-      rainydays_beanstalk_postfix = " more",
-      rainydays_beanstalk_prefix = "",
       
-      rainydays_collage_box_name = "Enhancements played",
+      rainydays_bud_bloomed = "Bloomed!",
       
       rainydays_desolate_box_name = "Hands discarded",
-      rainydays_desolate_message_postfix = " more",
-      rainydays_desolate_message_prefix = "",
-      rainydays_desolate_postfix_active = "",
-      rainydays_desolate_postfix_inactive = " more",
-      rainydays_desolate_prefix_active = "Currently ",
-      rainydays_desolate_prefix_inactive = "",
+      
+      rainydays_duality_day_appear = "Day!",
+      rainydays_duality_night_appear = "Night!",
       
       rainydays_lotteryticket_full_clear = "Full Clear!",
       
       rainydays_instructional_box_name = "Jokers affected",
       
-      rainydays_metropolis_infix_active = " for next ",
-      rainydays_metropolis_infix_inactive = "",
-      rainydays_metropolis_message_postfix = " remaining",
-      rainydays_metropolis_message_prefix = "",
-      rainydays_metropolis_postfix_active = "hand",
-      rainydays_metropolis_postfix_active_plural = " hands",
-      rainydays_metropolis_postfix_inactive = "",
-      rainydays_metropolis_prefix_active = "",
-      rainydays_metropolis_prefix_inactive = "Currently ",
-      
       rainydays_parrot_box_name = "Copied Jokers",
-      rainydays_parrot_wait_postfix_plural = " more rounds",
-      rainydays_parrot_wait_postfix_singular = " more round",
       rainydays_parrot_wait_prefix_plural = "Wait ",
+      rainydays_parrot_wait_postfix_plural = " more rounds",
       rainydays_parrot_wait_prefix_singular = "Wait ",
+      rainydays_parrot_wait_postfix_singular = " more round",
+      
+      rainydays_pigeon_appear = "Pigeon!",
       
       rainydays_prehistory_box_name = "Eligible Jokers",
       
+      rainydays_return_to_sender_box_name = "Compatible Jokers",
+      
       rainydays_satellite_box_name = "Planets used",
+      
+      rainydays_sketch_pad_box_name = "Enhancements played",
       
       rainydays_sputnik_box_name = "Hands played",
       
-      rainydays_starting_line_box_name = "Hands played too often",
+      rainydays_starting_line_box_name = "Ineligible hands",
       
-      rainydays_trading_stamps_message_postfix = " more",
-      rainydays_trading_stamps_message_prefix = "$",
+      rainydays_xylophone_box_name = "Hands played",
       
       --message
       rainydays_activated = "Active!",
@@ -1201,17 +1698,29 @@ return {
       rainydays_denied = "Denied!",
       rainydays_destroyed = "Destroyed!",
       rainydays_enhanced = "Enhanced!",
-      rainydays_found_target = "Found target!",
-      rainydays_full_reset = "Full reset",
       rainydays_hands_upgraded = "Hand upgraded!",
       rainydays_new_rank = "New Rank!",
+      rainydays_new_target = "New target!",
+      rainydays_target_lost = "Target Lost...",
       rainydays_wild_ex = "Wild!",
       
+      --message count
+      rainydays_charges_message_prefix = "",
+      rainydays_charges_message_postfix = " remaining",
+      rainydays_consumables_message_prefix = "",
+      rainydays_consumables_message_postfix = " more",
+      rainydays_jokers_message_prefix = "",
+      rainydays_jokers_message_postfix = " more",
+      rainydays_money_message_prefix = "$",
+      rainydays_money_message_postfix = " more",
+      rainydays_pokerhands_message_prefix = "",
+      rainydays_pokerhands_message_postfix = " more",
+      
       --misc
-      rainydays_infobox_nr_sign_postfix = "",
-      rainydays_infobox_nr_sign_prefix = " #",
-      rainydays_message_countdown_postfix = "...",
+      rainydays_nr_prefix = " #",
+      rainydays_nr_postfix = "",
       rainydays_message_countdown_prefix = "",
+      rainydays_message_countdown_postfix = "...",
       rainydays_plus = "+",
       
       --status
@@ -1222,37 +1731,40 @@ return {
       --terms
       rainydays_constellation = "Constellation",
       rainydays_feather = "Feather",
+      rainydays_hand = "Hand",
       rainydays_hand_size = "Hand size",
       rainydays_hands = "Hands",
+      rainydays_hands_to_play = "Hands",
       
       --JokerDisplay
       rainydays_JD_booster_pack = " Booster Pack",
       rainydays_JD_discarded = "Discarded ",
       rainydays_JD_discards = " discards",
       rainydays_JD_drawn = "Drawn ",
+      rainydays_JD_enhancements = "Enhancements",
       rainydays_JD_hand_size = " hand size",
-      rainydays_JD_hold_no_postfix = "",
-      rainydays_JD_hold_no_prefix = "Hold no ",
-      rainydays_JD_hold_postfix = "",
-      rainydays_JD_hold_prefix = "Hold ",
       rainydays_JD_held = "Held ",
+      rainydays_JD_hold_no_prefix = "Hold no ",
+      rainydays_JD_hold_no_postfix = "",
+      rainydays_JD_hold_prefix = "Hold ",
+      rainydays_JD_hold_postfix = "",
       rainydays_JD_in_deck = " in deck",
       rainydays_JD_max = "Max. ",
-      rainydays_JD_membership_postfix = "",
       rainydays_JD_membership_prefix = "Items ",
-      rainydays_JD_no_numbers = "No numbers",
-      rainydays_JD_no_postfix = "",
+      rainydays_JD_membership_postfix = "",
       rainydays_JD_no_prefix = "No ",
+      rainydays_JD_no_postfix = "",
       rainydays_JD_not_copying = "Not copying",
       rainydays_JD_numbers = "Numbers",
       rainydays_JD_per_discard = " per discard",
       rainydays_JD_required_scores = " scores",
       rainydays_JD_scored = "Scored ",
       rainydays_JD_set_to = "Set to ",
-      rainydays_JD_slashed_joker_postfix = " cards",
       rainydays_JD_slashed_joker_prefix = "",
+      rainydays_JD_slashed_joker_postfix = " cards",
+      rainydays_JD_squiggle_joker_prefix = "",
       rainydays_JD_squiggle_joker_postfix = " suits",
-      rainydays_JD_squiggle_joker_prefix = ""
+      rainydays_JD_tag = "Tag"
     }
   }
 }

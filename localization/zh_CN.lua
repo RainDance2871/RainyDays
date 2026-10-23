@@ -1,4 +1,4 @@
-return {
+--[[return {
   descriptions = {
     Mod = {
       rainydays = {
@@ -247,8 +247,8 @@ return {
         }
       },
       
-      j_RainyDays_collage = {
-        name = "Collage",
+      j_RainyDays_sketch_pad = {
+        name = "sketch_pad",
         text = {
           "{X:mult,C:white}X#1#{} Mult for each",
           "{C:attention}unique enhancement",
@@ -730,7 +730,7 @@ return {
         name = "漫漫长路",
         text = {
           "如果出牌中包含",
-          "{C:attention}#2#{}或{C:attention}#3#{}",
+          "{C:attention}#2#{}",
           "获得{C:red}+#1#{}次弃牌"
         }
       },
@@ -896,7 +896,7 @@ return {
         },
         unlock = {
           "During a run,",
-          "obtain {E:1,C:attention}#1#{} or",
+          "acquire {E:1,C:attention}#1#{} or",
           "more unique",
           "{E:1,C:attention}Jokers"   
         }
@@ -1285,7 +1285,7 @@ return {
       rainydays_beanstalk_postfix = "张",
       rainydays_beanstalk_prefix = "还差",
       
-      rainydays_collage_box_name = "Enhancements played",
+      rainydays_sketch_pad_box_name = "Enhancements played",
       
       rainydays_desolate_box_name = "Hands discarded",
       rainydays_desolate_message_postfix = "种",
@@ -1338,8 +1338,8 @@ return {
       rainydays_wild_ex = "万能!",
       
       --misc
-      rainydays_infobox_nr_sign_postfix = "",
-      rainydays_infobox_nr_sign_prefix = " #",
+      rainydays_nr_prefix = "",
+      rainydays_nr_postfix = " #",
       rainydays_message_countdown_postfix = "...",
       rainydays_message_countdown_prefix = "",
       rainydays_plus = "+",
@@ -1370,7 +1370,6 @@ return {
       rainydays_JD_max = "Max. ",
       rainydays_JD_membership_postfix = "",
       rainydays_JD_membership_prefix = "Items ",
-      rainydays_JD_no_numbers = "No numbers",
       rainydays_JD_no_postfix = "",
       rainydays_JD_no_prefix = "No ",
       rainydays_JD_not_copying = "Not copying",
@@ -1385,4 +1384,4 @@ return {
       rainydays_JD_squiggle_joker_prefix = ""
     }
   }
-}
+}]]

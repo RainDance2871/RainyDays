@@ -23,28 +23,7 @@ SMODS.Joker {
       
       for i = 1, #G.jokers.cards do
         if G.jokers.cards[i] ~= card and not RainyDays.list_contains(card.ability.extra.old_jokers, G.jokers.cards[i].ability.rd_joker_id) then
-          local name = localize{ type = 'name_text', set = 'Joker', key = G.jokers.cards[i].config.center_key }
-          
-          local function amount_of_copies(card)
-            local amount = 0
-            local nr
-            for j = 1, #G.jokers.cards do
-              if G.jokers.cards[j].config.center.key == card.config.center.key then
-                amount = amount + 1
-                if G.jokers.cards[j] == card then
-                  nr = amount
-                end
-              end
-            end
-            return amount, nr
-          end
-          
-          local amount, nr = amount_of_copies(G.jokers.cards[i])
-          if amount > 1 and nr then
-            name = name .. localize('rainydays_infobox_nr_sign_prefix') .. nr .. localize('rainydays_infobox_nr_sign_postfix')
-          end
-          
-          contents[#contents + 1] = name
+          contents[#contents + 1] = RainyDays.GetJokerName(G.jokers.cards[i])
         end
       end      
       

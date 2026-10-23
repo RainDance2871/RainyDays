@@ -16,6 +16,7 @@ SMODS.Joker {
     height = 11
   },
   attributes = { 'economy' },
+  
   config = {
     extra = {
       reward_money = 4,
@@ -56,46 +57,44 @@ SMODS.Joker {
   end,
   
   calculate = function(self, card, context)
-    if context.after and not context.blueprint then
-      G.E_MANAGER:add_event(Event({
-        func = function()
-          RainyDays.generate_lottery_string(card)
-          return true
-        end
-      }))
-    end
-    
-    local function is_lottery_rank(card)
+    if context.before and not context.blueprint then
+      card.ability.extra.valid_ranks = {}
       for i = 1, #G.GAME.current_round.RD_lotteryticket do 
-        if RainyDays.balatro_ranks_to_id[G.GAME.current_round.RD_lotteryticket[i]] == card:get_id() then
-          return true
+        local id = RainyDays.balatro_ranks_to_id[G.GAME.current_round.RD_lotteryticket[i]]
+        if not G.GAME.rd_ranks_scored_this_round[id] or G.GAME.rd_ranks_scored_this_round[id] <= 0 then
+          card.ability.extra.valid_ranks[#card.ability.extra.valid_ranks + 1] = id
         end
       end
-      return false
     end
-      
-    --check if rank is special and has been played yet.
-    if context.individual and context.cardarea == G.play and not context.other_card.debuff then
-      if not SMODS.has_no_rank(context.other_card) and is_lottery_rank(context.other_card) then
+    
+    if context.individual and context.cardarea == G.play and not context.other_card.debuff and not SMODS.has_no_rank(context.other_card) then
+      local id = context.other_card:get_id()
+      if RainyDays.list_contains(card.ability.extra.valid_ranks, id) then
         local rank_count = 0
         local position_first
         for i = 1, #context.scoring_hand do
-          if context.scoring_hand[i]:get_id() == context.other_card:get_id() then
+          if context.scoring_hand[i]:get_id() == id and not context.scoring_hand[i].debuff then
             rank_count = rank_count + 1
-            if not position_first then
-              position_first = i
-            end
+            position_first = position_first or i
           end
         end
         
         if position_first and context.other_card == context.scoring_hand[position_first] then
-          if G.GAME.rd_ranks_scored_this_round[context.other_card:get_id()] and G.GAME.rd_ranks_scored_this_round[context.other_card:get_id()] <= rank_count then
-            return {
-              dollars = card.ability.extra.reward_money
-            }
-          end
+          return {
+            dollars = card.ability.extra.reward_money
+          }
         end
       end
+    end
+    
+    if context.after and not context.blueprint then
+      G.E_MANAGER:add_event(Event({
+        func = function()
+          card.ability.extra.valid_ranks = nil
+          RainyDays.generate_lottery_string(card)
+          return true
+        end
+      }))
     end
   end,
   
@@ -114,7 +113,7 @@ SMODS.Joker {
 }
 
 --this function updates the listed ranks every round.
-function RainyDays.reset_game_globals_lotteryticket()  
+function RainyDays.reset_game_globals_lotteryticket()
   --add ranks from cards in deck to pool for picking, ranks can be added multiple times, so more common ranks get chosen more often
   local ranks_in_deck = {}
   if G.playing_cards then
@@ -172,13 +171,14 @@ function RainyDays.generate_lottery_string(card)
     local rank = RainyDays.balatro_ranks_to_id[G.GAME.current_round.RD_lotteryticket[i]]
     if not G.GAME.rd_ranks_scored_this_round[rank] or G.GAME.rd_ranks_scored_this_round[rank] <= 0 then
       local sub = string.sub(G.GAME.current_round.RD_lotteryticket[i], 1, 1)
-      string = string .. (sub ~= '1' and sub or '10') .. (i < #G.GAME.current_round.RD_lotteryticket and " " or "")
+      string = string .. (sub ~= '1' and sub or '10') .. " "
     end
   end
+  string = string.sub(string, 1, -2)
   
   card.ability.extra.string = string.gsub(string, " ", ", ")
   
-  if string == '' then
+  if string.len(string) <= 0 then
     string = localize('rainydays_lotteryticket_full_clear')
   end
   

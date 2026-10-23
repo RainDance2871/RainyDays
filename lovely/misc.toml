@@ -18,7 +18,7 @@ end'''
 
 
 
-#save game after drawing cards. necessary to prevent hand size bugs with troupe
+#save game after drawing cards. necessary to prevent hand size bugs with folding chair
 [[patches]]
 [patches.pattern]
 target = 'functions/state_events.lua'
@@ -26,3 +26,22 @@ match_indent = true
 pattern = '''if G.GAME.facing_blind then G.GAME.current_round.any_hand_drawn = true end'''
 position = 'after'
 payload = '''save_run()'''
+
+
+
+#add extra infoqueue for return to sender/collection info
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+match_indent = true
+pattern = '''local info_queue = {}'''
+position = 'after'
+payload = '''if RainyDays.collection_message then
+	info_queue[#info_queue + 1] = { set = 'Other', key = 'rainydays_collection_contributes' }
+    	RainyDays.collection_message = nil
+end
+
+if RainyDays.return_to_sender_compatible then
+	info_queue[#info_queue + 1] = { set = 'Other', key = 'rainydays_return_to_sender_compatible', specific_vars = { localize{ type = 'name_text', set = 'Joker', key = 'j_RainyDays_return_to_sender' }}}
+    	RainyDays.return_to_sender_compatible = nil
+end'''

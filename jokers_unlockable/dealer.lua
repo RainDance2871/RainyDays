@@ -26,10 +26,11 @@ SMODS.Joker {
   
   calculate = function(self, card, context)
     if G.GAME.blind and G.GAME.blind.in_blind then
-      if context.selling_self or (context.selling_card and (context.card ~= card and context.card.ability.set == 'Joker') or (context.card == card and context.blueprint)) then
+      local self_card = context.blueprint_card or card
+      if context.selling_self or (context.selling_card and (context.card ~= self_card and context.card.ability.set == 'Joker')) then
         return {
           message_card = context.blueprint_card or card,
-          message = localize('rainydays_plus') .. card.ability.extra.hand_bonus .. ' ' .. localize('rainydays_hands'),
+          message = localize('rainydays_plus') .. card.ability.extra.hand_bonus .. ' ' .. localize('rainydays_hands_to_play'),
           func = function()
             ease_hands_played(card.ability.extra.hand_bonus)
             return true

@@ -1,11 +1,80 @@
 [manifest]
 version = '1.0.0'
 dump_lua = true
-priority = 0
+priority = 0            
 
 
 
-#plump joker consumeable ante count
+#count times ranks are scored
+#count times enhancements are scored
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/utils.lua"]'''
+match_indent = true
+pattern = '''context.main_scoring = true
+        local effects = { eval_card(card, context) }'''
+position = 'before'
+payload = '''if card.area == G.play then
+	if not SMODS.has_no_rank(card) then
+      		G.GAME.rd_ranks_scored_this_round[card.base.id] = (G.GAME.rd_ranks_scored_this_round[card.base.id] or 0) + 1
+      		G.GAME.rd_ranks_scored_this_ante[card.base.id] = (G.GAME.rd_ranks_scored_this_ante[card.base.id] or 0) + 1
+      		G.GAME.rd_ranks_scored[card.base.id] = (G.GAME.rd_ranks_scored[card.base.id] or 0) + 1
+	end
+
+	local enhancements = SMODS.get_enhancements(card)
+	for key in pairs(enhancements) do
+		G.GAME.rd_enhancements_scored_this_ante[key] = (G.GAME.rd_enhancements_scored_this_ante[key] or 0) + 1
+	end
+end'''
+
+
+
+#context draw individual
+#count cards drawn this round
+#count steel cards drawn this round
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+match_indent = true
+pattern = '''end
+
+function highlight_card(card, percent, dir)'''
+position = 'before'
+payload = '''if from == G.deck and to == G.hand and card then
+	local rd_effects = {}
+	SMODS.calculate_context({ rd_draw_individual = true, other_card = card }, rd_effects)
+	if G.GAME.facing_blind then
+  		G.GAME.rd_cards_drawn_this_round = G.GAME.rd_cards_drawn_this_round + 1
+		if SMODS.has_enhancement(card, 'm_steel') then
+			G.GAME.rd_steel_cards_drawn_this_round = G.GAME.rd_steel_cards_drawn_this_round + 1
+		end
+  		card.ability.rd_early_bird = not G.GAME.current_round.any_hand_drawn and true or nil
+	end
+	SMODS.trigger_effects(rd_effects)
+end'''
+
+
+
+#context is_repetition
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/utils.lua"]'''
+match_indent = true
+pattern = '''context.individual = true'''
+position = 'after'
+payload = '''context.rd_is_repetition = (reps[j] ~= 1)'''
+
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/utils.lua"]'''
+match_indent = true
+pattern = '''context.individual = nil'''
+position = 'after'
+payload = '''context.rd_is_repetition = nil'''
+
+
+
+#count consumeable usage during round and ante
 [[patches]]
 [patches.pattern]
 target = 'functions/misc_functions.lua'
@@ -13,7 +82,8 @@ match_indent = true
 pattern = '''G.GAME.consumeable_usage_total.all = G.GAME.consumeable_usage_total.all + 1'''
 position = 'after'
 payload = '''G.GAME.rd_consumeable_usage_round = G.GAME.rd_consumeable_usage_round + 1
-G.GAME.rd_consumeable_usage_ante = G.GAME.rd_consumeable_usage_ante + 1'''
+G.GAME.rd_consumeable_usage_ante = G.GAME.rd_consumeable_usage_ante + 1
+check_for_unlock({ type = 'rd_used_consumeable' })'''
 
 
 
@@ -26,3 +96,61 @@ pattern = '''inc_career_stat('c_cards_sold', 1)
 if self.ability.set == 'Joker' then '''
 position = 'after'
 payload = '''G.GAME.rd_jokers_sold = (G.GAME.rd_jokers_sold or 0) + 1'''
+
+
+
+#count amount jokers destroyed
+[[patches]]
+[patches.pattern]
+target = 'functions/common_events.lua'
+match_indent = true
+pattern = '''if not card:can_calculate(context.ignore_debuff, context.remove_playing_cards or context.joker_type_destroyed) then'''
+position = 'before'
+payload = '''if context.joker_type_destroyed then
+	G.GAME.rd_jokers_destroyed = (G.GAME.rd_jokers_destroyed or 0) + 1
+	check_for_unlock({ type = 'rd_joker_destroyed' })
+end'''
+
+
+
+#count lucky triggers
+[[patches]]
+[patches.pattern]
+target = 'card.lua'
+match_indent = true
+pattern = '''self.lucky_trigger = true'''
+position = 'before'
+payload = '''if not self.lucky_trigger then
+	G.GAME.rd_lucky_trigger_count = (G.GAME.rd_lucky_trigger_count or 0) + 1
+  check_for_unlock({ type = 'rd_lucky_trigger_count' })
+end'''
+
+
+
+#count giving enhancements
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/overrides.lua"]'''
+match_indent = true
+pattern = '''SMODS.calculate_context({setting_ability = true, old = old_center.key, new = self.config.center_key, other_card = self, unchanged = old_center.key == self.config.center.key})'''
+position = 'after'
+payload = '''if self.config.center_key ~= 'c_base' and (self.ability.set == 'Default' or self.ability.set == 'Enhanced') then
+	G.GAME.rd_enhancements_given_count = (G.GAME.rd_enhancements_given_count or 0) + 1
+	if old_center.key ~= 'c_base' and self.config.center_key ~= old_center.key then
+		G.GAME.rd_enhancements_override_count = (G.GAME.rd_enhancements_override_count or 0) + 1
+	end
+	check_for_unlock({ type = 'rd_enhancements_given' })
+end'''
+
+
+
+#count boosters opened
+[[patches]]
+[patches.pattern]
+target =  'card.lua'
+match_indent = true
+pattern = '''function Card:open()
+    if self.ability.set == "Booster" then'''
+position = 'after'
+payload = '''G.GAME.rd_boosters_opened = (G.GAME.rd_boosters_opened or 0) + 1
+check_for_unlock({ type = 'rd_booster_opened' })'''

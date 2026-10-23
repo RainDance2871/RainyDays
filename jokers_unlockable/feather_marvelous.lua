@@ -15,7 +15,7 @@ if RainyDays.config.feathers then SMODS.Joker {
   attributes = { 'xmult' }, 
   config = {
     extra = {
-      plus_xmult = 1.5
+      plus_xmult = 1.4
     }
   },
   
@@ -35,12 +35,6 @@ if RainyDays.config.feathers then SMODS.Joker {
       }
     end
   end,
-  
-  calc_dollar_bonus = function(self, card)
-    if G.GAME.rd_feather_payout and G.GAME.rd_feather_payout > 0 then
-      return G.GAME.rd_feather_payout
-    end
-	end,
   
   locked_loc_vars = function(self, info_queue, card)
     local count = 0

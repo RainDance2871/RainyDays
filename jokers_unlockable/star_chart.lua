@@ -10,7 +10,6 @@ SMODS.Joker {
   pos = RainyDays.GetJokersAtlasTable('star_chart'),
   soul_pos = RainyDays.GetJokersAtlasTable('star_chart_soul'),
   rd_highlight_shader = 'RainyDays_metallic_highlight',
-  rd_skip_soul = true,
   attributes = { 'chips', 'scaling', 'planet', 'space' },
   
   config = {

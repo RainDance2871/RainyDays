@@ -57,6 +57,49 @@ function RainyDays.GetJokerPosition(joker)
   end
 end
 
+
+RainyDays.naming = RainyDays.naming or {}
+function RainyDays.GetJokerNameKey(card)
+  local key = card.config.center_key
+  local center = card.config.center
+
+  if type(center.loc_vars) == 'function' and not RainyDays.naming[card] then
+    RainyDays.naming[card] = true
+    local ok, loc_vars = pcall(center.loc_vars, card, {}, card)
+    RainyDays.naming[card] = nil
+    if ok then
+      key = loc_vars.key or key
+    end
+  end
+
+  return key
+end
+
+function RainyDays.GetJokerName(card, not_numbered)
+  if card and card.config and not RainyDays.naming[card] then
+    local name_key = RainyDays.GetJokerNameKey(card)
+    if not name_key then return end
+    
+    local name = localize{ type = 'name_text', set = 'Joker', key = name_key }
+    if name and not not_numbered and G.jokers and G.jokers.cards then
+      local amount, nr = 0, nil
+      for i = 1, #G.jokers.cards do
+        if G.jokers.cards[i] == card then
+          amount = amount + 1
+          nr = amount
+        elseif RainyDays.GetJokerNameKey(G.jokers.cards[i]) == name_key then
+          amount = amount + 1
+        end
+      end
+      if nr and amount > 1 then
+        name = name .. localize('rainydays_nr_prefix') .. nr .. localize('rainydays_nr_postfix')
+      end
+    end
+    
+    return name
+  end
+end
+
 function RainyDays.IsInPool(card, pool)
   local center = (type(card) == 'string' and G.P_CENTERS[card]) or (card.config and card.config.center)
   return (center and center.pools and center.pools[pool])

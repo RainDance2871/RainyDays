@@ -7,7 +7,7 @@ SMODS.Joker {
   blueprint_compat = false,
   eternal_compat = true,
   perishable_compat = true,
-  pos = RainyDays.GetJokersAtlasTable('burdenofgreatness'),
+  pos = RainyDays.GetJokersAtlasTable('hubris'),
   attributes = { 'xblindsize', 'tag' }, 
   
   config = {
@@ -19,7 +19,9 @@ SMODS.Joker {
   },
   
   loc_vars = function(self, info_queue, card)
-    info_queue[#info_queue + 1] = G.P_TAGS[card.ability.extra.tag]
+    info_queue[#info_queue + 1] = { set = 'Other', key = 'rainydays_' .. card.ability.extra.tag }
+    info_queue[#info_queue + 1] = G.P_CENTERS['p_arcana_mega_1']
+    
     return {
       vars = {
         card.ability.extra.plus_score,
@@ -33,7 +35,7 @@ SMODS.Joker {
       G.GAME.starting_params.ante_scaling = G.GAME.starting_params.ante_scaling * (1 + 0.01 * card.ability.extra.plus_score)
       G.E_MANAGER:add_event(Event({
         func = function()
-          add_tag(Tag('tag_charm'))
+          add_tag(Tag(card.ability.extra.tag))
           play_sound('generic1', 0.9 + math.random() * 0.1, 0.8)
           play_sound('holo1', 1.2 + math.random() * 0.1, 0.4)
           return true

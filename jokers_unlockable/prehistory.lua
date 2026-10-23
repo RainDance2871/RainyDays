@@ -7,6 +7,16 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = false,
+  in_pool = function(self, args) --does not appear in packs normally if player does not have a sellable joker
+    if G.jokers and G.jokers.cards then
+      for i = 1, #G.jokers.cards do
+        if not SMODS.is_eternal(G.jokers.cards[i]) then
+          return true
+        end
+      end
+    end
+    return false
+  end,
   pos = RainyDays.GetJokersAtlasTable('prehistory'),
   attributes = { 'xmult', 'scaling', 'joker', 'on_sell' },  
   config = {
@@ -22,29 +32,8 @@ SMODS.Joker {
       local contents = {}
       
       for i = 1, #G.jokers.cards do
-        if G.jokers.cards[i] ~= card and RainyDays.list_contains(card.ability.extra.old_jokers, G.jokers.cards[i].ability.rd_joker_id) and not SMODS.is_eternal(G.jokers.cards[i]) then
-          local name = localize{ type = 'name_text', set = 'Joker', key = G.jokers.cards[i].config.center_key }
-          
-          local function amount_of_copies(card)
-            local amount = 0
-            local nr
-            for j = 1, #G.jokers.cards do
-              if G.jokers.cards[j].config.center.key == card.config.center.key then
-                amount = amount + 1
-                if G.jokers.cards[j] == card then
-                  nr = amount
-                end
-              end
-            end
-            return amount, nr
-          end
-          
-          local amount, nr = amount_of_copies(G.jokers.cards[i])
-          if amount > 1 and nr then
-            name = name .. localize('rainydays_infobox_nr_sign_prefix') .. nr .. localize('rainydays_infobox_nr_sign_postfix')
-          end
-          
-          contents[#contents + 1] = name
+        if G.jokers.cards[i] ~= card and RainyDays.list_contains(card.ability.extra.old_jokers, G.jokers.cards[i].ability.rd_joker_id) and not SMODS.is_eternal(G.jokers.cards[i], card) then
+          contents[#contents + 1] = RainyDays.GetJokerName(G.jokers.cards[i])
         end
       end      
       
@@ -91,7 +80,7 @@ SMODS.Joker {
     return {
       main_end = not self.unlocked and RainyDays.generate_main_end_counter(G.GAME and G.GAME.rd_jokers_uniquelist_count or 0) or nil,
       vars = { 
-        15
+        30
       }
     }
   end,

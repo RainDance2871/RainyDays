@@ -8,7 +8,7 @@ SMODS.Joker {
   eternal_compat = true,
   perishable_compat = true,
   pos = RainyDays.GetJokersAtlasTable('membership_card'),
-  attributes = { 'passsive', 'economy' },
+  attributes = { 'passsive', 'economy', 'shop' },
   config = {
     extra = {
       cost_reduction = 2
@@ -50,7 +50,7 @@ SMODS.Joker {
   
   locked_loc_vars = function(self, info_queue, card)    
     return { 
-      main_end = not self.unlocked and RainyDays.generate_main_end_counter(localize('$') .. (G.GAME.rd_money_spent_shop or 0)) or nil,
+      main_end = not self.unlocked and RainyDays.generate_main_end_counter(localize('$') .. (G.GAME.rd_money_spent_this_shop or 0)) or nil,
       vars = { 
         50
       }
@@ -58,6 +58,6 @@ SMODS.Joker {
   end,
   
   check_for_unlock = function(self, args)
-    return args.type == 'money' and (G.GAME.rd_money_spent_shop or 0) >= 50
+    return args.type == 'money' and (G.GAME.rd_money_spent_this_shop or 0) >= 50
   end
 }

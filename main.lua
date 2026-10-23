@@ -28,11 +28,16 @@ end
 local old_func_init_game_object = Game.init_game_object
 function Game:init_game_object()
 	local ret = old_func_init_game_object(self)
+  ret.current_round.RD_abacus = { '10', '9', '8' }
 	ret.current_round.RD_lotteryticket = { 'Ace', 'King', 'Queen', 'Jack', '10' }
   ret.current_round.RD_prairie_poker_hand = 'High Card'
-  ret.current_round.RD_skip_interest = false --used for piggybank
-  ret.current_round.RD_wanted = 'j_joker'
+  ret.current_round.RD_wanted_name_key = 'j_joker'
   ret.current_round.RD_wishbone = 'c_fool'
+  
+  ret.rd_bingo_balls = 0
+  ret.rd_bingo_balls_min = 0
+  ret.rd_bingo_balls_max = 150
+  ret.rd_skip_interest = false
 	return ret
 end
 
@@ -44,6 +49,7 @@ end
 
 --calls here in case we add more cards that need the same function
 function RainyDays.reset_game_globals(run_start)
+  RainyDays.reset_game_globals_abacus()
   RainyDays.reset_game_globals_lotteryticket()
   RainyDays.reset_game_globals_prairie()
   RainyDays.reset_game_globals_wanted()

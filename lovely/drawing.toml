@@ -25,12 +25,25 @@ if apply_edition and self.children.floating_sprite then'''
 [patches.pattern]
 target = '''=[SMODS _ "src/card_draw.lua"]'''
 match_indent = true
+pattern = '''function Card:draw(layer)'''
+position = 'after'
+payload = '''RainyDays.disable_normal_drawing = self.config.center.rd_canvas_drawing
+or (RainyDays.config.metallic_hightlights and self.config.center.rd_highlight_shader)
+or ((RainyDays.config.clarifiers == 1 or RainyDays.config.clarifiers == 2) and self.config.center.rd_indicator_shader)
+if RainyDays.disable_normal_drawing and self.config.center_key == 'j_satellite' and not RainyDays.config.satellite then
+  RainyDays.disable_normal_drawing = false
+end'''
+
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+match_indent = true
 pattern = '''SMODS.DrawStep {
     key = 'center',
     order = -10,
     func = function(self, layer)'''
 position = 'after'
-payload = '''        if self.config.center.rd_canvas_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
+payload = '''        if RainyDays.disable_normal_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
 
 [[patches]]
 [patches.pattern]
@@ -41,7 +54,7 @@ pattern = '''SMODS.DrawStep {
     order = 0,
     func = function(self, layer)'''
 position = 'after'
-payload = '''        if self.config.center.rd_canvas_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
+payload = '''        if RainyDays.disable_normal_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
 
 [[patches]]
 [patches.pattern]
@@ -52,7 +65,7 @@ pattern = '''SMODS.DrawStep {
     order = 20,
     func = function(self, layer)'''
 position = 'after'
-payload = '''        if self.config.center.rd_canvas_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
+payload = '''        if RainyDays.disable_normal_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
 
 [[patches]]
 [patches.pattern]
@@ -63,11 +76,8 @@ pattern = '''SMODS.DrawStep {
     order = 45,
     func = function(self, layer)'''
 position = 'after'
-payload = '''        if self.config.center.rd_canvas_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
+payload = '''        if RainyDays.disable_normal_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
 
-
-
-#dont draw soul if skip_soul is true
 [[patches]]
 [patches.pattern]
 target = '''=[SMODS _ "src/card_draw.lua"]'''
@@ -77,4 +87,15 @@ pattern = '''SMODS.DrawStep {
     order = 60,
     func = function(self)'''
 position = 'after'
-payload = '''if self.config.center.rd_skip_soul then return end'''
+payload = '''        if (RainyDays.disable_normal_drawing or self.config.center.rd_highlight_shader or self.config.center.rd_indicator_shader) and (self.config.center.discovered or self.bypass_discovery_center) then return end'''
+
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/card_draw.lua"]'''
+match_indent = true
+pattern = '''SMODS.DrawStep {
+    key = 'debuff',
+    order = 70,
+    func = function(self)'''
+position = 'after'
+payload = '''        if RainyDays.disable_normal_drawing and (self.config.center.discovered or self.bypass_discovery_center) then return end'''

@@ -11,6 +11,46 @@ local function hand_has_enhancement(hand, enhancement)
   end
 end
 
+jd_def['j_RainyDays_abacus'] = {
+  text = {
+    { border_nodes = {
+      { text = "X" },
+      { ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp' }
+    }}
+  },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank1' },
+    { text = ", " },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank2' },
+    { text = ", " },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank3' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local xmult = card.ability.extra.x_mult
+    if not RainyDays.evaluating_play and #JokerDisplay.current_hand > 0 then
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        for _, scoring_card in ipairs(scoring_hand) do
+          local id = scoring_card:get_id()
+          if RainyDays.balatro_ranks_to_id[G.GAME.current_round.RD_abacus[1]] == id or RainyDays.balatro_ranks_to_id[G.GAME.current_round.RD_abacus[2]] == id 
+          or RainyDays.balatro_ranks_to_id[G.GAME.current_round.RD_abacus[3]] == id then
+            xmult = xmult + card.ability.extra.plus_xmult * JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+          end
+        end
+      end
+    end
+    card.joker_display_values.xmult = xmult
+    card.joker_display_values.rank1 = localize(G.GAME.current_round.RD_abacus[1], 'ranks')
+    card.joker_display_values.rank2 = localize(G.GAME.current_round.RD_abacus[2], 'ranks')
+    card.joker_display_values.rank3 = localize(G.GAME.current_round.RD_abacus[3], 'ranks')
+  end
+}
+
 jd_def['j_RainyDays_absent_heart'] = {
   text = {
     { text = "(" },
@@ -50,6 +90,46 @@ jd_def['j_RainyDays_accountant'] = {
   
   calc_function = function(card)
     card.joker_display_values.mult = card.ability.extra.mult * (G.GAME.facing_blind and G.GAME.rd_cards_drawn_this_round or 0)
+  end
+}
+
+jd_def['j_RainyDays_algebra'] = {
+  text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'ex', colour = G.C.CLEAR },
+    { text = "+", colour = G.C.CHIPS },
+    { ref_table = 'card.ability.extra', ref_value = 'current_chips', retrigger_type = 'mult', colour = G.C.CHIPS },
+    { ref_table = 'card.joker_display_values', ref_value = 'ex' }
+  },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'text', colour = G.C.FILTER },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local ex = ""
+    
+    if G.GAME.current_round.discards_left > 0 and not RainyDays.evaluating_play then
+      local text = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        
+        local function nummbers_only()
+          for i = 1, #JokerDisplay.current_hand do
+            if JokerDisplay.current_hand[i]:get_id() > 10 or JokerDisplay.current_hand[i]:get_id() < 2 then
+              return false
+            end
+          end
+          return true
+        end
+        
+        ex = #JokerDisplay.current_hand > 0 and nummbers_only() and " !" or ""
+      end
+    end
+    
+    card.joker_display_values.ex = ex
+    card.joker_display_values.text = localize('rainydays_JD_numbers')
   end
 }
 
@@ -182,6 +262,18 @@ jd_def['j_RainyDays_beanstalk'] = {
   reminder_text_config = { scale = reminder_text_scale }
 }
 
+jd_def['j_RainyDays_bingo_balls'] = {
+  text = {
+    { text = "+" },
+    { ref_table = 'card.joker_display_values', ref_value = 'chips', retrigger_type = 'mult' }
+  },
+  text_config = { colour = G.C.CHIPS },
+  
+  calc_function = function(card)
+    card.joker_display_values.chips = G.GAME.rd_bingo_balls
+  end
+}
+
 jd_def['j_RainyDays_blood_moon'] = {
   text = {
     { border_nodes = {
@@ -214,8 +306,6 @@ jd_def['j_RainyDays_bonsai'] = {
           amount = amount + 1
         end
       end
-    else
-      amount = 13
     end
     
     card.joker_display_values.mult = card.ability.extra.mult * math.floor(amount / card.ability.extra.cards)
@@ -268,30 +358,47 @@ jd_def['j_RainyDays_breakfast_cereal'] = {
   
   reminder_text = {
     { text = "(" },
-    { ref_table = 'card.joker_display_values', ref_value = 'localized_text' },
+    { ref_table = 'card.joker_display_values', ref_value = 'countdown' },
     { text = ")" }
   },
   
   calc_function = function(card)
-    card.joker_display_values.localized_text = math.max(0, card.ability.extra.display_cards_amount) .. "/" .. card.ability.extra.display_cards_amount_start
-    
-    local runs_out = false
-    if G.GAME.facing_blind then
-      local cards_played = 0
+    local amount = card.ability.extra.cards_amount
+    local cards_played = 0
+    if G.GAME.facing_blind and not RainyDays.evaluating_play then
       local text, _, scoring_hand = JokerDisplay.evaluate_hand()
       if text ~= 'Unknown' then
         for _, scoring_card in pairs(scoring_hand) do
-          cards_played = cards_played + 1
-          if cards_played >= card.ability.extra.cards_amount then
-            runs_out = true
-            break
+          if not scoring_card.debuff and next(SMODS.get_enhancements(scoring_card)) then
+            cards_played = cards_played + 1
           end
         end
       end
     end
+    amount = amount - cards_played
     
-    card.joker_display_values.amount = runs_out and card.ability.extra.amount or 0 
+    card.joker_display_values.countdown = math.max(0, amount) .. "/" .. card.ability.extra.cards_amount_start
+    card.joker_display_values.amount = (amount <= 0) and card.ability.extra.amount or 0 
     card.joker_display_values.tag = localize{ type = 'name_text', set = 'Tag', key = card.ability.extra.tag }
+  end,
+  
+  style_function = function(card, text, reminder_text, extra)
+    if reminder_text and reminder_text.children and reminder_text.children[2] then
+      local amount = card.ability.extra.cards_amount
+      local cards_played = 0
+      if G.GAME.facing_blind and  not RainyDays.evaluating_play then
+        local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+        if text ~= 'Unknown' then
+          for _, scoring_card in pairs(scoring_hand) do
+            if not scoring_card.debuff and next(SMODS.get_enhancements(scoring_card)) then
+              cards_played = cards_played + 1
+            end
+          end
+        end
+      end
+      amount = amount - cards_played
+      reminder_text.children[2].config.colour = (amount <= 0) and G.C.RED or G.C.UI.TEXT_INACTIVE
+    end
   end,
   
   retrigger_function = function(playing_card, scoring_hand, held_in_hand, joker_card)
@@ -315,6 +422,43 @@ jd_def['j_RainyDays_breakfast_cereal'] = {
     end
     
     return retrigger and joker_card.ability.extra.repetitions * JokerDisplay.calculate_joker_triggers(joker_card) or 0
+  end
+}
+
+jd_def['j_RainyDays_bud'] = {
+  text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'chips' }
+  },
+  
+  reminder_text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'reminder_start' },
+    { ref_table = 'card.joker_display_values', ref_value = 'dollar_minus', colour = G.C.GOLD },
+    { ref_table = 'card.joker_display_values', ref_value = 'reminder_end' }
+  },
+  --reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    card.joker_display_values.chips = "+" .. (card.ability.extra.chip_reward * math.floor(card.ability.extra.dollars_spent / card.ability.extra.per_dollar) * JokerDisplay.calculate_joker_triggers(card))
+    if card.ability.extra.bloomed then
+      card.joker_display_values.reminder_start = ""
+      card.joker_display_values.dollar_minus = ""
+      card.joker_display_values.reminder_end = ""
+    else
+      card.joker_display_values.reminder_start = "("
+      card.joker_display_values.dollar_minus = "-" .. localize('$') .. card.ability.extra.dollar_take
+      card.joker_display_values.reminder_end = " " .. localize('k_round') .. ")"
+    end
+  end,
+  
+  style_function = function(card, text, reminder_text, extra)
+    if text and text.children and text.children[1] then
+      text.children[1].config.colour = card.ability.extra.bloomed and not card.debuff and G.C.CHIPS or G.C.UI.TEXT_INACTIVE
+    end
+    if reminder_text and reminder_text.children then
+      for i = 1, #reminder_text.children do
+        reminder_text.children[i].config.scale = card.ability.extra.bloomed and 0 or reminder_text_scale
+      end
+    end
   end
 }
 
@@ -343,6 +487,46 @@ jd_def['j_RainyDays_burdenofgreatness'] = {
     card.joker_display_values.danger = localize('rainydays_JD_required_scores')
     card.joker_display_values.round = "(" .. localize('k_round') .. ")"
     card.joker_display_values.tag = localize{ type = 'name_text', set = 'Tag', key = card.ability.extra.tag }
+  end
+}
+
+jd_def['j_RainyDays_canine'] = {
+  text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'count', retrigger_type = 'mult' },
+    { text = "x", scale = 0.35 },
+    { text = "+", colour = G.C.CHIPS },
+    { ref_table = 'card.ability.extra', ref_value = 'chips', colour = G.C.CHIPS },
+    { text = "/" },
+    { text = "+", colour = G.C.MULT },
+    { ref_table = 'card.ability.extra', ref_value = 'mult', colour = G.C.MULT },
+  },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank1' },
+    { text = ", " },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank2' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local count = 0
+    
+    if G.GAME.facing_blind then
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        for _, scoring_card in pairs(scoring_hand) do
+          if scoring_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank1] or scoring_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank2] then
+            count = count + JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+          end
+        end
+      end
+    end
+    card.joker_display_values.count = count
+    
+    card.joker_display_values.rank1 = localize(card.ability.extra.rank1, 'ranks') 
+    card.joker_display_values.rank2 = localize(card.ability.extra.rank2, 'ranks')
   end
 }
 
@@ -385,6 +569,29 @@ jd_def['j_RainyDays_catwalk'] = {
   end
 }
 
+jd_def['j_RainyDays_ceremonial_bowl'] = {
+  text = {
+    { text = "+" .. localize('$') },
+    { ref_table = 'card.joker_display_values', ref_value = 'dollars' }
+  },
+  text_config = { colour = G.C.GOLD },
+  
+  reminder_text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'localized_text' }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local amount = 0
+    local pos = RainyDays.GetJokerPosition(card)
+    if pos then
+      amount = #G.jokers.cards - pos
+    end
+    
+    card.joker_display_values.dollars = amount * card.ability.extra.dollars
+  end
+}
+
 jd_def['j_RainyDays_checklist'] = {
   text = {
     { border_nodes = {
@@ -392,13 +599,6 @@ jd_def['j_RainyDays_checklist'] = {
       { ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp' }
     }}
   },
-  
-  extra = {
-    {{ text = "5 " }, { text = "4 " }, { text = "3 " }, { text = "2" }},
-    {{ text = "10 " }, { text = "9 " }, { text = "8 " }, { text = "7 " }, { text = "6" }}, 
-    {{ text = "A " }, { text = "K " }, { text = "Q " }, { text = "J" }}
-  },
-  extra_config = { scale = 0.2 },
   
   calc_function = function(card)
     local count = 0
@@ -432,21 +632,6 @@ jd_def['j_RainyDays_checklist'] = {
     end
     
     card.joker_display_values.xmult = card.ability.extra.xmult ^ count
-  end,
-  
-  style_function = function(card, text, reminder_text, extra)
-    if extra then
-      local table = { {contents = 4, start = 14 }, {contents = 5, start = 10 }, {contents = 4, start = 5 } }
-      for i = 1, 3 do
-        if extra.children[i] then
-          for j = 1, table[i].contents do
-            if extra.children[i].children[j] then
-              extra.children[i].children[j].config.colour = (G.GAME.rd_ranks_played_this_round[table[i].start + 1 - j] and G.GAME.rd_ranks_played_this_round[table[i].start + 1 - j] > 0) and G.C.FILTER or G.C.UI.TEXT_INACTIVE
-            end
-          end
-        end
-      end
-    end
   end
 }
 
@@ -489,7 +674,7 @@ jd_def['j_RainyDays_cloverfield'] = {
   end
 }
 
-jd_def['j_RainyDays_collage'] = {
+jd_def['j_RainyDays_collection'] = {
   text = {
     { border_nodes = {
       { text = "X" },
@@ -497,30 +682,28 @@ jd_def['j_RainyDays_collage'] = {
     }}
   },
   
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'jokers' },
+    { text = "/" },
+    { ref_table = 'card.ability.extra', ref_value = 'jokers' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
   calc_function = function(card)
-    local table = {}
-    for key in pairs(G.GAME.rd_enhancements_scored_this_ante) do
-      table[key] = true
-    end
-    
-    if G.GAME.facing_blind then
-      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
-      if text ~= 'Unknown' then
-        for _, scoring_card in pairs(scoring_hand) do
-          local enhancements = SMODS.get_enhancements(scoring_card)
-          for key in pairs(enhancements) do
-            table[key] = true
-          end
+    card.joker_display_values.jokers = math.min(G.GAME.rd_jokers_uniquelist_count, card.ability.extra.jokers)
+    card.joker_display_values.xmult = (G.GAME.rd_jokers_uniquelist_count >= card.ability.extra.jokers) and card.ability.extra.Xmult or 1
+  end,
+  
+  style_function = function(card, text, reminder_text, extra)
+    if reminder_text then
+      for i = 2, 4 do
+        if reminder_text.children[i] then
+          reminder_text.children[i].config.colour = (G.GAME.rd_jokers_uniquelist_count >= card.ability.extra.jokers) and G.C.GREEN or G.C.UI.TEXT_INACTIVE
         end
       end
     end
-    
-    local count = 0
-    for key in pairs(table) do
-      count = count + 1
-    end
-    
-    card.joker_display_values.xmult = card.ability.extra.xmult_base + card.ability.extra.xmult * count
   end
 }
 
@@ -586,7 +769,7 @@ jd_def['j_RainyDays_dancing_moves'] = {
   
   style_function = function(card, text, reminder_text, extra)
     if text and text.children[1] then
-      local active = hand_has_enhancement(JokerDisplay.current_hand, 'm_wild')
+      local active = not card.debuff and hand_has_enhancement(JokerDisplay.current_hand, 'm_wild')
       text.children[1].config.colour = active and G.C.FILTER or G.C.UI.TEXT_INACTIVE
     end
   end
@@ -596,6 +779,7 @@ jd_def['j_RainyDays_dealer'] = {}
 
 jd_def['j_RainyDays_delirium'] = {
   text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'ex', colour = G.C.CLEAR },
     { text = "+", colour = G.C.MULT },
     { ref_table = 'card.joker_display_values', ref_value = 'mult', retrigger_type = 'mult', colour = G.C.MULT },
     { ref_table = 'card.joker_display_values', ref_value = 'ex' }
@@ -610,6 +794,7 @@ jd_def['j_RainyDays_delirium'] = {
 
 jd_def['j_RainyDays_desolate'] = {
   text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'ex', colour = G.C.CLEAR },
     { border_nodes = {
       { text = "X" },
       { ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp' }
@@ -618,11 +803,11 @@ jd_def['j_RainyDays_desolate'] = {
   },
   
   reminder_text = {
-    { text = "(", scale = counter_scale },
-    { ref_table = 'card.joker_display_values', ref_value = 'hands', scale = counter_scale },
-    { text = "/", scale = counter_scale },
-    { ref_table = 'card.ability.extra', ref_value = 'hands', scale = counter_scale },
-    { text = ")", scale = counter_scale }
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'hands' },
+    { text = "/" },
+    { ref_table = 'card.ability.extra', ref_value = 'hands' },
+    { text = ")" }
   },
   reminder_text_config = { scale = reminder_text_scale },
   
@@ -658,9 +843,63 @@ jd_def['j_RainyDays_desolate'] = {
       
       for i = 2, 4 do
         if reminder_text.children[i] then
-          reminder_text.children[i].config.colour = (count >= card.ability.extra.hands) and G.C.GREEN or nil
+          reminder_text.children[i].config.colour = (count >= card.ability.extra.hands) and G.C.GREEN or G.C.UI.TEXT_INACTIVE
         end
       end
+    end
+  end
+}
+
+jd_def['j_RainyDays_doubling_joker'] = {
+  text = {
+    { text = "+" },
+    { ref_table = 'card.joker_display_values', ref_value = 'mult', retrigger_type = 'mult' }
+  },
+  text_config = { colour = G.C.MULT },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank1' },
+    { text = ", " },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank2' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local count = 0
+    
+    if G.GAME.facing_blind then
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        for _, scoring_card in pairs(scoring_hand) do
+          local id = scoring_card:get_id() 
+          if id == RainyDays.balatro_ranks_to_id[card.ability.extra.rank1] or id == RainyDays.balatro_ranks_to_id[card.ability.extra.rank2] then
+            count = count + JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+          end
+        end
+      end
+    end
+    
+    card.joker_display_values.mult = (card.ability.extra.mult_start * (card.ability.extra.mult_base ^ count)) - 1
+    card.joker_display_values.rank1 = localize(card.ability.extra.rank1, 'ranks') 
+    card.joker_display_values.rank2 = localize(card.ability.extra.rank2, 'ranks')
+  end
+}
+
+jd_def['j_RainyDays_duality'] = {
+  text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'chips', colour = G.C.CHIPS },
+    { ref_table = 'card.joker_display_values', ref_value = 'mult', colour = G.C.MULT }
+  },
+  
+  calc_function = function(card)
+    if card.ability.extra.night then
+      card.joker_display_values.chips = "+" .. (card.ability.extra.chips * JokerDisplay.calculate_joker_triggers(card))
+      card.joker_display_values.mult = ""
+    else
+      card.joker_display_values.mult = "+"  .. (card.ability.extra.mult * JokerDisplay.calculate_joker_triggers(card))
+      card.joker_display_values.chips = ""
     end
   end
 }
@@ -716,7 +955,7 @@ jd_def['j_RainyDays_equity'] = {
       local held_in_hand = {}
       for _, playing_card in ipairs(G.hand.cards) do
         if playing_hand or not playing_card.highlighted then
-          if playing_card.facing and playing_card.facing == 'back' then
+          if not playing_hand and playing_card.facing and playing_card.facing == 'back' then
             card.joker_display_values.mult = 0
             return
           end
@@ -790,6 +1029,7 @@ jd_def['j_RainyDays_feather_marvelous'] = {
     { ref_table = 'card.joker_display_values', ref_value = 'count', colour = G.C.ORANGE },
     { text = "x" },
     { ref_table = 'card.joker_display_values', ref_value = 'localized_text' },
+    { ref_table = 'card.joker_display_values', ref_value = 'sell_value', colour = G.C.GOLD },
     { text = ")" }
   },
   reminder_text_config = { scale = reminder_text_scale },
@@ -806,6 +1046,7 @@ jd_def['j_RainyDays_feather_marvelous'] = {
     
     card.joker_display_values.count = count
     card.joker_display_values.localized_text = localize('rainydays_feather')
+    card.joker_display_values.sell_value = next(SMODS.find_card('j_RainyDays_feather_precious', true)) and (" $" .. card.sell_cost) or ""
   end,
   
   mod_function = function(card, mod_joker)
@@ -821,7 +1062,9 @@ jd_def['j_RainyDays_feather_precious'] = {
   text_config = { colour = G.C.GOLD },
   
   reminder_text = {
-    { ref_table = 'card.joker_display_values', ref_value = 'localized_text' }
+    { ref_table = 'card.joker_display_values', ref_value = 'localized_text' },
+    { text = " $", colour = G.C.GOLD },
+    { ref_table = 'card', ref_value = 'sell_cost', colour = G.C.GOLD },
   },
   reminder_text_config = { scale = reminder_text_scale },
   
@@ -835,7 +1078,7 @@ jd_def['j_RainyDays_feather_precious'] = {
       end
     end
     
-    card.joker_display_values.dollars = count * card.ability.extra.plus_money
+    card.joker_display_values.dollars = count * card.ability.extra.sell_value
     card.joker_display_values.localized_text = "(" .. localize('k_round') .. ")"
   end
 }
@@ -846,6 +1089,7 @@ jd_def['j_RainyDays_feather_silky'] = {
     { ref_table = 'card.joker_display_values', ref_value = 'count', colour = G.C.ORANGE },
     { text = "x" },
     { ref_table = 'card.joker_display_values', ref_value = 'localized_text' },
+    { ref_table = 'card.joker_display_values', ref_value = 'sell_value', colour = G.C.GOLD },
     { text = ")" }
   },
   reminder_text_config = { scale = reminder_text_scale },
@@ -862,6 +1106,7 @@ jd_def['j_RainyDays_feather_silky'] = {
     
     card.joker_display_values.count = count
     card.joker_display_values.localized_text = localize('rainydays_feather')
+    card.joker_display_values.sell_value = next(SMODS.find_card('j_RainyDays_feather_precious', true)) and (" $" .. card.sell_cost) or ""
   end,
   
   mod_function = function(card, mod_joker)
@@ -875,6 +1120,7 @@ jd_def['j_RainyDays_feather_vibrant'] = {
     { ref_table = 'card.joker_display_values', ref_value = 'count', colour = G.C.ORANGE },
     { text = "x" },
     { ref_table = 'card.joker_display_values', ref_value = 'localized_text' },
+    { ref_table = 'card.joker_display_values', ref_value = 'sell_value', colour = G.C.GOLD },
     { text = ")" }
   },
   reminder_text_config = { scale = reminder_text_scale },
@@ -891,6 +1137,7 @@ jd_def['j_RainyDays_feather_vibrant'] = {
     
     card.joker_display_values.count = count
     card.joker_display_values.localized_text = localize('rainydays_feather')
+    card.joker_display_values.sell_value = next(SMODS.find_card('j_RainyDays_feather_precious', true)) and (" $" .. card.sell_cost) or ""
   end,
   
   mod_function = function(card, mod_joker)
@@ -950,18 +1197,28 @@ jd_def['j_RainyDays_five_and_dime'] = {
 
 jd_def['j_RainyDays_flipflop'] = {
   text = {
-    { text = "+", colour = G.C.CHIPS },
-    { ref_table = 'card.joker_display_values', ref_value = 'chips', colour = G.C.CHIPS, retrigger_type = 'mult' },
-    { text = " " },
+    { ref_table = 'card.joker_display_values', ref_value = 'chips', colour = G.C.CHIPS },
     { border_nodes = {
-      { text = "X" },
-      { ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp' }
-    }}
+      { ref_table = 'card.joker_display_values', ref_value = 'xmult' }
+    },
+    --border_colour = G.C.CLEAR
+    }
   },
   
   calc_function = function(card)
-    card.joker_display_values.chips = card.ability.extra.state == 1 and card.ability.extra.plus_chips or 0
-    card.joker_display_values.xmult = card.ability.extra.state == 0 and card.ability.extra.plus_xmult or 1
+    if card.ability.extra.state == 1 then
+      card.joker_display_values.chips = "+" .. (card.ability.extra.plus_chips * JokerDisplay.calculate_joker_triggers(card))
+      card.joker_display_values.xmult = ""
+    else
+      card.joker_display_values.xmult = "X"  .. (card.ability.extra.plus_xmult ^ JokerDisplay.calculate_joker_triggers(card))
+      card.joker_display_values.chips = ""
+    end
+  end,
+  
+  style_function = function(card, text, reminder_text, extra)
+    if text and text.children[2] then
+      text.children[2].config.colour = (card.ability.extra.state == 0) and G.C.XMULT or G.C.CLEAR
+    end
   end
 }
 
@@ -989,6 +1246,41 @@ jd_def['j_RainyDays_folding_chair'] = {
     card.joker_display_values.steel = localize('rainydays_steel')
   end
 }
+
+jd_def['j_RainyDays_frowny_face'] = {
+  text = {
+    { text = "+" },
+    { ref_table = 'card.joker_display_values', ref_value = 'mult', retrigger_type = 'mult' }
+  },
+  text_config = { colour = G.C.MULT },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'faces', colour = G.C.FILTER },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local count = 0
+    if G.GAME.facing_blind then
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        for _, playing_card in ipairs(JokerDisplay.current_hand) do
+          if playing_card:is_face(true) and (playing_card.debuff or not RainyDays.list_contains(scoring_hand, playing_card)) then
+            count = count + 1
+          end
+        end
+      end
+    end
+    
+    card.joker_display_values.mult = card.ability.extra.plus_mult * count
+    card.joker_display_values.faces = localize('k_face_cards')
+  end
+}
+
+
+jd_def['j_RainyDays_fruit_punch'] = {}
 
 jd_def['j_RainyDays_golden_idol'] = {
   text = {
@@ -1035,9 +1327,18 @@ jd_def['j_RainyDays_goldfish'] = {
     end
     card.joker_display_values.dollars = dollars
     card.joker_display_values.prefix = localize('rainydays_JD_no_prefix')
-    card.joker_display_values.hand = localize(card.ability.extra.poker_hand, 'poker_hands')
+    card.joker_display_values.hand =  string.len(card.joker_display_values.prefix) > 0 and string.lower(localize(card.ability.extra.poker_hand, 'poker_hands')) or localize(card.ability.extra.poker_hand, 'poker_hands')
     card.joker_display_values.postfix = localize('rainydays_JD_no_postfix')
   end
+}
+
+jd_def['j_RainyDays_goose'] = {
+  text = {
+    { border_nodes = {
+      { text = "X" },
+      { ref_table = 'card.ability.extra', ref_value = 'xmult', retrigger_type = 'exp' }
+    }}
+  }
 }
 
 jd_def['j_RainyDays_grapes'] = {
@@ -1056,12 +1357,12 @@ jd_def['j_RainyDays_grapes'] = {
   
   calc_function = function(card)
     local count = 0
+    local cards_played = 0
     if G.GAME.facing_blind then
       local text, _, scoring_hand = JokerDisplay.evaluate_hand()
-      local cards_played = 0
       if text ~= 'Unknown' then
         for _, scoring_card in pairs(scoring_hand) do
-          if cards_played < card.ability.extra.card_amount then
+          if not scoring_card.debuff and cards_played < card.ability.extra.card_amount then
             cards_played = cards_played + 1
             count = count + JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
           end
@@ -1069,13 +1370,34 @@ jd_def['j_RainyDays_grapes'] = {
       end
     end
     
-    card.joker_display_values.localized_text = math.max(0, card.ability.extra.display_card_amount) .. "/" .. card.ability.extra.display_card_amount_start
+    local amount = card.ability.extra.card_amount - (not RainyDays.evaluating_play and cards_played or 0)
+    
+    card.joker_display_values.localized_text = math.max(0, amount) .. "/" .. card.ability.extra.card_amount_start
     card.joker_display_values.mult = card.ability.extra.mult * count
+  end,
+  
+  style_function = function(card, text, reminder_text, extra)
+    if reminder_text and reminder_text.children and reminder_text.children[2] then
+      local cards_played = 0
+      if G.GAME.facing_blind and not RainyDays.evaluating_play then
+        local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+        if text ~= 'Unknown' then
+          for _, scoring_card in pairs(scoring_hand) do
+            if not scoring_card.debuff then
+              cards_played = cards_played + 1
+            end
+          end
+        end
+      end
+      local amount = card.ability.extra.card_amount - cards_played
+      reminder_text.children[2].config.colour = amount <= 0 and G.C.RED or G.C.UI.TEXT_INACTIVE
+    end
   end
 }
 
 jd_def['j_RainyDays_grey_joker'] = {
   text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'ex', colour = G.C.CLEAR },
     { border_nodes = {
       { text = "X" },
       { ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp' }
@@ -1095,8 +1417,8 @@ jd_def['j_RainyDays_grey_joker'] = {
     local ex = ""
     
     if G.GAME.current_round.discards_left > 0 and not RainyDays.evaluating_play then
-      local _, poker_hands, _ = JokerDisplay.evaluate_hand()
-      if poker_hands[card.ability.extra.hand] and next(poker_hands[card.ability.extra.hand]) then
+      local text, poker_hands = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' and poker_hands[card.ability.extra.hand] and next(poker_hands[card.ability.extra.hand]) then
         ex = " !"
       end
     end
@@ -1104,6 +1426,39 @@ jd_def['j_RainyDays_grey_joker'] = {
     card.joker_display_values.ex = ex
     card.joker_display_values.xmult = xmult
     card.joker_display_values.hand = localize(card.ability.extra.hand, 'poker_hands')
+  end
+}
+
+jd_def['j_RainyDays_grindstone'] = {
+  text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'count', retrigger_type = 'mult' },
+    { text = "x", scale = 0.35 },
+    { text = "+", colour = G.C.CHIPS },
+    { ref_table = 'card.ability.extra', ref_value = 'bonus_chips', colour = G.C.CHIPS }
+  },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'localized_text' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local count = 0
+    if G.GAME.facing_blind then
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        for _, scoring_card in pairs(scoring_hand) do
+          if scoring_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank] then
+            count = count + JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+          end
+        end
+      end
+    end
+    card.joker_display_values.count = count
+    
+    card.joker_display_values.localized_text = localize(card.ability.extra.rank, 'ranks')
   end
 }
 
@@ -1233,6 +1588,60 @@ jd_def['j_RainyDays_heirloom'] = {
   end
 }
 
+jd_def['j_RainyDays_horseshoe'] = {
+  text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'active', scale = active_message_scale }
+  },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local seven_found
+    local unenhanced_found
+    if G.GAME.facing_blind and not card.debuff then
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        for _, scoring_card in pairs(scoring_hand) do
+          if scoring_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank] then
+            seven_found = true
+          end
+          if scoring_card.ability.set ~= 'Enhanced' then
+            unenhanced_found = true
+          end
+        end
+      end
+    end
+    card.joker_display_values.active = (seven_found and unenhanced_found) and localize('rainydays_activated') or localize('rainydays_deactivated')
+    card.joker_display_values.rank = localize(card.ability.extra.rank, 'ranks')
+  end,
+  
+  style_function = function(card, text, reminder_text, extra)
+    if text and text.children[1] then
+      local seven_found
+      local unenhanced_found
+      if G.GAME.facing_blind and not card.debuff then
+        local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+        if text ~= 'Unknown' then
+          for _, scoring_card in pairs(scoring_hand) do
+            if scoring_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank] then
+              seven_found = true
+            end
+            if scoring_card.ability.set ~= 'Enhanced' then
+              unenhanced_found = true
+            end
+          end
+        end
+      end
+      text.children[1].config.colour = (seven_found and unenhanced_found) and G.C.FILTER or G.C.UI.TEXT_INACTIVE
+    end
+  end
+}
+
 jd_def['j_RainyDays_instructional'] = {
   reminder_text = {
     { text = "(" },
@@ -1294,7 +1703,35 @@ jd_def['j_RainyDays_jungle_jack'] = {
   
   calc_function = function(card)
     card.joker_display_values.rank = localize(card.ability.extra.rank, 'ranks')
-  end}
+  end
+}
+
+jd_def['j_RainyDays_kimono'] = {
+  text = {
+    { text = "+" },
+    { ref_table = 'card.ability.extra', ref_value = 'mult', retrigger_type = 'mult' }
+  },
+  text_config = { colour = G.C.MULT },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'suit' },
+    { ref_table = 'card.joker_display_values', ref_value = 'in_deck' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    card.joker_display_values.suit = localize(card.ability.extra.suit, 'suits_plural')
+    card.joker_display_values.in_deck = localize('rainydays_JD_in_deck')
+  end,
+  
+  style_function = function(card, text, reminder_text, extra)
+    if reminder_text and reminder_text.children[2] then
+      reminder_text.children[2].config.colour = lighten(G.C.SUITS[card.ability.extra.suit], 0.35)
+    end
+  end
+}
 
 jd_def['j_RainyDays_kudzu'] = {
   text = {
@@ -1307,19 +1744,13 @@ jd_def['j_RainyDays_kudzu'] = {
 jd_def['j_RainyDays_lady_in_waiting'] = {
   reminder_text = {
     { text = "(" },
-    { ref_table = 'card.joker_display_values', ref_value = 'rank1' },
-    { text = ", " },
-    { ref_table = 'card.joker_display_values', ref_value = 'rank2' },
-    { text = ", " },    
-    { ref_table = 'card.joker_display_values', ref_value = 'rank3' },
+    { ref_table = 'card.joker_display_values', ref_value = 'faces', colour = G.C.FILTER },
     { text = ")" }
   },
   reminder_text_config = { scale = reminder_text_scale },
   
   calc_function = function(card)
-    card.joker_display_values.rank1 = localize(card.ability.extra.rank1, 'ranks')
-    card.joker_display_values.rank2 = localize(card.ability.extra.rank2, 'ranks')
-    card.joker_display_values.rank3 = localize(card.ability.extra.rank3, 'ranks')
+    card.joker_display_values.faces = localize('k_face_cards')
   end
 }
 
@@ -1330,7 +1761,7 @@ jd_def['j_RainyDays_lady_of_the_lake'] = {
   
   calc_function = function(card)
     local active
-    if G.GAME.facing_blind then
+    if G.GAME.facing_blind and not card.debuff then
       local _, _, scoring_hand = JokerDisplay.evaluate_hand()
       active = (#scoring_hand >= card.ability.extra.cards)
     end
@@ -1340,7 +1771,7 @@ jd_def['j_RainyDays_lady_of_the_lake'] = {
   style_function = function(card, text, reminder_text, extra)
     if text and text.children[1] then
       local active
-      if G.GAME.facing_blind then
+      if G.GAME.facing_blind and not card.debuff then
         local _, _, scoring_hand = JokerDisplay.evaluate_hand()
         active = (#scoring_hand >= card.ability.extra.cards)
       end
@@ -1358,7 +1789,7 @@ jd_def['j_RainyDays_legions'] = {
   
   reminder_text = {
     { text = "(" },
-    { ref_table = 'card.joker_display_values', ref_value = 'localized_text' },
+    { ref_table = 'card.joker_display_values', ref_value = 'localized_text', colour = G.C.FILTER },
     { text = ")" }
   },
   
@@ -1391,7 +1822,9 @@ jd_def['j_RainyDays_letter_board'] = {
   
   reminder_text = {
     { text = "(" },
-    { ref_table = 'card.joker_display_values', ref_value = 'localized_text' },
+    { ref_table = 'card.joker_display_values', ref_value = 'prefix' },
+    { ref_table = 'card.joker_display_values', ref_value = 'localized_text', colour = G.C.FILTER },
+    { ref_table = 'card.joker_display_values', ref_value = 'postfix' },
     { text = ")" }
   },
   reminder_text_config = { scale = reminder_text_scale },  
@@ -1406,8 +1839,28 @@ jd_def['j_RainyDays_letter_board'] = {
       return true
     end
     
-    card.joker_display_values.chips = (G.GAME.facing_blind and #JokerDisplay.current_hand > 0 and check_board()) and card.ability.extra.plus_chips or 0
-    card.joker_display_values.localized_text = localize('rainydays_JD_no_numbers')
+    local chips = 0
+    if G.GAME.facing_blind and #JokerDisplay.current_hand > 0 then
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        local number_found = false
+        for _, scoring_card in pairs(scoring_hand) do
+          if scoring_card:get_id() <= 10 and scoring_card:get_id() >= 2 then
+            number_found = true
+            break
+          end
+        end
+        
+        if not number_found then
+          chips = card.ability.extra.plus_chips
+        end
+      end
+    end
+    
+    card.joker_display_values.chips = chips
+    card.joker_display_values.prefix = localize('rainydays_JD_no_prefix')
+    card.joker_display_values.localized_text = string.len(card.joker_display_values.prefix) > 0 and string.lower(localize('rainydays_JD_numbers')) or localize('rainydays_JD_numbers')
+    card.joker_display_values.postfix = localize('rainydays_JD_no_postfix')
   end
 }
 
@@ -1454,21 +1907,17 @@ jd_def['j_RainyDays_long_road'] = {
   
   reminder_text = {
     { text = "(" },
-    { ref_table = 'card.joker_display_values', ref_value = 'hand1', colour = G.C.FILTER },
-    { text = ", " },
-    { ref_table = 'card.joker_display_values', ref_value = 'hand2', colour = G.C.FILTER },
+    { ref_table = 'card.joker_display_values', ref_value = 'hand', colour = G.C.FILTER },
     { text = ")" }
   },
   reminder_text_config = { scale = reminder_text_scale },
   
   calc_function = function(card)
     card.joker_display_values.discards = localize('rainydays_JD_discards')
-    card.joker_display_values.hand1 = localize(card.ability.extra.hand1, 'poker_hands')
-    card.joker_display_values.hand2 = localize(card.ability.extra.hand2, 'poker_hands')
+    card.joker_display_values.hand = localize(card.ability.extra.hand, 'poker_hands')
     
     local _, poker_hands, _ = JokerDisplay.evaluate_hand()
-    local bool = (poker_hands[card.ability.extra.hand1] and next(poker_hands[card.ability.extra.hand1])) or (poker_hands[card.ability.extra.hand2] and next(poker_hands[card.ability.extra.hand2]))
-    card.joker_display_values.count = bool and card.ability.extra.discard_bonus or 0
+    card.joker_display_values.count = (poker_hands[card.ability.extra.hand] and next(poker_hands[card.ability.extra.hand])) and card.ability.extra.discard_bonus or 0
   end
 }
 
@@ -1488,38 +1937,30 @@ jd_def['j_RainyDays_lotteryticket'] = {
   calc_function = function(card)
     local text, _, scoring_hand = JokerDisplay.evaluate_hand()
     local count = 0
-    if text ~= 'Unknown' then
-      local function is_lottery_rank(card)
-        for i = 1, #G.GAME.current_round.RD_lotteryticket do 
-          if RainyDays.balatro_ranks_to_id[G.GAME.current_round.RD_lotteryticket[i]] == card:get_id() then
-            return true
-          end
-        end
-        return false
-      end
-      
+    if text ~= 'Unknown' then      
       for _, scoring_card in pairs(scoring_hand) do
-        if not SMODS.has_no_rank(scoring_card) and is_lottery_rank(scoring_card) then
-          local rank_count = 0
-          local position_first
-          for i = 1, #JokerDisplay.current_hand do
-            if JokerDisplay.current_hand[i]:get_id() == scoring_card:get_id() then
-              rank_count = rank_count + 1
-              if not position_first then
-                position_first = i
+        if not SMODS.has_no_rank(scoring_card) then
+          local id = scoring_card:get_id()
+          if not G.GAME.rd_ranks_scored_this_round[id] or G.GAME.rd_ranks_scored_this_round[id] <= 0 or (RainyDays.evaluating_play and RainyDays.list_contains(card.ability.extra.valid_ranks, id)) then
+            local rank_count = 0
+            local position_first
+            for i = 1, #scoring_hand do
+              if scoring_hand[i]:get_id() == id then
+                rank_count = rank_count + 1
+                position_first = position_first or i
               end
             end
-          end
           
-          if position_first and scoring_card == JokerDisplay.current_hand[position_first] then
-            count = count + JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+            if position_first and scoring_card == scoring_hand[position_first] then
+              count = count + JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+            end
           end
         end
       end
     end
     
     card.joker_display_values.count = count
-    card.joker_display_values.string = (card.ability.extra.string ~= "") and "(" .. card.ability.extra.string .. ")" or ""
+    card.joker_display_values.string = (string.len(card.ability.extra.string) > 0) and "(" .. card.ability.extra.string .. ")" or ""
   end
 }
 
@@ -1542,6 +1983,7 @@ jd_def['j_RainyDays_membership_card'] = {
 
 jd_def['j_RainyDays_metropolis'] = {
   text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'ex', colour = G.C.CLEAR },
     { border_nodes = {
       { text = "X" },
       { ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp' }
@@ -1609,6 +2051,8 @@ jd_def['j_RainyDays_mirror_lake'] = {
   end,
 }
 
+jd_def['j_RainyDays_musketeers'] = {}
+
 jd_def['j_RainyDays_orange'] = {
   text = {
     { text = "+" },
@@ -1632,6 +2076,43 @@ jd_def['j_RainyDays_orange'] = {
       end
     end
     card.joker_display_values.mult = math.max(0, mult)
+  end
+}
+
+jd_def['j_RainyDays_origami'] = {
+  text = {
+    { text = "+$" },
+    { ref_table = 'card.joker_display_values', ref_value = 'money' }
+  },
+  text_config = { colour = G.C.MONEY },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'suit' },
+    { ref_table = 'card.joker_display_values', ref_value = 'in_deck' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local amount = 0
+    if G.deck and G.deck.cards then
+      for i= 1, #G.deck.cards do
+        if G.deck.cards[i]:is_suit(card.ability.extra.suit) then
+          amount = amount + 1
+        end
+      end
+    end
+    
+    card.joker_display_values.money = card.ability.extra.payout or (card.ability.extra.dollars * math.floor(amount / card.ability.extra.cards))
+    card.joker_display_values.suit = localize(card.ability.extra.suit, 'suits_plural')
+    card.joker_display_values.in_deck = localize('rainydays_JD_in_deck')
+  end,
+  
+  style_function = function(card, text, reminder_text, extra)
+    if reminder_text and reminder_text.children[2] then
+      reminder_text.children[2].config.colour = lighten(G.C.SUITS[card.ability.extra.suit], 0.35)
+    end
   end
 }
 
@@ -1712,6 +2193,11 @@ jd_def['j_RainyDays_parrot'] = {
   
   style_function = function(card, text, reminder_text, extra)
     if text and text.children[1] then
+      if card.debuff then
+        text.children[1].config.colour = G.C.UI.TEXT_INACTIVE
+        return
+      end
+      
       local next_joker
       for i = 1, #G.jokers.cards do
         if G.jokers.cards[i] == card then 
@@ -1733,6 +2219,15 @@ jd_def['j_RainyDays_parrot'] = {
       end
     end
   end
+}
+
+jd_def['j_RainyDays_pigeon'] = {
+  text = {
+    { border_nodes = {
+      { text = "X" },
+      { ref_table = 'card.ability.extra', ref_value = 'xmult', retrigger_type = 'exp' }
+    }}
+  }
 }
 
 jd_def['j_RainyDays_plump_joker'] = {
@@ -1765,7 +2260,10 @@ jd_def['j_RainyDays_prairie'] = {
   
   reminder_text = {
     { text = "(" },
+    
+    { ref_table = 'card.joker_display_values', ref_value = 'prefix' },
     { ref_table = 'card.joker_display_values', ref_value = 'hand', colour = G.C.FILTER },
+    { ref_table = 'card.joker_display_values', ref_value = 'postfix' },
     { text = ")" }
   },
   reminder_text_config = { scale = reminder_text_scale },
@@ -1778,8 +2276,11 @@ jd_def['j_RainyDays_prairie'] = {
         mult = mult + card.ability.extra.mult_gain
       end
     end
+    
     card.joker_display_values.mult = math.max(0, mult)
+    card.joker_display_values.prefix = localize('rainydays_JD_no_prefix')
     card.joker_display_values.hand = localize(G.GAME.current_round.RD_prairie_poker_hand, 'poker_hands')
+    card.joker_display_values.postfix = localize('rainydays_JD_no_postfix')
   end
 }
 
@@ -1815,6 +2316,86 @@ jd_def['j_RainyDays_primality'] = {
 }
 
 jd_def['j_RainyDays_purple_card'] = {}
+
+jd_def['j_RainyDays_quasar'] = {
+  text = {
+    { border_nodes = {
+      { text = "X" },
+      { ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp' }
+    }}
+  },
+  
+  calc_function = function(card)
+    local xmult = card.ability.extra.xmult
+    if  G.GAME.blind and G.GAME.blind.in_blind and not RainyDays.evaluating_play and #JokerDisplay.current_hand > 0 then
+      local text = (JokerDisplay.evaluate_hand())
+      if text and G.GAME.hands[text] and G.GAME.hands[text].level >= card.ability.extra.min_level then
+        xmult = xmult + card.ability.extra.xmult_gain
+      end
+    end
+    card.joker_display_values.xmult = xmult
+  end
+}
+
+jd_def['j_RainyDays_queue'] = {
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank1' },
+    { text = ", " },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank2' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    card.joker_display_values.rank1 = localize(card.ability.extra.rank1, 'ranks') 
+    card.joker_display_values.rank2 = localize(card.ability.extra.rank2, 'ranks')
+  end,
+  
+  retrigger_function = function(playing_card, scoring_hand, held_in_hand, joker_card)
+    if playing_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank1] or playing_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank2] then
+      if held_in_hand then 
+        return joker_card.ability.extra.repetitions * JokerDisplay.calculate_joker_triggers(joker_card) or 0
+      else
+        return JokerDisplay.in_scoring(playing_card, scoring_hand) and joker_card.ability.extra.repetitions * JokerDisplay.calculate_joker_triggers(joker_card) or 0
+      end
+    end
+  end
+}
+
+jd_def['j_RainyDays_receipt'] = {
+  text = {
+    { text = "+" },
+    { ref_table = 'card.ability.extra', ref_value = 'current_mult', retrigger_type = 'mult' }
+  },
+  text_config = { colour = G.C.MULT },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'money_spent' },
+    { text = "/" },
+    { ref_table = 'card.ability.extra', ref_value = 'money_border' },
+    { text = ")" },
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    card.joker_display_values.money_spent = math.min(card.ability.extra.money_spent, card.ability.extra.money_border)
+  end,
+  
+  style_function = function(card, text, reminder_text, extra)
+    if reminder_text then
+      for i = 2, 4 do
+        if reminder_text.children[i] then
+          reminder_text.children[i].config.colour = (card.ability.extra.money_spent >= card.ability.extra.money_border) and G.C.GREEN or G.C.UI.TEXT_INACTIVE
+        end
+      end
+      for i = 1, #reminder_text.children do
+        reminder_text.children[i].config.scale = G.shop and not G.shop.REMOVED and reminder_text_scale or 0
+      end
+    end
+  end
+}
 
 jd_def['j_RainyDays_recycle'] = {
   text = {
@@ -1854,8 +2435,69 @@ jd_def['j_RainyDays_recycle'] = {
   end
 }
 
+jd_def['j_RainyDays_report_card'] = {
+  text = {
+    { border_nodes = {
+      { text = "X" },
+      { ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp' }
+    }}
+  },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local xmult = card.ability.extra.xmult_base + card.ability.extra.xmult_extra * (G.GAME.rd_ranks_scored_this_ante[RainyDays.balatro_ranks_to_id[card.ability.extra.rank]] or 0)
+    if not RainyDays.evaluating_play and #JokerDisplay.current_hand > 0 then
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        for _, scoring_card in ipairs(scoring_hand) do
+          local id = scoring_card:get_id()
+          if id == RainyDays.balatro_ranks_to_id[card.ability.extra.rank] then
+            xmult = xmult + card.ability.extra.xmult_extra * JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+          end
+        end
+      end
+    end
+    card.joker_display_values.xmult = xmult
+    card.joker_display_values.rank = localize(card.ability.extra.rank, 'ranks')
+  end
+}
+
+jd_def['j_RainyDays_return_to_sender'] = {  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'copying', colour = mix_colours(G.C.RED, G.C.JOKER_GREY, 0.8) },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local copied_joker, copied_debuff = JokerDisplay.calculate_blueprint_copy(card)
+    card.joker_display_values.copying = localize('rainydays_JD_not_copying')
+    JokerDisplay.copy_display(card, copied_joker, copied_debuff)
+  end,
+  
+  get_blueprint_joker = function(card)
+    local other_joker
+    for i = 1, #G.jokers.cards do
+      if G.jokers.cards[i].config.center.key ~= card.config.center.key and G.jokers.cards[i].config.center.blueprint_compat and G.jokers.cards[i].ability.rd_joker_id and not G.jokers.cards[i].debuff then
+        if not other_joker or G.jokers.cards[i].ability.rd_joker_id > other_joker.ability.rd_joker_id then
+          other_joker = G.jokers.cards[i]
+        end
+      end
+    end
+    return other_joker
+  end
+}
+
 jd_def['j_RainyDays_roller_skates'] = {
   text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'ex', colour = G.C.CLEAR },
     { border_nodes = {
       { text = "X" },
       { ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp' }
@@ -1883,6 +2525,43 @@ jd_def['j_RainyDays_roller_skates'] = {
     
     card.joker_display_values.ex = ex
     card.joker_display_values.xmult = active and card.ability.extra.xmult or 1
+  end
+}
+
+jd_def['j_RainyDays_secret_agent'] = {
+  text = {
+    { text = "+" },
+    { ref_table = 'card.joker_display_values', ref_value = 'mult', retrigger_type = 'mult' }
+  },
+  text_config = { colour = G.C.MULT },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank1' },
+    { text = ", " },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank2' },
+    { text = ")" },
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local count = 0
+    if G.GAME.facing_blind then
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      local cards_played = 0
+      if text ~= 'Unknown' then
+        for _, scoring_card in pairs(scoring_hand) do
+          local id = scoring_card:get_id()
+          if id == RainyDays.balatro_ranks_to_id[card.ability.extra.rank1] or id == RainyDays.balatro_ranks_to_id[card.ability.extra.rank2] then
+            count = count + JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+          end
+        end
+      end
+    end
+    
+    card.joker_display_values.mult = count * card.ability.extra.mult
+    card.joker_display_values.rank1 = localize(card.ability.extra.rank1, 'ranks')
+    card.joker_display_values.rank2 = localize(card.ability.extra.rank2, 'ranks')
   end
 }
 
@@ -2003,6 +2682,82 @@ jd_def['j_RainyDays_shooting_star'] = {
   end
 }
 
+jd_def['j_RainyDays_simple_joker'] = {
+  text = {
+    { text = "+" },
+    { ref_table = 'card.joker_display_values', ref_value = 'mult', retrigger_type = 'mult' }
+  },
+  text_config = { colour = G.C.MULT },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'prefix' },
+    { ref_table = 'card.joker_display_values', ref_value = 'enhancements', colour = G.C.FILTER },
+    { ref_table = 'card.joker_display_values', ref_value = 'postfix' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    card.joker_display_values.prefix = localize('rainydays_JD_no_prefix')
+    card.joker_display_values.enhancements = string.len(card.joker_display_values.prefix) > 0 and string.lower(localize('rainydays_JD_enhancements')) or localize('rainydays_JD_enhancements')
+    card.joker_display_values.postfix = localize('rainydays_JD_no_postfix')
+    
+    local mult = 0
+    if G.GAME.facing_blind and #JokerDisplay.current_hand > 0 then
+      local enhancement_found = false
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        for _, scoring_card in pairs(scoring_hand) do
+          if next(SMODS.get_enhancements(scoring_card)) then
+            enhancement_found = true
+            break
+          end
+        end
+        if not enhancement_found then
+          mult = card.ability.extra.mult
+        end
+      end
+    end
+    card.joker_display_values.mult = mult
+  end
+}
+
+jd_def['j_RainyDays_sketch_pad'] = {
+  text = {
+    { border_nodes = {
+      { text = "X" },
+      { ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp' }
+    }}
+  },
+  
+  calc_function = function(card)
+    local table = {}
+    for key in pairs(G.GAME.rd_enhancements_scored_this_ante) do
+      table[key] = true
+    end
+    
+    if G.GAME.facing_blind then
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        for _, scoring_card in pairs(scoring_hand) do
+          local enhancements = SMODS.get_enhancements(scoring_card)
+          for key in pairs(enhancements) do
+            table[key] = true
+          end
+        end
+      end
+    end
+    
+    local count = 0
+    for key in pairs(table) do
+      count = count + 1
+    end
+    
+    card.joker_display_values.xmult = card.ability.extra.xmult_base + card.ability.extra.xmult * count
+  end
+}
+
 jd_def['j_RainyDays_skinner_box'] = {  
   reminder_text = {
     { text = "(" },
@@ -2054,7 +2809,7 @@ jd_def['j_RainyDays_slashed_joker'] = {
   
   style_function = function(card, text, reminder_text, extra)
     if text and text.children[1] then
-      local active = (G.GAME.facing_blind and #JokerDisplay.current_hand > 0 and #JokerDisplay.current_hand <= card.ability.extra.cards_amount)
+      local active = (G.GAME.facing_blind and not card.debuff and #JokerDisplay.current_hand > 0 and #JokerDisplay.current_hand <= card.ability.extra.cards_amount)
       text.children[1].config.colour = active and G.C.FILTER or G.C.UI.TEXT_INACTIVE
     end
   end
@@ -2106,6 +2861,32 @@ jd_def['j_RainyDays_snow_shovel'] = {
   end
 }
 
+jd_def['j_RainyDays_spire'] = {
+  text = {
+    { text = "+" .. localize('$') },
+    { ref_table = 'card.ability.extra', ref_value = 'payout' }
+  },
+  text_config = { colour = G.C.GOLD },
+  
+  reminder_text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'round' }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  extra = {{
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'odds' },
+    { text = ")" },
+  }},
+  extra_config = { colour = G.C.GREEN, scale = 0.3 },
+  
+  calc_function = function(card)
+    local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.numerator_in, card.ability.extra.denominator_in)
+    card.joker_display_values.odds = localize{ type = 'variable', key = 'jdis_odds', vars = { numerator, denominator }}
+    card.joker_display_values.round = "(" .. localize('k_round') .. ")"
+  end
+}
+
 jd_def['j_RainyDays_spooky_joker'] = {
   text = {
     { border_nodes = {
@@ -2135,25 +2916,23 @@ jd_def['j_RainyDays_spooky_joker'] = {
 
 jd_def['j_RainyDays_sputnik'] = {
   text = {
-    { text = "+" },
-    { ref_table = 'card.joker_display_values', ref_value = 'planet', retrigger_type = 'mult' }
+    { text = "+", colour = G.C.SECONDARY_SET['Tarot'] },
+    { ref_table = 'card.joker_display_values', ref_value = 'tarot', colour = G.C.SECONDARY_SET['Tarot'], retrigger_type = 'mult' },
+    { text = " -$", colour = G.C.MONEY },
+    { ref_table = 'card.joker_display_values', ref_value = 'money', colour = G.C.MONEY, retrigger_type = 'mult' }
   },
-  text_config = { colour = G.C.SECONDARY_SET['Planet'] },
   
   calc_function = function(card)
-    local planet = 0
+    local tarot = 0
     if G.GAME.facing_blind then
-      local text, poker_hands, _ = JokerDisplay.evaluate_hand()
-      if G.GAME.hands[text] and G.GAME.hands[text].played_this_ante == 0 then
-        planet = 1
-      elseif G.GAME.hands[text] and G.GAME.hands[text].played_this_ante == 1 then
-        if RainyDays.evaluating_play then
-          planet = 1
-        end
+      local text = JokerDisplay.evaluate_hand()
+      if G.GAME.hands[text] and (G.GAME.hands[text].played_this_ante == 0 or (RainyDays.evaluating_play and G.GAME.hands[text].played_this_ante == 1)) then
+        tarot = 1
       end
     end
     
-    card.joker_display_values.planet = planet
+    card.joker_display_values.tarot = tarot
+    card.joker_display_values.money = tarot * card.ability.extra.dollar
   end
 }
 
@@ -2238,15 +3017,52 @@ jd_def['j_RainyDays_starting_line'] = {
   calc_function = function(card)
     local xmult = 1
     if G.GAME.facing_blind then
-      local text, poker_hands, _ = JokerDisplay.evaluate_hand()
-      if G.GAME.hands[text] and G.GAME.hands[text].played_this_ante < card.ability.extra.amount then
+      local text = (JokerDisplay.evaluate_hand())
+      if G.GAME.hands[text] and G.GAME.hands[text].played < card.ability.extra.amount then
         xmult = card.ability.extra.Xmult
-      elseif G.GAME.hands[text] and G.GAME.hands[text].played_this_ante == card.ability.extra.amount and RainyDays.evaluating_play then
+      elseif G.GAME.hands[text] and G.GAME.hands[text].played == card.ability.extra.amount and RainyDays.evaluating_play then
         xmult = card.ability.extra.Xmult
       end
     end
     
     card.joker_display_values.xmult = xmult
+  end
+}
+
+jd_def['j_RainyDays_tessen'] = {
+  text = {
+    { text = "+" },
+    { ref_table = 'card.joker_display_values', ref_value = 'chips', retrigger_type = 'mult' }
+  },
+  text_config = { colour = G.C.CHIPS },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'suit' },
+    { ref_table = 'card.joker_display_values', ref_value = 'in_deck' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local amount = 0
+    if G.deck and G.deck.cards then
+      for i= 1, #G.deck.cards do
+        if G.deck.cards[i]:is_suit(card.ability.extra.suit) then
+          amount = amount + 1
+        end
+      end
+    end
+    
+    card.joker_display_values.chips = card.ability.extra.chips * math.floor(amount / card.ability.extra.cards)
+    card.joker_display_values.suit = localize(card.ability.extra.suit, 'suits_plural')
+    card.joker_display_values.in_deck = localize('rainydays_JD_in_deck')
+  end,
+  
+  style_function = function(card, text, reminder_text, extra)
+    if reminder_text and reminder_text.children[2] then
+      reminder_text.children[2].config.colour = lighten(G.C.SUITS[card.ability.extra.suit], 0.35)
+    end
   end
 }
 
@@ -2266,7 +3082,6 @@ jd_def['j_RainyDays_theater'] = {
   
   calc_function = function(card)
     local count = 0
-    
     if G.GAME.facing_blind then
       local playing_hand = next(G.play.cards)
       for _, playing_card in ipairs(G.hand.cards) do
@@ -2340,7 +3155,6 @@ jd_def['j_RainyDays_train_ticket'] = {
       end
     end
     card.joker_display_values.mult = math.max(0, mult)
-    card.joker_display_values.hand = localize(G.GAME.current_round.RD_prairie_poker_hand, 'poker_hands')
   end
 }
 
@@ -2362,7 +3176,7 @@ jd_def['j_RainyDays_wanted'] = {
   reminder_text_config = { scale = reminder_text_scale },
   
   calc_function = function(card)
-    card.joker_display_values.tarot = localize{ type = 'name_text', set = 'Joker', key = G.GAME.current_round.RD_wanted }
+    card.joker_display_values.tarot = localize{ type = 'name_text', set = 'Joker', key = G.GAME.current_round.RD_wanted_name_key }
   end  
 }
 
@@ -2398,6 +3212,8 @@ jd_def['j_RainyDays_waveform'] = {
     card.joker_display_values.odds = localize{ type = 'variable', key = 'jdis_odds', vars = { numerator, denominator }}
   end
 }
+
+jd_def['j_RainyDays_whirlpool'] = {}
 
 jd_def['j_RainyDays_windowsill'] = {
   text = {
@@ -2460,5 +3276,77 @@ jd_def['j_RainyDays_wishbone'] = {
   
   calc_function = function(card)
     card.joker_display_values.tarot = localize{ type = 'name_text', set = 'Tarot', key = G.GAME.current_round.RD_wishbone }
+  end
+}
+
+jd_def['j_RainyDays_wuxing'] = {
+  text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'count', retrigger_type = 'mult' },
+    { text = "x", scale = 0.35 },
+    { ref_table = 'card.joker_display_values', ref_value = 'tag', colour = G.C.FILTER }
+  },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  extra = {{
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'odds' },
+    { text = ")" },
+  }},
+  extra_config = { colour = G.C.GREEN, scale = 0.3 },
+  
+  calc_function = function(card)
+    local count = 0
+    if G.GAME.facing_blind then
+      local text, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if text ~= 'Unknown' then
+        for _, scoring_card in pairs(scoring_hand) do
+          if scoring_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank] then
+            count = count + JokerDisplay.calculate_card_triggers(scoring_card, scoring_hand)
+          end
+        end
+      end
+    end
+    card.joker_display_values.count = count
+    card.joker_display_values.tag = localize('rainydays_JD_tag')
+    
+    local numerator, denominator = SMODS.get_probability_vars(card, card.ability.extra.numerator_in, card.ability.extra.denominator_in)
+    card.joker_display_values.odds = localize{ type = 'variable', key = 'jdis_odds', vars = { numerator, denominator }}
+    
+    card.joker_display_values.rank = localize(card.ability.extra.rank, 'ranks')
+  end
+}
+
+jd_def['j_RainyDays_xylophone'] = {
+  text = {
+    { text = "+" },
+    { ref_table = 'card.joker_display_values', ref_value = 'mult', retrigger_type = 'mult' }
+  },
+  text_config = { colour = G.C.MULT },
+  
+  calc_function = function(card)
+    local count = 0
+    
+    for _, value in ipairs(G.handlist) do
+      if G.GAME.hands[value].played > 0 then
+        count = count + 1
+      end
+    end
+    
+    if G.GAME.blind and G.GAME.blind.in_blind then
+      local text = (JokerDisplay.evaluate_hand())
+      if text and G.GAME.hands[text] and G.GAME.hands[text].played == 0 then
+        count = count + 1
+      else
+        math.max(count, 1)
+      end
+    end
+    
+    card.joker_display_values.mult = count * card.ability.extra.mult
   end
 }

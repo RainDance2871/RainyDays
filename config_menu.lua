@@ -6,7 +6,7 @@ function RainyDays.folder_get_filenames(folder)
   return filenames
 end
 
-function RainyDays.unlock_all_in_folder(folder, prefix)
+function RainyDays.unlock_all(folder, prefix)
   for key, value in pairs(G.P_CENTERS) do
     local key_part = prefix .. 'RainyDays_'
     local len = string.len(key_part)
@@ -19,7 +19,7 @@ function RainyDays.unlock_all_in_folder(folder, prefix)
   play_sound('foil2', 0.5, 0.4)
 end
 
-function RainyDays.discover_all_in_folder(folder, prefix)
+function RainyDays.discover_all(folder, prefix)
   for key, value in pairs(G.P_CENTERS) do
     local key_part = prefix .. 'RainyDays_'
     local len = string.len(key_part)
@@ -33,12 +33,12 @@ function RainyDays.discover_all_in_folder(folder, prefix)
 end
 
 function G.FUNCS.rainydays_unlock_all()
-  RainyDays.unlock_all_in_folder('jokers_unlockable', 'j_')
+  RainyDays.unlock_all('jokers_unlockable', 'j_')
 end
 
 function G.FUNCS.rainydays_discover_all()
-  RainyDays.discover_all_in_folder('jokers', 'j_')
-  RainyDays.discover_all_in_folder('jokers_unlockable', 'j_')
+  RainyDays.discover_all('jokers', 'j_')
+  RainyDays.discover_all('jokers_unlockable', 'j_')
 end
 
 function G.FUNCS.cycle_options(args)
@@ -80,7 +80,6 @@ RainyDays.config_tab = function()
         }),
         create_toggle({
           label = localize('rainydays_include_satellite'),
-          info = { localize('rainydays_requires_restart') },
           ref_table = RainyDays.config,
           ref_value = 'satellite'
         })

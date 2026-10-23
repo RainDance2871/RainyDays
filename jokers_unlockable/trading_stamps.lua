@@ -45,7 +45,7 @@ SMODS.Joker {
         end
       else
         return {
-          message = localize('rainydays_trading_stamps_message_prefix') .. (card.ability.extra.money_border - card.ability.extra.money_spent) .. localize('rainydays_trading_stamps_message_postfix'),
+          message = localize('rainydays_money_message_prefix') .. (card.ability.extra.money_border - card.ability.extra.money_spent) .. localize('rainydays_money_message_postfix'),
           colour = G.C.MONEY,
           delay = 0.5
         }
@@ -55,7 +55,7 @@ SMODS.Joker {
   
   locked_loc_vars = function(self, info_queue, card)    
     return { 
-      main_end = not self.unlocked and RainyDays.generate_main_end_counter(localize('$') .. (G.GAME.rd_money_spent or 0)) or nil,
+      main_end = not self.unlocked and RainyDays.generate_main_end_counter(localize('$') .. (G.GAME.rd_money_spent_shops or 0)) or nil,
       vars = { 
         200
       }
@@ -63,6 +63,6 @@ SMODS.Joker {
   end,
   
   check_for_unlock = function(self, args)
-    return args.type == 'money' and (G.GAME.rd_money_spent or 0) >= 200
+    return args.type == 'money' and (G.GAME.rd_money_spent_shops or 0) >= 200
   end
 }

@@ -1,11 +1,17 @@
 SMODS.Shader {
+  key = 'base',
+  path = 'base.fs'
+}
+
+SMODS.Shader {
   key = 'metallic_highlight',
   path = 'metallic_highlight.fs',
   
   send_vars = function(sprite, card)
     return {
       brightness = 1.6,
-      scaling = 0.03
+      scaling = 0.03,
+      tilt = 0.025 * card.ARGS.send_to_shader[1]
     }
   end
 }
@@ -32,9 +38,9 @@ SMODS.Shader {
   
   send_vars = function(sprite, card)
     return {
-      time2 = love.timer.getTime(),
+      time = love.timer.getTime(),
       scale = 35,
-      speed = 8,
+      speed = 6,
       height = 0.5,
     }
   end
@@ -46,26 +52,26 @@ SMODS.Shader {
   
   send_vars = function(sprite, card)
     local sphere
-    if RainyDays.card_drawn.config.center.key == 'j_RainyDays_balance' then
+    if card.config.center.key == 'j_RainyDays_balance' then
       sphere = function(i)
         return (G.GAME.blind.in_blind and G.GAME.hands[RainyDays.balatro_hands[i]].played_this_round > 0) and 1 or 0
       end
-    elseif RainyDays.card_drawn.config.center.key == 'j_RainyDays_desolate' then
+    elseif card.config.center.key == 'j_RainyDays_desolate' then
       sphere = function(i)
         return (G.GAME.hands[RainyDays.balatro_hands[i]].rd_discarded > 0) and 1 or 0
       end
-    elseif RainyDays.card_drawn.config.center.key == 'j_RainyDays_sputnik' then
+    elseif card.config.center.key == 'j_RainyDays_sputnik' then
       sphere = function(i)
         return (G.GAME.hands[RainyDays.balatro_hands[i]].played_this_ante > 0) and 1 or 0
       end
-    elseif RainyDays.card_drawn.config.center.key == 'j_RainyDays_starting_line' then
+    elseif card.config.center.key == 'j_RainyDays_starting_line' then
       sphere = function(i)
         return (G.GAME.hands[RainyDays.balatro_hands[i]].played >= 3) and 1 or 0
       end
-    elseif RainyDays.card_drawn.config.center.key == 'j_satellite' then
+    elseif card.config.center.key == 'j_satellite' then
       sphere = function(i)
         local planets = { 'c_eris', 'c_ceres', 'c_planet_x', 'c_neptune', 'c_mars', 'c_earth', 'c_jupiter', 'c_saturn', 'c_venus', 'c_uranus', 'c_mercury', 'c_pluto' }
-        return G.GAME.consumeable_usage[planets[i]] and 1 or 0
+        return (RainyDays.config.satellite and G.GAME.consumeable_usage[planets[i]]) and 1 or 0
       end
     end
   
@@ -86,7 +92,7 @@ SMODS.Shader {
   
   send_vars = function(sprite, card)
     local sphere
-    if RainyDays.card_drawn.config.center.key == 'j_RainyDays_collage' then
+    if card.config.center.key == 'j_RainyDays_sketch_pad' then
       sphere = function(i)
         local enhancements = { 'm_bonus', 'm_mult', 'm_wild', 'm_glass', 'm_steel', 'm_stone', 'm_gold', 'm_lucky' }
         return (G.GAME.rd_enhancements_scored_this_ante and G.GAME.rd_enhancements_scored_this_ante[enhancements[i]] and G.GAME.rd_enhancements_scored_this_ante[enhancements[i]] > 0) and 1 or 0
@@ -111,7 +117,7 @@ SMODS.Shader {
   
   send_vars = function(sprite, card)
     local sphere
-    if RainyDays.card_drawn.config.center.key == 'j_RainyDays_checklist' then
+    if card.config.center.key == 'j_RainyDays_checklist' then
       sphere = function(i)
         local rank_id = RainyDays.balatro_ranks_to_id[RainyDays.balatro_ranks[i]]
         return (G.GAME.blind.in_blind and G.GAME.rd_ranks_played_this_round[rank_id] and G.GAME.rd_ranks_played_this_round[rank_id] > 0) and 1 or 0

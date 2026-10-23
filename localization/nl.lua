@@ -4,15 +4,28 @@ return {
       rainydays = {
         name = "Rainy Days",
         text = {
-          "Een stevige collectie van {C:attention}90{} Jokers, alle in de",
-          "stijl van het origineel {C:attention}Balatro{}: Het doel is om",
-          "de speler nieuw speelgoed te geven, zonder oude",
-          "dingen te overschaduwen."
+          "Een stevige collectie van meer dan {C:attention}100{} Jokers,",
+          "allemaal in de stijl van het originele {C:attention}Balatro{}.",
+          "Het doel van deze mod is om de speler nieuw",
+          "gereedschap te geven, zonder oude dingen te",
+          "overschaduwen."
         }
       }
     },
     
     Joker = {
+      j_RainyDays_abacus = {
+        name = "Telraam",
+        text = {
+          "Wanneer een gespeelde {C:attention}#1#{},",
+          "{C:attention}#2#{} of {C:attention}#3#{} scoort, ontvangt",
+          "deze Joker {X:mult,C:white}X#4#{} Multi",
+          "{C:inactive}(Momenteel {X:mult,C:white}X#5#{C:inactive} Multi)",
+          "{s:0.8} Opeenvolgende cijferrangen",
+          "{s:0.8}veranderen elke ronde"
+        }
+      },
+      
       j_RainyDays_absent_heart = {
         name = "Verloren Hart",
         text = {
@@ -29,12 +42,22 @@ return {
         text = {
           "{C:mult}+#1#{} Multi voor elke tijdens",
           "deze ronde {C:attention}getrokken{} kaart",
-          "{C:inactive}(Momentell {C:mult}+#2#{C:inactive} Multi)"
+          "{C:inactive}(Momenteel {C:mult}+#2#{C:inactive} Multi)"
         },
         unlock = {
           "Versla een blind",
           "terwijl kaartspel",
           "{E:1,C:attention}leeg{} is"
+        }
+      },
+      
+      j_RainyDays_algebra = {
+        name = "Algebra",
+        text = {
+          "Deze Joker ontvangt {C:chips}+#1#{} fiches",
+          "als {C:attention}weggegooide{} hand aleen",
+          "{C:attention}cijferkaarten{} bevat",
+          "{C:inactive}(momenteel {C:chips}+#2# {C:inactive}fiches)"
         }
       },
       
@@ -104,7 +127,29 @@ return {
           "waarin {C:attention}#2#{} of meer {C:attention}consumptie{}-",
           "kaarten zijn gebruikt",
           "{C:inactive}(Momenteel {X:mult,C:white}X#3#{C:inactive} Multi)",
-          "{C:inactive}(#4#{C:attention}#5#{C:inactive}#6#)"
+          "{C:inactive}(Nog {C:attention}#4#{C:inactive}#5#)"
+        }
+      },
+      
+      j_RainyDays_beanstalk_grown = {
+        name = "Bonenstaak",
+        text = {
+          "Deze Joker ontvangt {X:mult,C:white}X#1#{} Multi",
+          "voor elke opeenvolgende ronde",
+          "waarin {C:attention}#2#{} of meer {C:attention}consumptie{}-",
+          "kaarten zijn gebruikt",
+          "{C:inactive}(Momenteel {X:mult,C:white}X#3#{C:inactive} Multi)",
+        }
+      },
+      
+      j_RainyDays_bingo_balls = {
+        name = "Bingo Ballen",
+        text = {
+          "Wanneer een {C:attention}consumptie{}-",
+          "kaart wordt gebruikt,",
+          "zet deze Joker's fiches",
+          "tussen {C:chips}+#2#{} en {C:chips}+#3#",
+          "{C:inactive}(Momenteel {C:chips}+#1#{C:inactive} fiches)"
         }
       },
       
@@ -122,13 +167,13 @@ return {
         name = "Bonsai",
         text = {
           "{C:mult}+#1#{} Multi voor elke",
-          "{C:attention}#2#{} kaarten met {V:1}#4#{}-",
-          "kleur in het {C:attention}kaartspel",
-          "{C:inactive}(Momenteel {C:mult}+#3# {C:inactive}Multi)"
+          "kaart met {V:1}#3#{}-",
+          "kleur in het kaartspel",
+          "{C:inactive}(Momenteel {C:mult}+#2# {C:inactive}Multi)"
         },
         unlock = {
           "Hou {E:1,C:attention}#1#{} of minder kaarten",
-          "met {E:1,C:clubs}Klaveren{}-kleur in",
+          "met {E:1,V:1}#2#{}-kleur in",
           "het volledige kaartspel",
         }
       },
@@ -165,6 +210,24 @@ return {
         }
       },
       
+      j_RainyDays_bud = {
+        name = "Knop",
+        text = {
+          "Betaal {C:money}$#1#{} aan einde van ronde.",
+          "Verkoop deze Joker om een",
+          "{C:attention}#6#{}-kopie te creëren"
+        }
+      },
+      
+      j_RainyDays_bud_bloomed = {
+        name = "Bloem",
+        text = {
+          "{C:chips}+#2#{} fiches voor elke",
+          "{C:money}$#3#{} uitgegeven als {C:attention}#5#",
+          "{C:inactive}(Momenteel {C:chips}+#4# {C:inactive}fiches)"
+        }
+      },
+      
       j_RainyDays_burdenofgreatness = {
         name = "Hoogmoed",
         text = {
@@ -177,6 +240,15 @@ return {
           "Versla een baasblind",
           "met minstens {E:1,C:attention}#1#{} keer",
           "de vereiste score"
+        }
+      },
+      
+      j_RainyDays_canine = {
+        name = "Hond",
+        text = {
+          "Elke gespeelde {C:attention}#1#",
+          "of {C:attention}#2#{} geeft {C:chips}+#3#{} fiches",
+          "of {C:mult}+#4#{} Multi bij scoren"
         }
       },
       
@@ -200,6 +272,22 @@ return {
         }
       },
       
+      j_RainyDays_ceremonial_bowl = {
+        name = "Ceremoniele Schaal",
+        text = {
+          "Als {C:attention}blind{} is geselecteerd,",
+          "verdien {C:money}$#1#{} voor elke {C:attention}Joker",
+          "aan de rechterkant en ver-",
+          "nietig er één van",
+          "{C:inactive}(Momenteel {C:money}$#2#{C:inactive})"          
+        },
+        unlock = {
+          "Tijdens een spel,",
+          "vernietig {E:1,C:attention}#1#{} of",
+          "meer {E:1,C:attention}Jokers"
+        }
+      },
+      
       j_RainyDays_checklist = {
         name = "Afvinken",
         text = {
@@ -208,15 +296,6 @@ return {
           "in een {C:attention}vorige{} hand deze",
           "ronde geeft {X:mult,C:white}X#1#{} Multi",
           "bij scoren"
-        }
-      },
-      
-      j_RainyDays_checklist_list = {
-        name = "Gespeelde rangen",
-        text = {
-          "{V:1}A {V:2}K {V:3}Q {V:4}J",
-          "{V:5}10 {V:6}9 {V:7}8 {V:8}7 {V:9}6",
-          "{V:10}5 {V:11}4 {V:12}3 {V:13}2"
         }
       },
       
@@ -239,14 +318,23 @@ return {
         }
       },
       
-      j_RainyDays_collage = {
-        name = "Collage",
+      j_RainyDays_collection = {
+        name = "Collectie",
         text = {
-          "{X:mult,C:white}X#1#{} Multi voor elke",-- {C:attention}",
-          "{C:attention}verschillende verbetering",
-          "onder deze {C:attention}ante{} gespeelde",
-          "scorende kaarten",
-          "{C:inactive}(Momenteel {X:mult,C:white}X#2#{C:inactive} Multi)"
+          "{X:mult,C:white}X#1#{} Multi als dit spel",
+          "{C:attention}#2#{} of meer verschillende",
+          "Jokers verkregen zijn",
+          "{C:inactive}(Nog {C:attention}#3#{C:inactive})"
+        }
+      },
+      
+      j_RainyDays_collection_active = {
+        name = "Collectie",
+        text = {
+          "{X:mult,C:white}X#1#{} Multi als dit spel",
+          "{C:attention}#2#{} of meer verschillende",
+          "Jokers verkregen zijn",
+          "{C:inactive}(Momenteel {C:attention}actief{C:inactive})"
         }
       },
       
@@ -312,13 +400,55 @@ return {
       },
       
       j_RainyDays_desolate = {
-        name = "Verlaten",
+        name = "Desolaat",
         text = {
           "{X:mult,C:white}X#1#{} Multi als er dit spel",
           "{C:attention}#2#{} of meer verschillende",
           "{C:attention}pokerhanden{} zijn {C:attention}wegge-",
           "{C:attention}gooid",
-          "{C:inactive}(#3#{C:attention}#4#{C:inactive}#5#)"
+          "{C:inactive}(Nog {C:attention}#3#{C:inactive})"
+        }
+      },
+      
+      j_RainyDays_desolate_active = {
+        name = "Desolaat",
+        text = {
+          "{X:mult,C:white}X#1#{} Multi als er dit spel",
+          "{C:attention}#2#{} of meer verschillende",
+          "{C:attention}pokerhanden{} zijn {C:attention}wegge-",
+          "{C:attention}gooid",
+          "{C:inactive}(Momenteel {C:attention}actief{C:inactive})"
+        }
+      },
+      
+      j_RainyDays_doubling_joker = {
+        name = "Dubbel Joker",
+        text = {
+          "Wanneer een gespeelde",
+          "{C:attention}#1#{} of {C:attention}#2#{} scoort, geeft",
+          "deze {C:mult}+#3#{} Multi, verdubbel",
+          "daarna deze hoeveelheid",
+          "tijdens deze hand"
+        }
+      },
+      
+      j_RainyDays_duality = {
+        name = "Dualiteit",
+        text = {
+          "{C:chips}+#1#{} fiches als laatst gebruikte",
+          "{C:attention}consumptie{}-kaart van dit spel een",
+          "{C:planet}planeet{}-kaart is, anders {C:mult}+#2#{} Multi",
+          "{C:inactive}(Momenteel {C:mult}+#2# {C:inactive}Mult)"
+        }
+      },
+      
+      j_RainyDays_duality_night = {
+        name = "Dualiteit",
+        text = {
+          "{C:chips}+#1#{} fiches als laatst gebruikte",
+          "{C:attention}consumptie{}-kaart van dit spel een",
+          "{C:planet}planeet{}-kaart is, anders {C:mult}+#2#{} Multi",
+          "{C:inactive}(Momenteel {C:chips}+#1# {C:inactive}fiches)"
         }
       },
       
@@ -343,10 +473,10 @@ return {
       j_RainyDays_fabergeegg = {
         name = "Fabergé-ei",
         text = {
-          "Elke gespeelde {C:attention}#2#{} of",
-          "{C:attention}#3#{} voegt bij scoren",
-          "{C:money}$#1#{} {C:attention}verkoopwaarde{} aan",
-          "deze Joker toe"
+          "Wanneer een gespeelde",
+          "{C:attention}#2#{} of {C:attention}#3#{} scoort,",
+          "voeg {C:money}$#1#{} {C:attention}verkoopwaarde",
+          "aan deze Joker toe"
         }
       },
       
@@ -436,6 +566,24 @@ return {
         }
       },
       
+      j_RainyDays_frowny_face = {
+        name = "Frowny Face",
+        text = {
+          "{C:mult}+#1#{} Mult voor elk {C:attention}niet-scored",
+          "{C:attention}plaatje{} of {C:attention}plaatje{} zonder {C:attention}buff",
+          "in gespeelde hand"
+        }
+      },
+      
+      j_RainyDays_fruit_punch = {
+        name = "Fruit Punch",
+        text = {
+          "Verkoop deze Joker",
+          "om een {C:attention}#1#",
+          "te creëren"
+        }
+      },
+      
       j_RainyDays_golden_idol = {
         name = "Gouden Kalf",
         text = {
@@ -451,6 +599,21 @@ return {
         text = {
           "Verdien {C:money}$#1#{} als gespeelde",
           "hand geen {C:attention}#2#{} bevat"
+        }
+      },
+      
+      j_RainyDays_goose = {
+        name = "Gans",
+        text = {
+          "Wanneer een {C:attention}tag{} is verkregen,",
+          "vernietig deze en deze Joker",
+          "ontvangt {X:mult,C:white}X#1#{} Multi",
+          "{C:inactive}(Momenteel {X:mult,C:white}X#2#{C:inactive} Multi)"
+        },
+        unlock = {
+          "Tijdens een spel,",
+          "verkrijg minstens",
+          "{E:1,C:attention}#1# tags"
         }
       },
       
@@ -479,8 +642,18 @@ return {
         }
       },
       
+      j_RainyDays_grindstone = {
+        name = "Slijpsteen",
+        text = {
+          "Wanneer een gespeelde {C:attention}#1#",
+          "scoort, ontvangt elke {C:attention}#1#",
+          "in het volledige kaart-",
+          "spel {C:chips}+#2#{} fiches"
+        }
+      },
+      
       j_RainyDays_hannysvoorwerp = {
-        name = "Hanny's Voorwerp",
+        name = "Ceremonieel Masker",
         text =  {
           "Terwijl {C:planet}planeet{}-kaart in",
           "bezit is, als vermeldde",
@@ -508,9 +681,20 @@ return {
         text = {
           "Wanneer gespeelde {C:attention}bonus-",
           "of {C:attention}multikaart{} scoort,",
-          "{C:green}#1# op #2#{} kans dat kaart",
+          "ontvangt {C:attention}cijferkaart",
           "aan rechterkant diens",
-          "{C:attention}verbetering{} ontvangt"
+          "{C:attention}verbetering"
+        }
+      },
+      
+      j_RainyDays_horseshoe = {
+        name = "Hoefijzer",
+        text = {
+          "Als gespeelde hand een",
+          "scorende {C:attention}#1#{} bevat, wordt",
+          "een willekeurige {C:attention}onver-",
+          "{C:attention}betere{} scorende kaart",
+          "een {C:attention}bofkaart"
         }
       },
       
@@ -550,6 +734,22 @@ return {
         }
       },
       
+      j_RainyDays_kimono = {
+        name = "Kimono",
+        text = {
+          "Deze Joker ontvangt {C:mult}+#1#{} Multi",
+          "voor elke {C:attention}#2#{} kaarten met {V:1}#3#{}-",
+          "kleur in het kaartspel aan",
+          "het einde van ronde",
+          "{C:inactive}(Momemteel {C:mult}+#4# {C:inactive}Multi)"
+        },
+        unlock = {
+          "Hou {E:1,C:attention}#1#{} of minder kaarten",
+          "met {E:1,V:1}#2#{}-kleur in",
+          "het volledige kaartspel",
+        }
+      },
+      
       j_RainyDays_kudzu = {
         name = "Kudzu",
         text = {
@@ -570,7 +770,7 @@ return {
       j_RainyDays_lady_in_waiting = {
         name = "Hofdame",
         text = {
-          "Wanneer een {C:attention}#1#{}, {C:attention}#2#{} of {C:attention}#3#",
+          "Wanneer een {C:attention}plaatje",
           "tijdens een ronde wordt",
           "getrokken, ontvangt deze",
           "een nieuwe {C:attention}verbetering",
@@ -578,7 +778,7 @@ return {
         },
         unlock = {
           "Hou minstens",
-          "{E:1,C:attention}#1# #2#s{} in", 
+          "{E:1,C:attention}#1# #2#en{} in", 
           "het kaartspel"
         }
       },
@@ -611,8 +811,8 @@ return {
         name = "Letterbord",
         text = {
           "{C:chips}+#1#{} fiches als gespeelde",
-          "hand geen {C:attention}cijferkaarten",
-          "bevat"
+          "hand geen scorende",
+          "{C:attention}cijferkaarten{} bevat"
         }
       },
       
@@ -635,7 +835,7 @@ return {
         text = {
           "Ontvang {C:red}+#1#{} weggooikansen",
           "als gespeelde hand een",
-          "{C:attention}#2#{} or {C:attention}#3#{} bevat"
+          "{C:attention}#2#{} bevat"
         }
       },
       
@@ -660,11 +860,11 @@ return {
       j_RainyDays_lotteryticket_short = {
         name = "Staatslot",
         text = {
-          "First played scoring {V:1}#1#",
-          "this round earns {C:money}$#6#{} when",
-          "scored. Same for {V:2}#2#{}, {V:3}#3#{},",
-          "{V:4}#4#{}, and {V:5}#5#",
-          "{s:0.8}Ranks change each round"
+          "Eerste deze ronde gespeelde",
+          "scorende {V:1}#1#{} verdient {C:money}$#6#{} bij",
+          "scoren. Hetzelfde geldt voor",
+          "{V:2}#2#{}, {V:3}#3#{}, {V:4}#4#{} of {V:5}#5#",
+          "{s:0.8}Rangen veranderen elke ronde"
         }
       },
       
@@ -687,7 +887,17 @@ return {
           "Als gespeelde hand een",
           "{C:attention}#1#{} bevat, {X:mult,C:white}X#2#{} Multi",
           "voor {C:attention}#3#{} volgende handen",
-          "{C:inactive}(#4#{V:1}#5#{C:inactive}#6#{C:attention}#7#{C:inactive}#8#)"
+          "{C:inactive}(Momenteel inactief)"
+        }
+      },
+      
+      j_RainyDays_metropolis_active = {
+        name = "Metropolis",
+        text = {
+          "Als gespeelde hand een",
+          "{C:attention}#1#{} bevat, {X:mult,C:white}X#2#{} Multi",
+          "voor {C:attention}#3#{} volgende handen",
+          "{C:inactive}({C:attention}Actief {C:inactive}voor volgende {C:attention}#4#{C:inactive} #5#)"
         }
       },
       
@@ -714,6 +924,16 @@ return {
         }
       },
       
+      j_RainyDays_musketeers = {
+        name = "Musketiers",
+        text = {
+          "Een {C:attention}#1#",
+          "kan worden gemaakt",
+          "met {C:attention}#2# opeenvolgende",
+          "kaarten"
+        }
+      },
+      
       j_RainyDays_orange = {
         name = "Sinaasappel",
         text = {
@@ -721,6 +941,22 @@ return {
           "{C:mult}-#2#{} Multi als gespeelde",
           "hand minder dan {C:attention}#3#{} sco-",
           "rende kaarten bevat"
+        }
+      },
+      
+      j_RainyDays_origami = {
+        name = "Origami",
+        text = {
+          "Aan einde van ronde,",
+          "verdien {C:money}$#1#{} voor elke",
+          "{C:attention}#2#{} kaarten met {V:1}#3#{}-",
+          "kleur in het kaartspel",
+          "{C:inactive}(Momenteel {C:money}$#4#{C:inactive})"
+        },
+        unlock = {
+          "Hou {E:1,C:attention}#1#{} of minder kaarten",
+          "met {E:1,V:1}#2#{}-kleur in",
+          "het volledige kaartspel",
         }
       },
       
@@ -736,11 +972,22 @@ return {
       j_RainyDays_parrot = {
         name = "Papegaai",
         text = {
-          "Als {C:attention}blind{} is geselecteerd,",
-          "kopieert {C:attention}Joker{} aan de rechter-",
-          "kant deze ronde als die niet is",
-          "gekopieerd in vorige {C:attention}#2#{} rondes",
+          "Als {C:attention}blind{} is geselecteerd, kopieert",
+          "deze ronde de krachten van  {C:attention}Joker",
+          "aan de rechterkant als deze niet",
+          "gekopieerd zijn in vorige {C:attention}#2#{} rondes",
           "{C:inactive}(Momenteel {V:1}#1#{C:inactive})"
+        }
+      },
+      
+      j_RainyDays_pigeon = {
+        name = "Duif",
+        text = {
+          "{C:green}#1# van #2#{} Jokers is een {C:attention}Duif{}.",
+          "Wanneer {C:attention}Duif{} is verkregen,",
+          "vernietig deze en deze",
+          "Joker ontvangt {X:mult,C:white}X#3#{} Multi",
+          "{C:inactive}(Momenteel {X:mult,C:white}X#4#{C:inactive} Multi)"
         }
       },
       
@@ -822,6 +1069,53 @@ return {
         }
       },
       
+      j_RainyDays_quasar = {
+        name = "Quasar",
+        text = {
+          "Als gespeelde {C:attention}pokerhand",
+          "level {C:attention}#1#{} of hoger is,",
+          "verlaag dan het level",
+          "met {C:attention}#2#{} en deze Joker ",
+          "ontvangt {X:mult,C:white}X#3#{} Multi",
+          "{C:inactive}(Momenteel {X:mult,C:white}X#4#{C:inactive} Multi)"
+        },
+        unlock = {
+          "Tijdens een spel,",
+          "gebruikt minstens",
+          "{E:1,C:attention}#1#{} verschillende",
+          "{E:1,C:planet}planeet{}-kaarten"
+        }
+      },
+      
+      j_RainyDays_queue_ticket = {
+        name = "Volgnummer",
+        text = {
+          "Heractiveer elke gespeelde",
+          "vastgehouden {C:attention}#1#{} of {C:attention}#2#"
+        }
+      },
+      
+      j_RainyDays_receipt = {
+        name = "Kassabon",
+        text = {
+          "Deze Joker ontvangt eens per",
+          "winkel {C:mult}+#1#{} multi als {C:money}$#2#{} of",
+          "meer werd uitgegeven",
+          "{C:inactive}(Momenteel {C:mult}+#3# {C:inactive}Multi)"
+        }
+      },
+      
+      j_RainyDays_receipt_in_shop = {
+        name = "Kassabon",
+        text = {
+          "Deze Joker ontvangt eens per",
+          "winkel {C:mult}+#1#{} multi als {C:money}$#2#{} of",
+          "meer werd uitgegeven",
+          "{C:inactive}(Momenteel {C:mult}+#3# {C:inactive}Multi)",
+          "{C:inactive}(Nog {C:money}$#4# {C:inactive})"
+        }
+      },
+      
       j_RainyDays_recycle = {
         name = "Recycle",
         text = {
@@ -829,6 +1123,37 @@ return {
           "of {C:attention}#5#{} ontvangt {C:mult}+#1#{} Multi en",
           "wordt terug in het kaart-",
           "spel gestopt"
+        }
+      },
+      
+      j_RainyDays_report_card = {
+        name = "Schoolrapport",
+        text = {
+          "{X:mult,C:white}X#1#{} Multi voor elke",
+          "keer een gespeelde {C:attention}#2#",
+          "deze {C:attention}ante{} scoorde",
+          "{C:inactive}(Momenteel {X:mult,C:white}X#3#{C:inactive} Multi)"
+        },
+        unlock = {
+          "Tijdens een spel,",
+          "scoor een gespeelde",
+          "{E:1,C:attention}#1#{} minstens {E:1,C:attention}#2#{} keer"
+        }
+      },
+      
+      j_RainyDays_return_to_sender = {
+        name = "Terugsturen",
+        text = {
+          "Kopieert laatst",
+          "verkregen toepas-",
+          "bare {C:attention}Joker",
+          "{C:inactive}(Momenteel {V:1}#1#{C:inactive})"
+        },
+        unlock = {
+          "Win een spel na het",
+          "verkrijgen van {E:1,C:attention}#1#{} of",
+          "meer verschillende",
+          "{E:1,C:attention}Jokers"
         }
       },
       
@@ -847,8 +1172,18 @@ return {
         }
       },
       
+      j_RainyDays_secret_agent = {
+        name = "Geheim Agent",
+        text = {
+          "Elke gespeelde {C:attention}#1#",
+          "of {C:attention}#2#{} scoort altijd",
+          "en geeft {C:mult}+#3#{} Multi",
+          "bij scoren" 
+        }
+      },
+      
       j_RainyDays_self_assembly = {
-        name = "Monteren",
+        name = "Zelfmontage",
         text = {
           "Deze Joker ontvangt {C:mult}+#1#{} Multi",
           "waneer een {C:attention}kaart{} een nieuwe",
@@ -894,6 +1229,32 @@ return {
         }
       },
       
+      j_RainyDays_simple_joker = {
+        name = "Simpele Joker",
+        text = {
+          "{C:mult}+#1#{} Multi als gespeelde",
+          "hand geen scorende",
+          "{C:attention}verbeterde{} kaarten bevat"
+        },
+        unlock = {
+          "Win een spel terwijl",
+          "volledig kaartspel {E:1,C:attention}#1#",
+          "of minder {E:1,C:attention}verbeterde",
+          "kaarten bevat"
+        }
+      },
+      
+      j_RainyDays_sketch_pad = {
+        name = "Schetsjes",
+        text = {
+          "{X:mult,C:white}X#1#{} Multi voor elke",
+          "{C:attention}verschillende verbetering",
+          "onder deze {C:attention}ante{} gespeelde",
+          "scorende kaarten",
+          "{C:inactive}(Momenteel {X:mult,C:white}X#2#{C:inactive} Multi)"
+        }
+      },
+      
       j_RainyDays_skinner_box = {
         name = "Skinner-box",
         text = {
@@ -928,6 +1289,22 @@ return {
         }
       },
       
+      j_RainyDays_spire = {
+        name = "Spits",
+        text = {
+          "Verdien {C:money}$#1#{} aan einde van",
+          "ronde. {C:green}#3# op #4#{} kans dat",
+          "uitbetaling stijgt met {C:money}$#2#",
+          "wanneer een {C:attention}boosterpakket",
+          "wordt geopened"
+        },
+        unlock = {
+          "Tijdens een spel,",
+          "gebruikt {E:1,C:attention}#1#{} of meer",
+          "{E:1,C:attention}boosterpakketten"
+        }
+      },
+      
       j_RainyDays_spooky_joker = {
         name = "Griezelige Joker",
         text = {
@@ -948,9 +1325,10 @@ return {
       j_RainyDays_sputnik = {
         name = "Sputnik",
         text = {
-          "Creëer de {C:planet}planeet{}-kaart voor",
-          "gespeelde {C:attention}pokerhand{} als die",
-          "deze {C:attention}ante{} nog niet gespeeld is",
+          "Als gespeelde {C:attention}pokerhand",
+          "deze {C:attention}ante{} nog niet ge-",
+          "speeld is, betaal {C:money}$#1#{} en",
+          "creëer een {C:tarot}tarot{}-kaart",
           "{C:inactive}(Moet ruimte voor zijn)"
         }
       },
@@ -988,6 +1366,21 @@ return {
         }
       },
       
+      j_RainyDays_tessen = {
+        name = "Tessen",
+        text = {
+          "{C:chips}+#1#{} fiches voor elke",
+          "kaart met {V:1}#3#{}-",
+          "kleur in het kaartspel",
+          "{C:inactive}(Momenteel {C:chips}+#2# {C:inactive}fiches)"
+        },
+        unlock = {
+          "Hou {E:1,C:attention}#1#{} of minder kaarten",
+          "met {E:1,V:1}#2#{}-kleur in",
+          "het volledige kaartspel",
+        }
+      },
+      
       j_RainyDays_theater = {
         name = "Theater",
         text = {
@@ -1016,15 +1409,15 @@ return {
       j_RainyDays_trading_stamps = {
         name = "Spaarzegels",
         text = {
-          "Elke uitgegeven {C:money}$#1#{} voegt",
-          "{C:money}$#2#{} aan {C:attention}verkoopwaarde{} aan",
+          "Elke uitgegeven {C:money}$#1#{}, voeg",
+          "{C:money}$#2#{} {C:attention}verkoopwaarde{} aan",
           "deze Joker toe",
           "{C:inactive}(Nog {C:money}$#3#{C:inactive})"
         },
         unlock = {
           "Tijdens een spel,",
           "geeft minstens",
-          "{E:1,C:money}$#1#{} uit"
+          "{E:1,C:money}$#1#{} uit in winkels"
         }
       },
       
@@ -1056,8 +1449,20 @@ return {
       j_RainyDays_wanted = {
         name = "Wanted!",
         text = {
-          "Verkoop {C:attention}#1##2#", 
-          "om {C:money}$#3#{} te verdienen",
+          "Verkoop een Joker",
+          "genaamd {C:attention}#1#{} om",
+          "{C:money}$#2#{} te verdienen",
+          "{s:0.8}Joker verandert",
+          "{s:0.8}elke ronde"
+        }
+      },
+      
+      j_RainyDays_wanted_long = {
+        name = "Wanted!",
+        text = {
+          "Verkoop een Joker",
+          "genaamd {C:attention}#1#",
+          "om {C:money}$#2#{} te verdienen",
           "{s:0.8}Joker verandert",
           "{s:0.8}elke ronde"
         }
@@ -1071,6 +1476,16 @@ return {
           "te reactiveren en geeft",
           "{C:mult}+#3#{} Multi wanneer deze",
           "{C:attention}gereactiveerd{} wordt"
+        }
+      },
+      
+      j_RainyDays_whirlpool = {
+        name = "Draaikolk",
+        text = {
+          "Een {C:attention}#2#{} kan worden",
+          "gemaakt met {C:attention}#1#{} of meer",
+          "kaarten met elk een",
+          "andere kleur"
         }
       },
       
@@ -1090,8 +1505,8 @@ return {
         text = {
           "{C:chips}+#1#{} fiches",
           "Verkoop deze kaart om",
-          "{C:tarot}#2# #3#{} te",
-          "creeren",
+          "{C:tarot}#2#{} te",
+          "creëren",
           "{s:0.8,C:tarot}Tarot{s:0.8}-kaart verandert",
           "{s:0.8}elke ronde",
           "{C:inactive}(Moet ruimte voor zijn)"
@@ -1103,10 +1518,111 @@ return {
         text = {
           "{C:chips}+#1#{} fiches",
           "Verkoop deze kaart om",
-          "{C:tarot}#2#{} te creeren",
+          "{C:tarot}#2#{} te creëren",
           "{s:0.8,C:tarot}Tarot{s:0.8}-kaart verandert",
           "{s:0.8}elke ronde",
           "{C:inactive}(Moet ruimte voor zijn)"
+        }
+      },
+      
+      j_RainyDays_wuxing = {
+        name = "Wuxing",
+        text = {
+          "Wanneer een gespeelde",
+          "{C:attention}#1#{} scoort, {C:green}#2# op #3#{} kans",
+          "om een {C:attention}#4#{} te",
+          "creëren"
+        }
+      },
+      
+      j_RainyDays_xylophone = {
+        name = "Xylofoon",
+        text = {
+          "{C:mult}+#1#{} Multi voor elk ver-",
+          "schillende dit spel",
+          "gespeelde {C:attention}pokerhand",
+          "{C:inactive}(Momenteel {C:mult}+#2# {C:inactive}Multi)"
+        }
+      }
+    },
+      
+    Other = {
+      rainydays_checklist_list = {
+        name = "Gespeelde rangen",
+        text = {
+          "{V:1}A {V:2}K {V:3}Q {V:4}J",
+          "{V:5}10 {V:6}9 {V:7}8 {V:8}7 {V:9}6",
+          "{V:10}5 {V:11}4 {V:12}3 {V:13}2"
+        }
+      },
+      
+      rainydays_collection_contributes = {
+        name = "Collectie",
+        text = {
+          "Dit spel zijn nog",
+          "geen kopieën van",
+          "deze Joker verkregen"
+        }
+      },
+      
+      rainydays_return_to_sender_compatible = {
+        name = "Toepasbaar",
+        text = {
+          "Zal door {C:attention}#1#",
+          "gekopieerd worden"
+        }
+      },
+      
+      rainydays_return_to_sender_compatible_bloom = {
+        name = "Toepasbaar",
+        text = {
+          "{C:attention}#1#{} zal gekopieerd",
+          " worden door {C:attention}#2#"
+        }
+      },
+      
+      rainydays_return_to_sender_second_best = {
+        name = "Volgend Doelwit",
+        text = {
+          "Zal krachten van {C:attention}#2#",
+          "{C:attention}#3#{} kopiëren als huidig",
+          "doelwit niet beschikbaar is"
+        }
+      },
+      
+      rainydays_return_to_sender_second_best_short = {
+        name = "Volgend Doelwit",
+        text = {
+          "Zal krachten van {C:attention}#1#",
+          "kopiëren als huidig doel-",
+          "wit niet beschikbaar is"
+        }
+      },
+      
+      rainydays_tag_charm = {
+        name = "Toverspreuktag",
+        text = {
+          "Levert een gratis",
+          "{C:tarot}Mega Arcanapakket{} op"
+        }
+      },
+      
+      rainydays_tag_edition = {
+        name = "Editietag",
+        text = {
+          "Volgende basiseditie-{C:attention}Joker",
+          "in de winkel is gratis en",
+          "wordt {C:dark_edition}folie{}, {C:dark_edition}holografisch{},",
+          "{C:dark_edition}polychroom{} of {C:dark_edition}negatief",
+        }
+      },
+      
+      rainydays_tag_voucher = {
+        name = "Vouchertag",
+        text = {
+          "Voegt één {C:attention}voucher{} toe",
+          "aan de huidige of",
+          "volgende winkel"
         }
       }
     }
@@ -1114,6 +1630,10 @@ return {
   
   misc = {
     dictionary = {
+      --vars
+      rainydays_return_to_sender_split = true,
+      rainydays_wishbone_split = false,
+      
       --config
       rainydays_clarifiers_info = {
         "Sommige Jokers vereisten dat de speler informatie",
@@ -1136,7 +1656,7 @@ return {
       rainydays_requires_restart = "(Vereist herstarten)",
       rainydays_show_metallic_highlights = "Laat metalen highlights zien",
       rainydays_unlock_all = "Ontgrendel alles",
-      
+            
       --enhancements shorthand
       rainydays_bonus = "Bonus",
       rainydays_glass = "Glazen",
@@ -1152,51 +1672,40 @@ return {
 
       rainydays_bazaar_message = "Speel een hand met 5 scorende kaarten",
       
-      rainydays_beanstalk_grown = "Al gegroeid deze ronde",
-      rainydays_beanstalk_message_postfix = "",
-      rainydays_beanstalk_message_prefix = "Nog ",
       rainydays_beanstalk_or_will_reset = " of reset aan einde van ronde",
-      rainydays_beanstalk_postfix = "",
-      rainydays_beanstalk_prefix = "Nog ",
       
-      rainydays_collage_box_name = "Gespeelde verbeteringen",
+      rainydays_bud_bloomed = "Gebloeid!",
       
       rainydays_desolate_box_name = "Weggegooide handen",
-      rainydays_desolate_message_postfix = "",
-      rainydays_desolate_message_prefix = "Nog ",
-      rainydays_desolate_postfix_active = "",
-      rainydays_desolate_postfix_inactive = "",
-      rainydays_desolate_prefix_active = "Momenteel ",
-      rainydays_desolate_prefix_inactive = "Nog ",
+      
+      rainydays_duality_day_appear = "Dag!",
+      rainydays_duality_night_appear = "Nacht!",
       
       rainydays_lotteryticket_full_clear = "Compleet!",
       
       rainydays_instructional_box_name = "Getroffen Jokers",
       
-      rainydays_metropolis_infix_active = " voor volgende ",
-      rainydays_metropolis_infix_inactive = "",
-      rainydays_metropolis_message_postfix = " over",
-      rainydays_metropolis_message_prefix = "",
-      rainydays_metropolis_postfix_active = "hand",
-      rainydays_metropolis_postfix_active_plural = " handen",
-      rainydays_metropolis_postfix_inactive = "",
-      rainydays_metropolis_prefix_active = "",
-      rainydays_metropolis_prefix_inactive = "Momenteel ",
-      
       rainydays_parrot_box_name = "Gekopieerde Jokers",
-      rainydays_parrot_wait_postfix_plural = " rondes",
-      rainydays_parrot_wait_postfix_singular = " ronde",
       rainydays_parrot_wait_prefix_plural = "Wacht nog ",
+      rainydays_parrot_wait_postfix_plural = " rondes",
       rainydays_parrot_wait_prefix_singular = "Wacht nog ",
+      rainydays_parrot_wait_postfix_singular = " ronde",
+      
+      rainydays_pigeon_appear = "Roekoe!",
       
       rainydays_prehistory_box_name = "Jokers in aanmerking",
+      
+      rainydays_return_to_sender_box_name = "Toepasbare Jokers",
+      
+      rainydays_satellite_box_name = "Gebruikte planeten",
+      
+      rainydays_sketch_pad_box_name = "Gespeelde verbeteringen",
       
       rainydays_sputnik_box_name = "Gespeelde handen",
       
       rainydays_starting_line_box_name = "Te vaak gespeelde handen",
       
-      rainydays_trading_stamps_message_postfix = "",
-      rainydays_trading_stamps_message_prefix = "Nog $",
+      rainydays_xylophone_box_name = "Gespeelde handen",
       
       --message
       rainydays_activated = "Actief!",
@@ -1205,17 +1714,29 @@ return {
       rainydays_denied = "Afgewezen!",
       rainydays_destroyed = "Vernietigd!",
       rainydays_enhanced = "Verbeterd!",
-      rainydays_found_target = "Doelwit gevonden!",
-      rainydays_full_reset = "Volle reset",
       rainydays_hands_upgraded = "Hand Geüpgraded!",
       rainydays_new_rank = "Nieuwe rang!",
+      rainydays_new_target = "Doelwit gevonden!",
+      rainydays_target_lost = "Doelwit verloren...",
       rainydays_wild_ex = "Wild!",
       
+      --message count
+      rainydays_charges_message_prefix = "Nog ",
+      rainydays_charges_message_postfix = " over",
+      rainydays_consumables_message_prefix = "Nog ",
+      rainydays_consumables_message_postfix = "",
+      rainydays_jokers_message_prefix = "Nog ",
+      rainydays_jokers_message_postfix = "",
+      rainydays_money_message_prefix = "Nog $",
+      rainydays_money_message_postfix = "",
+      rainydays_pokerhands_message_prefix = "Nog ",
+      rainydays_pokerhands_message_postfix = "",
+      
       --misc
-      rainydays_infobox_nr_sign_postfix = "",
-      rainydays_infobox_nr_sign_prefix = " #",
-      rainydays_message_countdown_postfix = "...",
+      rainydays_nr_prefix = " #",
+      rainydays_nr_postfix = "",
       rainydays_message_countdown_prefix = "",
+      rainydays_message_countdown_postfix = "...",
       rainydays_plus = "+",
       
       --status
@@ -1226,8 +1747,10 @@ return {
       --terms
       rainydays_constellation = "Sterrenbeeld",
       rainydays_feather = "Veer",
+      rainydays_hand = "hand",
       rainydays_hand_size = "Handomvang",
-      rainydays_hands = "Handen",
+      rainydays_hands = "handen",
+      rainydays_hands_to_play = "Speelkansen",
       
       --JokerDisplay
       rainydays_JD_booster_pack = " boosterpakket",
@@ -1235,28 +1758,28 @@ return {
       rainydays_JD_discards = " weggooikansen",
       rainydays_JD_drawn = "Getrokken ",
       rainydays_JD_hand_size = " handomvang",
-      rainydays_JD_hold_no_postfix = " vast",
-      rainydays_JD_hold_no_prefix = "Hou geen ",
-      rainydays_JD_hold_postfix = " vast",
-      rainydays_JD_hold_prefix = "Hou ",
       rainydays_JD_held = "Vastgehouden ",
+      rainydays_JD_hold_no_prefix = "Hou geen ",
+      rainydays_JD_hold_no_postfix = " vast",
+      rainydays_JD_hold_prefix = "Hou ",
+      rainydays_JD_hold_postfix = " vast",
       rainydays_JD_in_deck = " in kaartspel",
       rainydays_JD_max = "Max. ",
-      rainydays_JD_membership_postfix = "",
       rainydays_JD_membership_prefix = "Voorwerpen ",
-      rainydays_JD_no_numbers = "Geen cijfers",
-      rainydays_JD_no_postfix = "",
+      rainydays_JD_membership_postfix = "",
       rainydays_JD_no_prefix = "Geen ",
+      rainydays_JD_no_postfix = "",
       rainydays_JD_not_copying = "Niet bezig",
       rainydays_JD_numbers = "Cijfers",
       rainydays_JD_per_discard = " per weggooien",
-      rainydays_JD_required_scores = "vereiste scores",
+      rainydays_JD_required_scores = " scores",
       rainydays_JD_scored = "Gescoorde ",
       rainydays_JD_set_to = "Zet op ",
-      rainydays_JD_slashed_joker_postfix = " kaarten",
       rainydays_JD_slashed_joker_prefix = "",
+      rainydays_JD_slashed_joker_postfix = " kaarten",
+      rainydays_JD_squiggle_joker_prefix = "",
       rainydays_JD_squiggle_joker_postfix = " kleuren",
-      rainydays_JD_squiggle_joker_prefix = ""
+      rainydays_JD_tag = "tag"
     }
   }
 }

@@ -1,0 +1,30 @@
+[manifest]
+version = '1.0.0'
+dump_lua = true
+priority = 0
+
+
+
+#flush house with amigo
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/game_object.lua"]'''
+match_indent = true
+pattern = '''if #parts._3 < 1 or #parts._2 < 2 or not next(parts._flush) then return {} end'''
+position = 'before'
+payload = '''if #parts._3 < 1 or #parts._2 < 1 or not next(parts._flush) then return {} end
+if G.GAME.rd_musketeers and G.GAME.rd_musketeers > 0 then
+	return { SMODS.merge_lists(RainyDays.musketeers_check_full_house(parts._3, parts._2), parts._flush) }
+end'''
+
+#full house with amigo
+[[patches]]
+[patches.pattern]
+target = '''=[SMODS _ "src/game_object.lua"]'''
+match_indent = true
+pattern = '''if #parts._3 < 1 or #parts._2 < 2 then return {} end'''
+position = 'before'
+payload = '''if #parts._3 < 1 or #parts._2 < 1 then return {} end
+if G.GAME.rd_musketeers and G.GAME.rd_musketeers > 0 then
+	return RainyDays.musketeers_check_full_house(parts._3, parts._2)
+end'''

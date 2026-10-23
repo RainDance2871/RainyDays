@@ -1,6 +1,6 @@
 SMODS.Joker {
   key = 'plump_joker',
-  atlas = 'Plump_joker',
+  atlas = 'Wide',
   rarity = 1,
   cost = 5,
   unlocked = false,

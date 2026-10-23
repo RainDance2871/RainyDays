@@ -12,7 +12,10 @@ function Game:init_game_object()
     ret.hands[value].rd_secret = (not ret.hands[value].visible or type(ret.hands[value].visible) == 'function')
   end
   
-  --cards played
+  --cards played and scored
+  ret.rd_ranks_scored = {}
+  ret.rd_ranks_played_this_ante = {}
+  ret.rd_ranks_scored_this_ante = {}
   ret.rd_ranks_played_this_round = {}
   ret.rd_ranks_scored_this_round = {}
   ret.rd_enhancements_scored_this_ante = {}
@@ -37,29 +40,14 @@ function Game:init_game_object()
   return ret
 end
 
-
 local func_evaluate_play_ref = G.FUNCS.evaluate_play
 G.FUNCS.evaluate_play = function(e)
   RainyDays.evaluating_play = true
-  G.GAME.rd_ranks_played_this_round = G.GAME.rd_ranks_played_this_round or {}
   for i = 1, #G.play.cards do
     if not SMODS.has_no_rank(G.play.cards[i]) then
       local id = G.play.cards[i]:get_id()
       G.GAME.rd_ranks_played_this_round[id] = (G.GAME.rd_ranks_played_this_round[id] or 0) + 1
-    end
-  end
-
-  local _, _, _, scoring_hand = G.FUNCS.get_poker_hand_info(G.play.cards)
-  G.GAME.rd_ranks_scored_this_round = G.GAME.rd_ranks_scored_this_round or {}
-  for i = 1, #scoring_hand do
-    if not SMODS.has_no_rank(scoring_hand[i]) then
-      local id = scoring_hand[i]:get_id()
-      G.GAME.rd_ranks_scored_this_round[id] = (G.GAME.rd_ranks_scored_this_round[id] or 0) + 1
-    end
-    
-    local enhancements = SMODS.get_enhancements(G.play.cards[i])
-    for key in pairs(enhancements) do
-      G.GAME.rd_enhancements_scored_this_ante[key] = (G.GAME.rd_enhancements_scored_this_ante[key] or 0) + 1
+      G.GAME.rd_ranks_played_this_ante[id] = (G.GAME.rd_ranks_played_this_ante[id] or 0) + 1
     end
   end
   
@@ -77,7 +65,6 @@ G.FUNCS.evaluate_play = function(e)
     end
   }))
 end
-
 
 local discard_cards_from_highlighted_ref = G.FUNCS.discard_cards_from_highlighted
 G.FUNCS.discard_cards_from_highlighted = function(e, hook)
@@ -127,9 +114,20 @@ function end_round()
       --ante values reset
       if G.GAME.blind:get_type() == 'Boss' then
         G.GAME.rd_consumeable_usage_ante = 0
+        
+      
+        for key in pairs(G.GAME.rd_ranks_played_this_ante) do
+          G.GAME.rd_ranks_played_this_ante[key] = nil
+        end
+        
+        for key in pairs(G.GAME.rd_ranks_scored_this_ante) do
+          G.GAME.rd_ranks_scored_this_ante[key] = nil
+        end
+        
         for _, value in pairs(G.GAME.hands) do
           value.rd_discarded_this_ante = 0
         end
+        
         for key in pairs(G.GAME.rd_enhancements_scored_this_ante) do
           G.GAME.rd_enhancements_scored_this_ante[key] = nil
         end
@@ -179,32 +177,22 @@ function RainyDays.delirium_check(hand)
   return false
 end
 
---maintain list of unique jokers
 local add_to_deck_ref = Card.add_to_deck
 function Card:add_to_deck(from_debuff)
-  if G.GAME and self.ability.set == 'Joker' then
-    if not self.ability.rd_joker_id then
-      G.GAME.rd_joker_ids_given = (G.GAME.rd_joker_ids_given or 0) + 1
-      self.ability.rd_joker_id = G.GAME.rd_joker_ids_given
-    end
-    
-    if not G.GAME.rd_jokers_uniquelist[self.config.center.key] then
-      G.GAME.rd_jokers_uniquelist[self.config.center.key] = true
-      G.GAME.rd_jokers_uniquelist_count = G.GAME.rd_jokers_uniquelist_count + 1
-      G.GAME.rd_jokers_uniquelist_added = G.GAME.rd_jokers_uniquelist_added or {}
-      G.GAME.rd_jokers_uniquelist_added[#G.GAME.rd_jokers_uniquelist_added + 1] = self.config.center.key
-      G.E_MANAGER:add_event(Event({
-        func = function()
-          if G.GAME.rd_jokers_uniquelist_added and #G.GAME.rd_jokers_uniquelist_added > 0 then
-            SMODS.calculate_context({ rd_unique_joker_added = true, card_keys = G.GAME.rd_jokers_uniquelist_added })
-            G.GAME.rd_jokers_uniquelist_added = nil
-          end
-          return true
-        end
-      }))
-    end
+  local ret
+  if G.GAME and self.ability.set == 'Joker' and (not from_debuff or not self.ability.rd_joker_id) then
+    G.GAME.rd_joker_ids_given = (G.GAME.rd_joker_ids_given or 0) + 1
+    self.ability.rd_joker_id = G.GAME.rd_joker_ids_given
   end
-  return add_to_deck_ref(self, from_debuff)
+    
+  ret = add_to_deck_ref(self, from_debuff)
+  
+  if G.GAME and self.ability.set == 'Joker' and not G.GAME.rd_jokers_uniquelist[self.config.center.key] then
+    G.GAME.rd_jokers_uniquelist[self.config.center.key] = true
+    G.GAME.rd_jokers_uniquelist_count = G.GAME.rd_jokers_uniquelist_count + 1
+  end
+  
+  return ret
 end
 
 local ref_add_tag = add_tag
@@ -212,4 +200,12 @@ function add_tag(_tag)
   ref_add_tag(_tag)
   G.GAME.rd_tag_count = (G.GAME.rd_tag_count or 0) + 1
   check_for_unlock({ type = 'rd_tag_count' })
+end
+
+local old_set_consumeable_usage = set_consumeable_usage
+function set_consumeable_usage(card)
+  local ret = old_set_consumeable_usage(card)
+  G.GAME.rd_night_active = (card.config.center.set == 'Planet')
+  G.GAME.rd_bingo_balls = pseudorandom('bingo_balls', G.GAME.rd_bingo_balls_min, G.GAME.rd_bingo_balls_max)
+  return ret
 end

@@ -10,7 +10,6 @@ SMODS.Joker {
   pos = RainyDays.GetJokersAtlasTable('lady_of_the_lake'),
   soul_pos = RainyDays.GetJokersAtlasTable('lady_of_the_lake_soul'),
   rd_highlight_shader = 'RainyDays_metallic_highlight',
-  rd_skip_soul = true,
   attributes = { 'enhancements', 'modify_card' },  
   config = {
     extra = {
@@ -30,7 +29,7 @@ SMODS.Joker {
     if context.before and context.main_eval and #context.scoring_hand >= card.ability.extra.cards then
       local choices = {}
       for i = 1, #context.scoring_hand do 
-        if not context.scoring_hand[i].ladylaked and not context.scoring_hand[i].debuff then
+        if not context.scoring_hand[i].getting_enhancement and not context.scoring_hand[i].debuff then
           choices[#choices + 1] = context.scoring_hand[i]
         end
       end
@@ -48,10 +47,10 @@ SMODS.Joker {
           end
         end
         local enhancement = SMODS.poll_enhancement({ type_key = 'ladylake', guaranteed = true, options = options })
-        upgrade_card.ladylaked = true       
+        upgrade_card.getting_enhancement = true       
         G.E_MANAGER:add_event(Event({
           func = function()
-            upgrade_card.ladylaked = nil
+            upgrade_card.getting_enhancement = nil
             return true
           end
         }))
@@ -61,7 +60,11 @@ SMODS.Joker {
   end,
   
   locked_loc_vars = function(self, info_queue, card)
-    return { vars = { 5 }}
+    return {
+      vars = {
+        5
+      }
+    }
   end,
   
   check_for_unlock = function(self, args)

@@ -44,9 +44,9 @@ SMODS.Joker {
         
         update_hand_text({ sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3 }, {})
         G.E_MANAGER:add_event(Event({ trigger = 'after', delay = 0.2, func = function() return RainyDays.shakeit(message_cards, true) end }))
-        G.E_MANAGER:add_event(Event({ trigger = 'after', delay = 0.9, func = function() return RainyDays.shakeit(message_cards, true) end }))
         update_hand_text({ delay = 0 }, { chips = SMODS.Scoring_Parameters.chips.current + card.ability.extra.chips_rewards, StatusText = true })
         mod_chips(SMODS.Scoring_Parameters.chips.current + card.ability.extra.chips_rewards)
+        G.E_MANAGER:add_event(Event({ trigger = 'after', delay = 0.9, func = function() return RainyDays.shakeit(message_cards, true) end }))
         G.E_MANAGER:add_event(Event({ trigger = 'after', delay = 0.9, func = function() return RainyDays.shakeit(message_cards, false) end }))
         delay(1.3)
       end

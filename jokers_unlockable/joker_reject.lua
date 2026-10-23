@@ -29,19 +29,21 @@ SMODS.Joker {
   add_to_deck = function(self, card, from_debuff)
     G.GAME.round_resets.discards = G.GAME.round_resets.discards + card.ability.extra.discards
     ease_discard(card.ability.extra.discards)
-    G.GAME.modifiers.discard_cost = (G.GAME.modifiers.discard_cost or 0) + card.ability.extra.money_pay
   end,
   
   remove_from_deck = function(self, card, from_debuff)
     G.GAME.round_resets.discards = G.GAME.round_resets.discards - card.ability.extra.discards
     ease_discard(-card.ability.extra.discards)
-    G.GAME.modifiers.discard_cost = (G.GAME.modifiers.discard_cost or 0) - card.ability.extra.money_pay
-    if G.GAME.G.GAME.modifiers.discard_cost == 0 then
-      G.GAME.G.GAME.modifiers.discard_cost = nil
+  end,
+  
+  calculate = function(self, card, context)
+    if context.pre_discard and not context.blueprint then
+      ease_dollars(-card.ability.extra.money_pay)
+      card_eval_status_text(card, 'dollars', -card.ability.extra.money_pay)
     end
   end,
   
-  locked_loc_vars = function(self, info_queue, card)   
+  locked_loc_vars = function(self, info_queue, card)    
     return {
       main_end = not self.unlocked and RainyDays.generate_main_end_counter(G.GAME and G.GAME.unused_discards or 0) or nil,
       vars = { 
