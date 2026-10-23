@@ -919,7 +919,7 @@ return {
           "A {C:attention}#1#",
           "can be made with",
           "{C:attention}#2#{} cards with",
-          "{C:attention}consective{} ranks"
+          "{C:attention}consecutive{} ranks"
         }
       },
       
