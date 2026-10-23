@@ -16,14 +16,6 @@ SMODS.Joker {
     }
   },
   
-  add_to_deck = function(self, card, from_debuff)
-    G.GAME.rd_early_bird = (G.GAME.rd_early_bird or 0) + 1
-  end,
-  
-  remove_from_deck = function(self, card, from_debuff)
-    G.GAME.rd_early_bird = (G.GAME.rd_early_bird or 0) - 1
-  end,
-  
   loc_vars = function(self, info_queue, card)
     return {
       vars = {

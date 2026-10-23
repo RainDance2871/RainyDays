@@ -8,9 +8,9 @@ SMODS.Joker {
   eternal_compat = true,
   perishable_compat = true,
   pos = RainyDays.GetJokersAtlasTable('desolate'),
-  soul_pos = RainyDays.GetJokersAtlasTable('indicator_hands'),
-  rd_soul_indicator_shader = 'RainyDays_indicator',
-  rd_skip_soul = true,
+  soul_atlas = 'Indicators',
+  soul_pos = RainyDays.GetIndicatorsAtlasTable('hands'),
+  rd_indicator_shader = 'RainyDays_indicator',
   attributes = { 'xmult', 'discard', 'hand_type' },
   
   config = { 
@@ -35,12 +35,11 @@ SMODS.Joker {
     
     local active = #contents >= card.ability.extra.hands
     return {
+      key = active and 'j_RainyDays_desolate_active' or 'j_RainyDays_desolate',
       vars = {
         card.ability.extra.Xmult,
         card.ability.extra.hands,
-        active and localize('rainydays_desolate_prefix_active') or localize('rainydays_desolate_prefix_inactive'),
-        active and localize('rainydays_active') or (card.ability.extra.hands - #contents),
-        active and localize('rainydays_desolate_postfix_active') or localize('rainydays_desolate_postfix_inactive')
+        card.ability.extra.hands - #contents
       }
     }
   end,
@@ -78,7 +77,7 @@ SMODS.Joker {
           }
         elseif count < 9 then
           return {
-            message = localize('rainydays_desolate_message_prefix') .. (card.ability.extra.hands - count) .. localize('rainydays_desolate_message_postfix'),
+            message = localize('rainydays_pokerhands_message_prefix') .. (card.ability.extra.hands - count) .. localize('rainydays_pokerhands_message_postfix'),
             colour = G.C.FILTER
           }
         end

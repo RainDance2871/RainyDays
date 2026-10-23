@@ -7,12 +7,10 @@ SMODS.Joker {
   blueprint_compat = true,
   eternal_compat = true,
   perishable_compat = true,
-  rd_waveform_soul = true,
   pos = RainyDays.GetJokersAtlasTable('waveform'),
   soul_pos = RainyDays.GetJokersAtlasTable('waveform_soul'),
   rd_canvas_drawing = true,
   rd_waveform = true,
-  rd_skip_soul = true,
   attributes = { 'mult', 'retrigger', 'chance' },
   
   config = {

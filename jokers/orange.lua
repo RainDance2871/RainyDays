@@ -13,7 +13,7 @@ SMODS.Joker {
   config = {
     extra = {
       mult = 18,
-      malus_mult = 3,
+      malus_mult = 6,
       border = 5
     }
   },

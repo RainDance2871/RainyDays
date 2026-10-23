@@ -12,8 +12,7 @@ SMODS.Joker {
   config = {
     extra = {
       discard_bonus = 2,
-      hand1 = 'Flush',
-      hand2 = 'Straight'
+      hand = 'Straight'
     }
   },
   
@@ -21,14 +20,13 @@ SMODS.Joker {
     return {
       vars = {
         card.ability.extra.discard_bonus,
-        localize(card.ability.extra.hand1, 'poker_hands'),
-        localize(card.ability.extra.hand2, 'poker_hands')
+        localize(card.ability.extra.hand, 'poker_hands')
       }
     }
   end,
 
   calculate = function(self, card, context)
-    if context.joker_main and (next(context.poker_hands[card.ability.extra.hand1]) or next(context.poker_hands[card.ability.extra.hand2])) then
+    if context.joker_main and next(context.poker_hands[card.ability.extra.hand]) then
       G.E_MANAGER:add_event(Event({
         func = function()
           ease_discard(card.ability.extra.discard_bonus)

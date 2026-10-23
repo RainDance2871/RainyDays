@@ -16,11 +16,11 @@ SMODS.Joker {
   },
   
   add_to_deck = function(self, card, from_debuff)
-    G.GAME.jungle_jack = (G.GAME.jungle_jack or 0) + 1
+    G.GAME.rd_jungle_jack = (G.GAME.rd_jungle_jack or 0) + 1
   end,
   
   remove_from_deck = function(self, card, from_debuff)
-    G.GAME.jungle_jack = (G.GAME.jungle_jack or 0) - 1
+    G.GAME.rd_jungle_jack = (G.GAME.rd_jungle_jack or 0) - 1
   end,
   
   loc_vars = function(self, info_queue, card)
@@ -34,7 +34,7 @@ SMODS.Joker {
 
 --functions to change the card ids, then change them back
 local function change_cards(hand)
-  if hand and type(hand) == "table" and G.GAME.jungle_jack and G.GAME.jungle_jack > 0 then
+  if hand and type(hand) == "table" and G.GAME.rd_jungle_jack and G.GAME.rd_jungle_jack > 0 then
     local table = {}
     for i = 2, #hand do
       if hand[i]:get_id() == 11 and not SMODS.has_no_rank(hand[i - 1]) and hand[i - 1]:get_id() ~= 11 then
@@ -106,7 +106,7 @@ end
 local function_align_cards_ref = CardArea.align_cards
 function CardArea:align_cards()
   function_align_cards_ref(self)
-  if G.GAME.jungle_jack and G.GAME.jungle_jack > 0 and self == G.hand and G.hand.highlighted and #G.hand.highlighted > 1 then
+  if G.GAME.rd_jungle_jack and G.GAME.rd_jungle_jack > 0 and self == G.hand and G.hand.highlighted and #G.hand.highlighted > 1 then
     if not (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.SMODS_BOOSTER_OPENED) then
       local old_order = {}
       for i = 1, #G.hand.highlighted do

@@ -8,7 +8,7 @@ SMODS.Joker {
   eternal_compat = true,
   perishable_compat = true,
   pos = RainyDays.GetJokersAtlasTable('parrot'),
-  attributes = { 'copying', 'joker' },
+  attributes = { 'copying', 'joker', 'position' },
   
   config = {
     extra = {
@@ -29,27 +29,7 @@ SMODS.Joker {
     if card.area and card.area == G.jokers and G.GAME.blind then
       for i = 1, #G.jokers.cards do
         if RainyDays.parrot_copied_before(card, G.jokers.cards[i]) then
-          local name = localize{ type = 'name_text', set = 'Joker', key = G.jokers.cards[i].config.center_key }
-          
-          local function amount_of_copies(card)
-            local amount = 0
-            local nr
-            for j = 1, #G.jokers.cards do
-              if G.jokers.cards[j].config.center.key == card.config.center.key then
-                amount = amount + 1
-                if G.jokers.cards[j] == card then
-                  nr = amount
-                end
-              end
-            end
-            return amount, nr
-          end
-          
-          local amount, nr = amount_of_copies(G.jokers.cards[i])
-          if amount > 1 and nr then
-            name = name .. localize('rainydays_infobox_nr_sign_prefix') .. nr .. localize('rainydays_infobox_nr_sign_postfix')
-          end
-          
+          local name = RainyDays.GetJokerName(G.jokers.cards[i])          
           if card.ability.extra.other_joker_id == G.jokers.cards[i].ability.rd_joker_id then
             other_joker_name = name
           else
@@ -125,7 +105,7 @@ SMODS.Joker {
           if not RainyDays.parrot_copied_before(card, G.jokers.cards[i + 1]) then
             card.ability.extra.other_joker_id = G.jokers.cards[i + 1].ability.rd_joker_id
             card.ability.extra.copied_before[card.ability.extra.other_joker_id] = card.ability.extra.round
-            card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('rainydays_found_target'), colour = G.C.GREEN })
+            card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('rainydays_new_target'), colour = G.C.GREEN })
           end
         end
       end

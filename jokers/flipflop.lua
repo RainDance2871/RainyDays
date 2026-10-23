@@ -19,9 +19,11 @@ SMODS.Joker {
   },
   
   set_ability = function(self, card, initial, delay_sprites)
-    card.ability.extra.state = pseudorandom_element({ 0, 1 }, pseudoseed('flipflop' .. G.GAME.round_resets.ante))
-    if card.ability and card.ability.extra.state == 1 and (card.config.center.discovered or card.bypass_discovery_center) then
-      card.children.center:set_sprite_pos(RainyDays.GetJokersAtlasTable('flipflop_odd'))
+    if card.area and not card.area.created_on_pause then
+      card.ability.extra.state = pseudorandom_element({ 0, 1 }, pseudoseed('flipflop' .. G.GAME.round_resets.ante))
+      if card.ability and card.ability.extra.state == 1 and (card.config.center.discovered or card.bypass_discovery_center) then
+        card.children.center:set_sprite_pos(RainyDays.GetJokersAtlasTable('flipflop_odd'))
+      end
     end
   end,
   
@@ -36,7 +38,7 @@ SMODS.Joker {
   end,
   
   set_sprites = function(self, card, front)
-    if card.ability and card.ability.extra.state == 1 and (card.config.center.discovered or card.bypass_discovery_center) then
+    if card.ability and card.ability.extra and card.ability.extra.state == 1 and (card.config.center.discovered or card.bypass_discovery_center) then
       card.children.center:set_sprite_pos(RainyDays.GetJokersAtlasTable('flipflop_odd'))
     end
   end,
@@ -51,12 +53,28 @@ SMODS.Joker {
     
     if context.after and not context.blueprint then
       G.E_MANAGER:add_event(Event({ 
-        trigger = 'before',
+        trigger = 'after',
         delay = 0.1,
         func = function()
           card:flip()
+          return true
+        end
+      }))
+  
+      G.E_MANAGER:add_event(Event({ 
+        trigger = 'after',
+        delay = 0.1,
+        func = function()
           card.ability.extra.state = card.ability.extra.state == 1 and 0 or 1
           card.children.center:set_sprite_pos(RainyDays.GetJokersAtlasTable(card.ability.extra.state == 0 and 'flipflop_even' or 'flipflop_odd'))
+          return true
+        end
+      }))
+  
+      G.E_MANAGER:add_event(Event({
+        trigger = 'after',
+        delay = 0.1,
+        func = function()
           card:flip()
           return true
         end

@@ -8,9 +8,9 @@ SMODS.Joker {
   eternal_compat = true,
   perishable_compat = true,
   pos = RainyDays.GetJokersAtlasTable('starting_line'),
-  soul_pos = RainyDays.GetJokersAtlasTable('indicator_hands'),
-  rd_soul_indicator_shader = 'RainyDays_indicator',
-  rd_skip_soul = true,
+  soul_atlas = 'Indicators',
+  soul_pos = RainyDays.GetIndicatorsAtlasTable('hands'),
+  rd_indicator_shader = 'RainyDays_indicator',
   attributes = { 'xmult' },
   
   config = { 

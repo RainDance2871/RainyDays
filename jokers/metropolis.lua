@@ -19,27 +19,18 @@ SMODS.Joker {
   },
     
   loc_vars = function(self, info_queue, card)
-    local active = card.ability.extra.activations > 0
-    local prefix = active and localize('rainydays_metropolis_prefix_active') or localize('rainydays_metropolis_prefix_inactive')
-    local active_text = active and localize('rainydays_active') or localize('rainydays_inactive')
-    
-    if string.len(prefix) <= 0 then
-      active_text = string.upper(string.sub(active_text, 1, 1)) .. string.sub(active_text, 2)
-    end
-    
+    local active = card.ability.extra.activations > 0    
     return {      
       vars = {
+        key = active and 'j_RainyDays_metropolis_active' or 'j_RainyDays_metropolis',
         colours = {
           active and G.C.FILTER or G.C.UI.TEXT_INACTIVE
         },
         localize(card.ability.extra.poker_hand, 'poker_hands'),
         card.ability.extra.xmult,
         card.ability.extra.amount_hands,
-        prefix,
-        active_text,
-        active and localize('rainydays_metropolis_infix_active') or localize('rainydays_metropolis_infix_inactive'),
-        card.ability.extra.activations > 1 and card.ability.extra.activations or '',
-        active and (card.ability.extra.activations == 1 and localize('rainydays_metropolis_postfix_active') or localize('rainydays_metropolis_postfix_active_plural')) or localize('rainydays_metropolis_postfix_inactive')
+        card.ability.extra.activations,
+        string.lower((card.ability.extra.activations == 1) and localize('rainydays_hand') or localize('rainydays_hands'))
       }
     }
   end,
@@ -82,7 +73,7 @@ SMODS.Joker {
           end
         }))
         return {
-          message = card.ability.extra.activations == 1 and localize('k_reset') or localize('rainydays_metropolis_message_prefix') .. (card.ability.extra.activations -1) .. localize('rainydays_metropolis_message_postfix'),
+          message = card.ability.extra.activations == 1 and localize('k_reset') or localize('rainydays_charges_message_prefix') .. (card.ability.extra.activations -1) .. localize('rainydays_charges_message_postfix'),
           colour = G.C.RED
         }
       end

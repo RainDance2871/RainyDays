@@ -10,7 +10,6 @@ SMODS.Joker {
   pos = RainyDays.GetJokersAtlasTable('catwalk'),
   soul_pos = RainyDays.GetJokersAtlasTable('catwalk_soul'),
   rd_highlight_shader = 'RainyDays_metallic_highlight',
-  rd_skip_soul = true,
   attributes = { 'xmult', 'enhancements' },
   
   config = { 

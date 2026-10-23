@@ -10,7 +10,6 @@ SMODS.Joker {
   pos = RainyDays.GetJokersAtlasTable('hecate'),
   soul_pos = RainyDays.GetJokersAtlasTable('hecate_soul'),
   rd_highlight_shader = 'RainyDays_metallic_highlight',
-  rd_skip_soul = true,
   attributes = { 'spectral', 'hand_type', 'generation', 'space' },
   
   config = {

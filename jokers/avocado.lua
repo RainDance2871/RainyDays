@@ -10,6 +10,7 @@ SMODS.Joker {
   perishable_compat = true,
   pos = RainyDays.GetJokersAtlasTable('avocado'),
   attributes = { 'mult', 'food' },
+  
   config = {
     extra = {
       mult = 24,

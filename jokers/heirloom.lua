@@ -4,7 +4,7 @@ SMODS.Joker {
   rarity = 2,
   cost = 5,
   unlocked = true,
-  blueprint_compat = true,
+  blueprint_compat = false,
   eternal_compat = true,
   perishable_compat = true,
   in_pool = function(self, args) --only appears if player has at least one bonus or mult card in deck.
@@ -18,29 +18,15 @@ SMODS.Joker {
     return false
   end,
   pos = RainyDays.GetJokersAtlasTable('heirloom'),
-  attributes = { 'enhancements', 'chance', 'modify_card' },
-  
-  config = {
-    extra = {
-      numerator_in = 1,
-      denominator_in = 3
-    }
-  },
+  attributes = { 'enhancements', 'modify_card' },
   
   loc_vars = function(self, info_queue, card)
     info_queue[#info_queue + 1] = G.P_CENTERS.m_bonus
     info_queue[#info_queue + 1] = G.P_CENTERS.m_mult
-    local numerator_out, denominator_out = SMODS.get_probability_vars(card, card.ability.extra.numerator_in, card.ability.extra.denominator_in)
-    return {
-      vars = {
-        numerator_out,
-        denominator_out
-      }
-    }
   end,
   
   calculate = function(self, card, context)
-    if context.individual and context.cardarea == G.play and not context.other_card.debuff and SMODS.pseudorandom_probability(card, 'heirloom', card.ability.extra.numerator_in, card.ability.extra.denominator_in) then
+    if context.individual and context.cardarea == G.play and not context.other_card.debuff and not context.blueprint then
       local options = {}
       if SMODS.has_enhancement(context.other_card, 'm_bonus') then
         options[#options + 1] = 'm_bonus'
@@ -60,8 +46,11 @@ SMODS.Joker {
         
         local card_pos = find_position(context.other_card, context.scoring_hand)
         if card_pos and context.scoring_hand[card_pos + 1] then
-          local enhancement = SMODS.poll_enhancement({ type_key = 'heirloom', guaranteed = true, options = options })
-          return RainyDays.set_ability_multiple(context.blueprint_card or card, context.scoring_hand[card_pos + 1], enhancement, { juice_card = context.other_card })
+          local id = context.scoring_hand[card_pos + 1]:get_id()
+          if id <= 10 and id >= 2 then
+            local enhancement = SMODS.poll_enhancement({ type_key = 'heirloom', guaranteed = true, options = options })
+            return RainyDays.set_ability_multiple(card, context.scoring_hand[card_pos + 1], enhancement, { juice_card = context.other_card })
+          end
         end
       end
     end

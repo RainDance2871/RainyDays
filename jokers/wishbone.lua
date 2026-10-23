@@ -18,18 +18,19 @@ SMODS.Joker {
   loc_vars = function(self, info_queue, card)
     info_queue[#info_queue + 1] = G.P_CENTERS[G.GAME.current_round.RD_wishbone]
     
-    local string_tarot1 = localize{ type = 'name_text', set = 'Tarot', key = G.GAME.current_round.RD_wishbone }
-    local string_tarot2 = ""
-    local split = string.find(string_tarot1, ' ', 6)
+    local string_tarot = localize{ type = 'name_text', set = 'Tarot', key = G.GAME.current_round.RD_wishbone }
+    local string_tarot1, string_tarot2
+    local split = localize('rainydays_wishbone_split') and string.len(string_tarot) > 8 and string.find(string_tarot, ' ', 6)
     if split then
-      string_tarot2 = string.sub(string_tarot1, split + 1, -1)
-      string_tarot1 = string.sub(string_tarot1, 1, split - 1)
+      string_tarot1 = string.sub(string_tarot, 1, split - 1)
+      string_tarot2 = string.sub(string_tarot, split + 1, -1)
     end
     
     return {
-      key = split and 'j_RainyDays_wishbone' or 'j_RainyDays_wishbone_short',
+      key = (split or string.len(string_tarot) > 15) and 'j_RainyDays_wishbone' or 'j_RainyDays_wishbone_short',
       vars = {
         card.ability.extra.chips,
+        string_tarot,
         string_tarot1,
         string_tarot2
       }
@@ -43,7 +44,7 @@ SMODS.Joker {
       }
     end
     
-    if context.selling_self and not context.blueprint then
+    if context.selling_self then
       return RainyDays.create_consumable(context.other_joker, 'Tarot', nil, G.GAME.current_round.RD_wishbone)
     end
   end

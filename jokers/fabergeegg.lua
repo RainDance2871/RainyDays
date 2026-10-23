@@ -10,7 +10,6 @@ SMODS.Joker {
   pos = RainyDays.GetJokersAtlasTable('fabergeegg'),
   soul_pos = RainyDays.GetJokersAtlasTable('fabergeegg_soul'),
   rd_highlight_shader = 'RainyDays_metallic_highlight',
-  rd_skip_soul = true,
   attributes = { 'rank', 'king', 'queen', 'sell_value', 'economy' },
   
   config = {

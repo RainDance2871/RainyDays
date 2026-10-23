@@ -21,28 +21,15 @@ SMODS.Joker {
   },
   
   loc_vars = function(self, info_queue, card)
-    local amount = card.ability.extra.card_amount - card.ability.extra.cards_used_this_round
-    local string1, string2
-    if amount <= 0 then
-      string1 = localize('rainydays_beanstalk_grown')
-      amount = ""
-      string2 = ""
-    else
-      string1 = localize('rainydays_beanstalk_prefix')
-      string2 = localize('rainydays_beanstalk_postfix')
-      if card.ability.extra.xmult ~= card.ability.extra.xmult_start then
-        string2 = string2 .. localize('rainydays_beanstalk_or_will_reset')
-      end
-    end
-  
+    local amount = card.ability.extra.card_amount - card.ability.extra.cards_used_this_round  
     return {
+      key = (amount <= 0) and 'j_RainyDays_beanstalk_grown' or 'j_RainyDays_beanstalk',
       vars = {
         card.ability.extra.xmult_gain,
         card.ability.extra.card_amount,
         card.ability.extra.xmult,
-        string1,
         amount,
-        string2
+        (card.ability.extra.xmult ~= card.ability.extra.xmult_start) and localize('rainydays_beanstalk_or_will_reset') or ""
       }
     }
   end,
@@ -67,7 +54,7 @@ SMODS.Joker {
         local amount = card.ability.extra.card_amount - card.ability.extra.cards_used_this_round
         return { 
           message_card = card,
-          message = localize('rainydays_beanstalk_message_prefix') .. amount .. localize('rainydays_beanstalk_message_postfix'),
+          message = localize('rainydays_consumables_message_prefix') .. amount .. localize('rainydays_consumables_message_postfix'),
           colour = G.C.FILTER
         }
       end

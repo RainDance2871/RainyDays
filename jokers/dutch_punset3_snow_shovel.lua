@@ -60,10 +60,15 @@ SMODS.Joker {
           operation = function(ref_table, ref_value, initial, modifier)
             ref_table[ref_value] = initial + modifier * upgraded
           end,
-          scaling_message = { message = localize('k_upgrade_ex'), message_card = card, colour = G.C.CHIPS }
+          no_message = true
         })
+        return {
+          message_card = card,
+          message = localize('k_upgrade_ex'),
+          colour = G.C.CHIPS
+        }
       else
-        return { 
+        return {
           message_card = card,
           message = localize('rainydays_message_countdown_prefix') .. (card.ability.extra.per_scored - card.ability.extra.scored_counter) .. localize('rainydays_message_countdown_postfix'),
           colour = G.C.FILTER,

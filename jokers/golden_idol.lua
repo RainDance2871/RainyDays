@@ -1,7 +1,7 @@
 SMODS.Joker {
   key = 'golden_idol',
   atlas = 'Jokers',
-  rarity = 3,
+  rarity = 2,
   cost = 7,
   unlocked = true,
   blueprint_compat = true,
@@ -23,12 +23,12 @@ SMODS.Joker {
   config = {
     extra = {
       x_mult = 1,
-      plus_xmult = 0.2
+      plus_xmult = 0.05
     }
   },
   
   loc_vars = function(self, info_queue, card)
-    info_queue[#info_queue + 1] = G.P_CENTERS.m_gold
+    info_queue[#info_queue + 1] = G.P_CENTERS['m_gold']
     return {
       vars = {
         card.ability.extra.plus_xmult,

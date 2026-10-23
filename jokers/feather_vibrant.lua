@@ -36,10 +36,4 @@ if RainyDays.config.feathers then SMODS.Joker {
       }
     end
   end,
-  
-  calc_dollar_bonus = function(self, card)
-    if G.GAME.rd_feather_payout and G.GAME.rd_feather_payout > 0 then
-      return G.GAME.rd_feather_payout
-    end
-	end
 } end

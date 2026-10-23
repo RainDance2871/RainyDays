@@ -35,7 +35,7 @@ SMODS.Joker {
     }
   end,
   
-  calculate = function(self, card, context)    
+  calculate = function(self, card, context)
     if context.individual and context.cardarea == G.play and not context.other_card.debuff then
       if context.other_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank1] or context.other_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank2] then
         if SMODS.pseudorandom_probability(card, 'five_and_dime', card.ability.extra.numerator_in, card.ability.extra.denominator_in) then

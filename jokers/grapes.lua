@@ -13,8 +13,7 @@ SMODS.Joker {
   
   config = {
     extra = {
-      display_card_amount = 30,
-      display_card_amount_start = 30,
+      card_amount_start = 30,
       card_amount = 30,
       mult = 4
     }
@@ -33,14 +32,6 @@ SMODS.Joker {
     if context.individual and context.cardarea == G.play and not context.other_card.debuff then
       if not context.blueprint and not context.rd_is_repetition then
         card.ability.extra.card_amount = card.ability.extra.card_amount - 1
-         G.E_MANAGER:add_event(Event({
-          trigger = 'immediate',
-          delay = 0,
-          func = function()
-            card.ability.extra.display_card_amount = card.ability.extra.display_card_amount - 1
-            return true
-          end
-        }))
       end
       
       if card.ability.extra.card_amount > 0 or (card.ability.extra.card_amount == 0 and context.rd_is_repetition) then

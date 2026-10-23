@@ -30,7 +30,7 @@ SMODS.Joker {
     }
   end,
   
-  calculate = function(self, card, context)    
+  calculate = function(self, card, context)
     if context.individual and context.cardarea == G.play and context.other_card:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank] then
       if not context.other_card.debuff and SMODS.pseudorandom_probability(card, 'atom', card.ability.extra.numerator_in, card.ability.extra.denominator_in) then
         local source = context.blueprint_card or card
@@ -49,9 +49,9 @@ SMODS.Joker {
           
           update_hand_text({ sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3 }, {})
           G.E_MANAGER:add_event(Event({ trigger = 'after', delay = 0.2, func = function() return RainyDays.shakeit(message_cards, true) end }))
+          G.E_MANAGER:add_event(Event({ trigger = 'after', delay = 0.9, func = function() return RainyDays.shakeit(message_cards, true) end }))
           update_hand_text({ delay = 0 }, { mult = SMODS.Scoring_Parameters.mult.current + card.ability.extra.mult_rewards, StatusText = true })
           mod_mult(SMODS.Scoring_Parameters.mult.current + card.ability.extra.mult_rewards)
-          G.E_MANAGER:add_event(Event({ trigger = 'after', delay = 0.9, func = function() return RainyDays.shakeit(message_cards, true) end }))
           G.E_MANAGER:add_event(Event({ trigger = 'after', delay = 0.9, func = function() return RainyDays.shakeit(message_cards, false) end }))
           delay(1.3)
         end

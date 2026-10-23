@@ -8,9 +8,9 @@ SMODS.Joker {
   eternal_compat = true,
   perishable_compat = true,
   pos = RainyDays.GetJokersAtlasTable('checklist'),
-  soul_pos = RainyDays.GetJokersAtlasTable('indicator_ranks'),
-  rd_soul_indicator_shader = 'RainyDays_indicator_ranks',
-  rd_skip_soul = true,
+  soul_atlas = 'Indicators',
+  soul_pos = RainyDays.GetIndicatorsAtlasTable('ranks'),
+  rd_indicator_shader = 'RainyDays_indicator_ranks',
   attributes = { 'rank', 'xmult' },
   
   config = {
@@ -21,7 +21,12 @@ SMODS.Joker {
   
   loc_vars = function(self, info_queue, card)
     if card.area and not card.area.created_on_pause and G.GAME.blind and G.GAME.blind.in_blind and (RainyDays.config.clarifiers == 1 or RainyDays.config.clarifiers == 3) then
-      info_queue[#info_queue + 1] = G.P_CENTERS['j_RainyDays_checklist_list']
+      local colours = {}
+      for i = 1, 13 do
+        local rank_id = RainyDays.balatro_ranks_to_id[RainyDays.balatro_ranks[i]]
+        colours[i] = (G.GAME.rd_ranks_played_this_round[rank_id] and G.GAME.rd_ranks_played_this_round[rank_id] > 0) and G.C.FILTER or G.C.UI.TEXT_INACTIVE
+      end
+      info_queue[#info_queue + 1] = { set = 'Other', key = 'rainydays_checklist_list', specific_vars = { colours = colours }}
     end
     
     return {
@@ -50,29 +55,5 @@ SMODS.Joker {
         end
       end
     end
-  end
-}
-
-SMODS.Joker {
-  key = 'checklist_list',
-  unlocked = true,
-  discovered = true,
-  no_collection = true,
-  in_pool = function(self, args)
-    return false
-  end,
-  
-  loc_vars = function(self, info_queue, card)
-    local colours = {}
-    for i = 1, 13 do
-      local rank_id = RainyDays.balatro_ranks_to_id[RainyDays.balatro_ranks[i]]
-      colours[i] = (G.GAME.rd_ranks_played_this_round[rank_id] and G.GAME.rd_ranks_played_this_round[rank_id] > 0) and G.C.FILTER or G.C.UI.TEXT_INACTIVE
-    end
-    
-    return {
-      vars = {
-        colours = colours
-      }
-    }
   end
 }

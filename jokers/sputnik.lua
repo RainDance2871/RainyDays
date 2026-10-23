@@ -8,10 +8,16 @@ SMODS.Joker {
   eternal_compat = true,
   perishable_compat = true,
   pos = RainyDays.GetJokersAtlasTable('sputnik'),
-  soul_pos = RainyDays.GetJokersAtlasTable('indicator_hands'),
-  rd_soul_indicator_shader = 'RainyDays_indicator',
-  rd_skip_soul = true,
-  attributes = { 'planet', 'generation', 'hand_type', 'space', 'boss_blind' },
+  soul_atlas = 'Indicators',
+  soul_pos = RainyDays.GetIndicatorsAtlasTable('hands'),
+  rd_indicator_shader = 'RainyDays_indicator',
+  attributes = { 'tarot', 'generation', 'hand_type', 'space', 'boss_blind' },
+  
+  config = {
+    extra = {
+      dollar = 1
+    }
+  },
   
   loc_vars = function(self, info_queue, card)
     if card.area and not card.area.created_on_pause and G.GAME.blind and (RainyDays.config.clarifiers == 1 or RainyDays.config.clarifiers == 3) then
@@ -27,25 +33,19 @@ SMODS.Joker {
         info_queue[#info_queue + 1] = { set = 'Other', key = box }
       end
     end
+    
+    return {
+      vars = {
+        card.ability.extra.dollar
+      }
+    }
   end,
   
   calculate = function(self, card, context)
-    if context.joker_main and G.GAME.hands[context.scoring_name].played_this_ante == 1 then
-      if RainyDays.Constellations then
-        return RainyDays.create_consumable(context.blueprint_card or card, 'CN_Constellation')
-      else
-        local planet_key = nil
-        for _, value in pairs(G.P_CENTER_POOLS.Planet) do
-          if value.config.hand_type == context.scoring_name then
-            planet_key = value.key
-            break
-          end
-        end
-        
-        if planet_key then
-          return RainyDays.create_consumable(context.blueprint_card or card, 'Planet', 1, planet_key)
-        end
-      end
+    if context.before and G.GAME.hands[context.scoring_name].played_this_ante == 1 then
+      ease_dollars(-card.ability.extra.dollar)
+      card_eval_status_text(context.blueprint_card or card, 'dollars', -card.ability.extra.dollar)
+      return RainyDays.create_consumable(context.blueprint_card or card, RainyDays.Constellations and 'CN_Constellation' or 'Tarot')
     end
 
     if context.end_of_round and context.game_over == false and context.main_eval and not context.blueprint and G.GAME.blind.boss then

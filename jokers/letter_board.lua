@@ -1,7 +1,7 @@
 SMODS.Joker {
   key = 'letter_board',
   atlas = 'Jokers',
-  rarity = 2,
+  rarity = 1,
   cost = 6,
   unlocked = true, 
   blueprint_compat = true,
@@ -11,7 +11,7 @@ SMODS.Joker {
   attributes = { 'chips' },
   config = {
     extra = {
-      plus_chips = 80
+      plus_chips = 60
     }
   },
   
@@ -23,8 +23,8 @@ SMODS.Joker {
   
   calculate = function(self, card, context)
     if context.joker_main then
-      for i = 1, #context.full_hand do
-        if context.full_hand[i]:get_id() <= 10 and context.full_hand[i]:get_id() >= 2 then
+      for i = 1, #context.scoring_hand do
+        if context.scoring_hand[i]:get_id() <= 10 and context.scoring_hand[i]:get_id() >= 2 then
           return
         end
       end
