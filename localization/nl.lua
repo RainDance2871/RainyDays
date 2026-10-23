@@ -505,8 +505,8 @@ return {
         name = "Kostbare Veer",
         text = {
           "Aan einde van ronde",
-          "verdient elke {C:attention}Veer",
-          "{C:attention}Joker {C:money}$#1#"
+          "voeg {C:money}$#1#{} {C:attention}verkoopwaarde",
+          "aan elke {C:attention}Veer Joker{} toe"
         }
       },
       
