@@ -170,9 +170,10 @@ return {
           "{C:inactive}(Currently {C:mult}+#2# {C:inactive}Mult)"
         },
         unlock = {
-          "Have {E:1,C:attention}#1#{} or fewer",
-          "cards with {E:1,V:1}#2#",
-          "suit in full deck"
+          "Have exactly",
+          "{E:1,C:attention}#1#{} cards with",
+          "{E:1,V:1}#2#{} suit in",
+          "full deck"
         }
       },
       
@@ -732,9 +733,10 @@ return {
           "{C:inactive}(Currently {C:mult}+#4# {C:inactive}Mult)"
         },
         unlock = {
-          "Have {E:1,C:attention}#1#{} or fewer",
-          "cards with {E:1,V:1}#2#",
-          "suit in full deck"
+          "Have exactly",
+          "{E:1,C:attention}#1#{} cards with",
+          "{E:1,V:1}#2#{} suit in",
+          "full deck"
         }
       },
       
@@ -942,9 +944,10 @@ return {
           "{C:inactive}(Currently {C:money}$#4#{C:inactive})"
         },
         unlock = {
-          "Have {E:1,C:attention}#1#{} or fewer",
-          "cards with {E:1,V:1}#2#",
-          "suit in full deck"
+          "Have exactly",
+          "{E:1,C:attention}#1#{} cards with",
+          "{E:1,V:1}#2#{} suit in",
+          "full deck"
         }
       },
       
@@ -1355,9 +1358,10 @@ return {
           "{C:inactive}(Currently {C:chips}+#2# {C:inactive}Chips)"
         },
         unlock = {
-          "Have {E:1,C:attention}#1#{} or fewer",
-          "cards with {E:1,V:1}#2#",
-          "suit in full deck"
+          "Have exactly",
+          "{E:1,C:attention}#1#{} cards with",
+          "{E:1,V:1}#2#{} suit in",
+          "full deck"
         }
       },
       

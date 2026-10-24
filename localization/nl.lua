@@ -172,7 +172,7 @@ return {
           "{C:inactive}(Momenteel {C:mult}+#2# {C:inactive}Multi)"
         },
         unlock = {
-          "Hou {E:1,C:attention}#1#{} of minder kaarten",
+          "Hou precies {E:1,C:attention}#1#{} kaarteb",
           "met {E:1,V:1}#2#{}-kleur in",
           "het volledige kaartspel",
         }
@@ -188,7 +188,7 @@ return {
           "{C:inactive}(A, 9, 7, 5, 3)"
         },
         unlock = {
-          "Hou minstens {E:1,C:attention}#1#{} kaarten",
+          "Hou {E:1,C:attention}#1#{} of meer kaarten",
           "met {E:1,C:attention}oneven{} rang in het",
           "volledige kaartspel"
         }
@@ -744,7 +744,7 @@ return {
           "{C:inactive}(Momemteel {C:mult}+#4# {C:inactive}Multi)"
         },
         unlock = {
-          "Hou {E:1,C:attention}#1#{} of minder kaarten",
+          "Hou precies {E:1,C:attention}#1#{} kaarteb",
           "met {E:1,V:1}#2#{}-kleur in",
           "het volledige kaartspel",
         }
@@ -954,7 +954,7 @@ return {
           "{C:inactive}(Momenteel {C:money}$#4#{C:inactive})"
         },
         unlock = {
-          "Hou {E:1,C:attention}#1#{} of minder kaarten",
+          "Hou precies {E:1,C:attention}#1#{} kaarteb",
           "met {E:1,V:1}#2#{}-kleur in",
           "het volledige kaartspel",
         }
@@ -1375,7 +1375,7 @@ return {
           "{C:inactive}(Momenteel {C:chips}+#2# {C:inactive}fiches)"
         },
         unlock = {
-          "Hou {E:1,C:attention}#1#{} of minder kaarten",
+          "Hou precies {E:1,C:attention}#1#{} kaarteb",
           "met {E:1,V:1}#2#{}-kleur in",
           "het volledige kaartspel",
         }
