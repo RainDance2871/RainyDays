@@ -111,7 +111,7 @@ SMODS.Joker {
         else
         end
       end
-      return true
+      return count == 7
     end
   end
 }
