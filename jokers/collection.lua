@@ -19,6 +19,13 @@ SMODS.Joker {
     }
   },
   
+  add_to_deck = function(self, card, from_debuff)
+    if G.GAME.rd_jokers_uniquelist_count >= card.ability.extra.jokers then
+       card.ability.extra.message = true
+    end
+  end,
+  
+  
   loc_vars = function(self, info_queue, card)    
     local active = G.GAME.rd_jokers_uniquelist_count >= card.ability.extra.jokers
     return {
@@ -38,14 +45,19 @@ SMODS.Joker {
       }
     end
     
-    if context.card_added and context.card.ability.set == 'Joker' and context.card ~= card then
-      if not G.GAME.rd_jokers_uniquelist[context.card.config.center.key] and not context.blueprint then
-        local difference = card.ability.extra.jokers - G.GAME.rd_jokers_uniquelist_count - 1
-        return {
-          message = difference <= 0 and localize('rainydays_activated') or (localize('rainydays_jokers_message_prefix') .. difference .. localize('rainydays_jokers_message_postfix')),
-          colour = G.C.FILTER
-        }
-      end
+    if context.card_added and context.card.ability.set == 'Joker' and context.card ~= card and not G.GAME.rd_jokers_uniquelist[context.card.config.center.key] and not context.blueprint and not card.ability.extra.message then
+      card.ability.extra.message = true
+      G.E_MANAGER:add_event(Event({
+        func = function()
+          local difference = card.ability.extra.jokers - G.GAME.rd_jokers_uniquelist_count
+          local message = difference <= 0 and localize('rainydays_activated') or (localize('rainydays_jokers_message_prefix') .. difference .. localize('rainydays_jokers_message_postfix'))
+          card_eval_status_text(card, 'extra', nil, nil, nil, { message = message, colour = G.C.FILTER })
+          if difference > 0 then
+            card.ability.extra.message = nil
+          end
+          return true
+        end
+      }))
     end
   end
 }
