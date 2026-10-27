@@ -19,10 +19,10 @@ SMODS.Joker {
   },
     
   loc_vars = function(self, info_queue, card)
-    local active = card.ability.extra.activations > 0    
-    return {      
+    local active = card.ability.extra.activations > 0
+    return {
+      key = active and 'j_RainyDays_metropolis_active' or 'j_RainyDays_metropolis',
       vars = {
-        key = active and 'j_RainyDays_metropolis_active' or 'j_RainyDays_metropolis',
         colours = {
           active and G.C.FILTER or G.C.UI.TEXT_INACTIVE
         },

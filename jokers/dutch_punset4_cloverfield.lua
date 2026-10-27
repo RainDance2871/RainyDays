@@ -42,15 +42,27 @@ SMODS.Joker {
       }
     end
     
-    --grant mult on discard of clubs
     if context.discard and not context.blueprint and context.other_card:is_suit(card.ability.extra.suit) then
       card.ability.extra.discarded_counter = card.ability.extra.discarded_counter + 1
       
-      --enough clubs discarded
       local upgraded = 0
       while card.ability.extra.discarded_counter >= card.ability.extra.per_discarded do
         upgraded = upgraded + 1
         card.ability.extra.discarded_counter = card.ability.extra.discarded_counter - card.ability.extra.per_discarded
+      end
+      
+      if not card.ability.extra.shake then
+        card.ability.extra.shake = true
+        G.E_MANAGER:add_event(Event({
+          trigger = 'after',
+          delay = 0,
+          blockable = true,
+          func = function()
+            card.ability.extra.shake = nil
+            card:juice_up()
+            return true
+          end
+        }))
       end
       
       if upgraded > 0 then
@@ -63,13 +75,6 @@ SMODS.Joker {
           end,
           scaling_message = { message = localize('k_upgrade_ex'), message_card = card, colour = G.C.MULT }
         })
-      else
-        return { 
-          message_card = card,
-          message = localize('rainydays_message_countdown_prefix') .. (card.ability.extra.per_discarded - card.ability.extra.discarded_counter) .. localize('rainydays_message_countdown_postfix'),
-          colour = G.C.FILTER,
-          delay = 0.2
-        }
       end
     end
   end

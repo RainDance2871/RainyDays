@@ -52,6 +52,16 @@ SMODS.Joker {
         card.ability.extra.scored_counter = card.ability.extra.scored_counter - card.ability.extra.per_scored
       end
       
+      G.E_MANAGER:add_event(Event({
+        trigger = 'after',
+        delay = 0,
+        blockable = true,
+        func = function()
+          card:juice_up()
+          return true
+        end
+      }))
+      
       if upgraded > 0 then
         SMODS.scale_card(card, {
           ref_table = card.ability.extra, 
@@ -66,13 +76,6 @@ SMODS.Joker {
           message_card = card,
           message = localize('k_upgrade_ex'),
           colour = G.C.CHIPS
-        }
-      else
-        return {
-          message_card = card,
-          message = localize('rainydays_message_countdown_prefix') .. (card.ability.extra.per_scored - card.ability.extra.scored_counter) .. localize('rainydays_message_countdown_postfix'),
-          colour = G.C.FILTER,
-          delay = 0.2
         }
       end
     end

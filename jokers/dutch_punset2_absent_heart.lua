@@ -35,16 +35,24 @@ SMODS.Joker {
   calculate = function(self, card, context)
     if context.rd_draw_individual and G.GAME.facing_blind and context.other_card:is_suit(card.ability.extra.suit) and not context.other_card.debuff and not context.blueprint then
       card.ability.extra.drawn_counter = card.ability.extra.drawn_counter + 1
+      
+      if not card.ability.extra.shake then
+        card.ability.extra.shake = true
+        G.E_MANAGER:add_event(Event({
+          trigger = 'after',
+          delay = 0,
+          blockable = true,
+          func = function()
+            card.ability.extra.shake = nil
+            card:juice_up()
+            return true
+          end
+        }))
+      end
+      
       if card.ability.extra.drawn_counter >= card.ability.extra.per_drawn then
         card.ability.extra.drawn_counter = card.ability.extra.drawn_counter - card.ability.extra.per_drawn
-        return RainyDays.create_consumable(context.blueprint_card or card, card.ability.extra.reward)        
-      else
-        return { 
-          message_card = card,
-          message = localize('rainydays_message_countdown_prefix') .. (card.ability.extra.per_drawn - card.ability.extra.drawn_counter) .. localize('rainydays_message_countdown_postfix'),
-          colour = G.C.FILTER,
-          delay = 0.2
-        }
+        return RainyDays.create_consumable(context.blueprint_card or card, card.ability.extra.reward)
       end
     end
   end

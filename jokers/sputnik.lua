@@ -43,9 +43,12 @@ SMODS.Joker {
   
   calculate = function(self, card, context)
     if context.before and G.GAME.hands[context.scoring_name].played_this_ante == 1 then
-      ease_dollars(-card.ability.extra.dollar)
-      card_eval_status_text(context.blueprint_card or card, 'dollars', -card.ability.extra.dollar)
-      return RainyDays.create_consumable(context.blueprint_card or card, RainyDays.Constellations and 'CN_Constellation' or 'Tarot')
+      local ret = RainyDays.create_consumable(context.blueprint_card or card, RainyDays.Constellations and 'CN_Constellation' or 'Tarot')
+      if not RainyDays.Constellations and ret then
+        ease_dollars(-card.ability.extra.dollar)
+        card_eval_status_text(context.blueprint_card or card, 'dollars', -card.ability.extra.dollar)
+      end
+      return ret
     end
 
     if context.end_of_round and context.game_over == false and context.main_eval and not context.blueprint and G.GAME.blind.boss then

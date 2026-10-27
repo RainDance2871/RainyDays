@@ -20,7 +20,7 @@ SMODS.Joker {
     return {
       vars = {
         card.ability.extra.mult_amount,
-        2 * card.ability.extra.mult_amount
+        3 * card.ability.extra.mult_amount
       }
     } 
   end,
