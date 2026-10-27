@@ -276,11 +276,38 @@ jd_def['j_RainyDays_bingo_balls'] = {
 
 jd_def['j_RainyDays_blood_moon'] = {
   text = {
+    { ref_table = 'card.joker_display_values', ref_value = 'ex', colour = G.C.CLEAR },
     { border_nodes = {
       { text = "X" },
-      { ref_table = 'card.ability.extra', ref_value = 'xmult', retrigger_type = 'exp' }
-    }}
-  }
+      { ref_table = 'card.joker_display_values', ref_value = 'xmult', retrigger_type = 'exp' }
+    }},
+    { ref_table = 'card.joker_display_values', ref_value = 'ex' }
+  },
+  
+  reminder_text = {
+    { text = "(" },
+    { ref_table = 'card.joker_display_values', ref_value = 'rank' },
+    { text = " " },
+    { ref_table = 'card.ability.extra', ref_value = 'activations' },
+    { text = "/" },
+    { ref_table = 'card.ability.extra', ref_value = 'hands' },
+    { text = ")" }
+  },
+  reminder_text_config = { scale = reminder_text_scale },
+  
+  calc_function = function(card)
+    local ex = ""
+    if not RainyDays.evaluating_play and G.GAME.facing_blind and #JokerDisplay.current_hand == 1 then
+      local _, _, scoring_hand = JokerDisplay.evaluate_hand()
+      if #scoring_hand == 1 and scoring_hand[1]:get_id() == RainyDays.balatro_ranks_to_id[card.ability.extra.rank] then
+        ex = " !"
+      end
+    end
+    
+    card.joker_display_values.ex = ex
+    card.joker_display_values.xmult = card.ability.extra.activations > 0 and card.ability.extra.xmult or 1 
+    card.joker_display_values.rank = localize(card.ability.extra.rank, 'ranks')
+  end
 }
 
 jd_def['j_RainyDays_bonsai'] = {
