@@ -1,7 +1,7 @@
 SMODS.Joker {
   key = 'prehistory',
   atlas = 'Jokers',
-  rarity = 2,
+  rarity = 3,
   cost = 6,
   unlocked = false,
   blueprint_compat = true,
